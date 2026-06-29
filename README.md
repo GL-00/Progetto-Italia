@@ -8,3 +8,4 @@ Tra i settori di maggiore interesse vi sono:
 - telerilevamento e interpretazione di immagini satellitari;
 - lingue rare e dialetti d’area;
 - infografica, editing, elaborazioni e produzioni di prodotti e supporti grafici, mappe e grafici.
+Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scientifiche (paper) sugli argomenti.
