@@ -12,15 +12,15 @@ progressivamente le aree tematiche indicate nel [README](../README.md). Vedi
 - [x] README con visione e aree di interesse
 - [x] `docs/ARCHITETTURA.md`: stack tecnico e struttura repo
 - [x] `docs/ROADMAP.md`: questo documento
-- [ ] Linee guida editoriali minime (template per una nuova analisi, checklist fonti)
+- [x] Linee guida editoriali minime (template per una nuova analisi, checklist fonti)
 
 ## Fase 1 — MVP contenuti
 
 Obiettivo: validare il formato con contenuti reali, senza ancora costruire
 infrastruttura complessa.
 
-- [ ] Scaffold Next.js + MDX in `/apps/web` (layout minimo, lista articoli, pagina articolo)
-- [ ] 2–3 analisi pilota in 1–2 settori (es. `spazio-osservazione-terra`,
+- [x] Scaffold Next.js + MDX in `/apps/web` (layout minimo, lista articoli, pagina articolo)
+- [x] 2–3 analisi pilota in 1–2 settori (es. `spazio-osservazione-terra`,
   `energia-green-economy`)
 - [ ] Ricerca testuale base (Pagefind)
 - [ ] Deploy pubblico (Vercel o equivalente)
@@ -47,6 +47,6 @@ infrastruttura complessa.
 
 ## Prossimi passi immediati
 
-1. Validare con l'utente lo stack proposto in `docs/ARCHITETTURA.md`
-2. Scrivere le linee guida editoriali minime
-3. Procedere con lo scaffold Next.js (Fase 1) oppure con la prima analisi pilota
+1. Aggiungere ricerca testuale base (Pagefind) sul sito
+2. Decidere hosting/account per il deploy pubblico (Vercel o equivalente)
+3. Procedere con la Fase 2 (primo script ETL e visualizzazioni dati)

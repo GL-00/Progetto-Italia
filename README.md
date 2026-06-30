@@ -13,3 +13,16 @@ Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scien
 ## Documentazione
 - [Roadmap](docs/ROADMAP.md)
 - [Architettura](docs/ARCHITETTURA.md)
+- [Linee guida editoriali](docs/LINEE-GUIDA-EDITORIALI.md)
+
+## Sviluppo locale
+
+Il sito (`/apps/web`) è un'app Next.js che legge le analisi da `/content`.
+
+```sh
+cd apps/web
+npm install
+npm run dev
+```
+
+Apri http://localhost:3000.
