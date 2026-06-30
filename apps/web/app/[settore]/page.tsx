@@ -21,7 +21,11 @@ export default async function SettorePage({
     <div>
       <h1 className="text-2xl font-bold mb-6">{settore.nome}</h1>
       {articles.length === 0 ? (
-        <p className="text-slate-500">Nessuna analisi pubblicata in questo settore.</p>
+        <p className="text-slate-500">
+          Nessuna analisi qui ancora. Aggiungi un file in{" "}
+          <code className="text-sm bg-slate-100 rounded px-1.5 py-0.5">content/{settoreSlug}/</code>{" "}
+          seguendo il template nelle linee guida editoriali.
+        </p>
       ) : (
         <ul className="space-y-6">
           {articles.map((a) => (
@@ -29,9 +33,7 @@ export default async function SettorePage({
               <Link href={`/${settoreSlug}/${a.slug}`} className="text-lg font-medium hover:underline">
                 {a.frontmatter.title}
               </Link>
-              <p className="text-sm text-slate-500">
-                {a.frontmatter.data} — {a.frontmatter.autore}
-              </p>
+              <p className="text-sm text-slate-500">{a.frontmatter.data}</p>
               <p className="text-slate-700">{a.frontmatter.sintesi}</p>
             </li>
           ))}

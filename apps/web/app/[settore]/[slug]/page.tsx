@@ -45,9 +45,7 @@ export default async function ArticlePage({
       <header className="mb-8 border-b border-slate-200 pb-6">
         <p className="text-sm text-slate-500">{settore.nome}</p>
         <h1 className="text-3xl font-bold mt-1">{frontmatter.title}</h1>
-        <p className="text-sm text-slate-500 mt-2">
-          {frontmatter.data} — {frontmatter.autore}
-        </p>
+        <p className="text-sm text-slate-500 mt-2">{frontmatter.data}</p>
         {frontmatter.tags && frontmatter.tags.length > 0 && (
           <div className="flex gap-2 mt-3">
             {frontmatter.tags.map((tag) => (

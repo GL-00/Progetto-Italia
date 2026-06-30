@@ -1,50 +1,58 @@
 import Link from "next/link";
-import { SETTORI, getAllArticles } from "@/lib/content";
+import { getAllArticles, getCopertura } from "@/lib/content";
 
 export default function HomePage() {
-  const ultimeAnalisi = getAllArticles().slice(0, 5);
+  const copertura = getCopertura();
+  const totale = copertura.reduce((acc, c) => acc + c.count, 0);
+  const aree_avviate = copertura.filter((c) => c.count > 0).length;
+  const recenti = getAllArticles().slice(0, 5);
 
   return (
-    <div className="space-y-14">
+    <div className="space-y-12">
       <section>
-        <h1 className="text-3xl font-bold mb-3">Progetto Italia</h1>
-        <p className="text-slate-600 max-w-2xl leading-relaxed">
-          Analisi economico-industriale dell&apos;ecosistema italiano, basata solo su
-          fonti autorevoli e certificate e su pubblicazioni scientifiche.
+        <h1 className="text-2xl font-bold mb-1">Dashboard</h1>
+        <p className="text-sm text-slate-500">
+          {totale} {totale === 1 ? "analisi" : "analisi"} · {aree_avviate}/{copertura.length} aree avviate
         </p>
       </section>
 
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Aree tematiche</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {SETTORI.map((s) => (
-            <Link
-              key={s.slug}
-              href={`/${s.slug}`}
-              className="block rounded-lg border border-slate-200 p-4 hover:border-slate-400 transition-colors"
-            >
-              {s.nome}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Ultime analisi</h2>
-        {ultimeAnalisi.length === 0 ? (
-          <p className="text-slate-500">Nessuna analisi pubblicata ancora.</p>
-        ) : (
-          <ul className="space-y-5">
-            {ultimeAnalisi.map((a) => (
+      {recenti.length > 0 && (
+        <section>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">
+            Scritte di recente
+          </h2>
+          <ul className="space-y-4">
+            {recenti.map((a) => (
               <li key={`${a.settoreSlug}/${a.slug}`}>
                 <Link href={`/${a.settoreSlug}/${a.slug}`} className="font-medium hover:underline">
                   {a.frontmatter.title}
                 </Link>
-                <p className="text-sm text-slate-500">{a.frontmatter.sintesi}</p>
+                <p className="text-sm text-slate-500">
+                  {a.frontmatter.data} · {a.frontmatter.sintesi}
+                </p>
               </li>
             ))}
           </ul>
-        )}
+        </section>
+      )}
+
+      <section>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">Aree</h2>
+        <ul className="divide-y divide-slate-200 rounded-lg border border-slate-200">
+          {copertura.map(({ settore, count, ultimaData }) => (
+            <li key={settore.slug}>
+              <Link
+                href={`/${settore.slug}`}
+                className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-slate-50"
+              >
+                <span>{settore.nome}</span>
+                <span className="shrink-0 text-sm text-slate-400">
+                  {count > 0 ? `${count} · ${ultimaData}` : "da iniziare"}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );

@@ -73,3 +73,20 @@ export function getAllArticles(): (Article & { settoreSlug: string })[] {
     (a, b) => (a.frontmatter.data < b.frontmatter.data ? 1 : -1)
   );
 }
+
+export type Copertura = {
+  settore: Settore;
+  count: number;
+  ultimaData: string | null;
+};
+
+export function getCopertura(): Copertura[] {
+  return SETTORI.map((settore) => {
+    const articles = getArticles(settore.slug);
+    return {
+      settore,
+      count: articles.length,
+      ultimaData: articles[0]?.frontmatter.data ?? null,
+    };
+  });
+}

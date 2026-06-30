@@ -15,9 +15,10 @@ Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scien
 - [Architettura](docs/ARCHITETTURA.md)
 - [Linee guida editoriali](docs/LINEE-GUIDA-EDITORIALI.md)
 
-## Sviluppo locale
+## Uso locale
 
-Il sito (`/apps/web`) è un'app Next.js che legge le analisi da `/content`.
+`/apps/web` è una dashboard Next.js, a uso personale, che legge le analisi da
+`/content` per consultarle e tenerne traccia. Non è pensata per essere pubblicata.
 
 ```sh
 cd apps/web

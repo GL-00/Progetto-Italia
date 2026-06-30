@@ -6,33 +6,33 @@ import { SETTORI } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Progetto Italia",
-  description: "Analisi economico-industriale dell'ecosistema italiano",
+  description: "Strumento personale per analisi economico-industriali",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="it">
-      <body className="min-h-screen bg-white text-slate-900">
-        <header className="border-b border-slate-200">
-          <div className="mx-auto max-w-5xl px-4 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Link href="/" className="font-semibold text-lg">
-              Progetto Italia
-            </Link>
-            <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              {SETTORI.map((s) => (
-                <Link key={s.slug} href={`/${s.slug}`} className="text-slate-600 hover:text-slate-900 hover:underline">
-                  {s.nome}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </header>
-        <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
-        <footer className="border-t border-slate-200 mt-16">
-          <div className="mx-auto max-w-5xl px-4 py-6 text-sm text-slate-500">
-            Analisi basate solo su fonti autorevoli e certificate.
-          </div>
-        </footer>
+      <body className="min-h-screen bg-white text-slate-900 sm:flex">
+        <aside className="border-b border-slate-200 p-4 sm:w-60 sm:shrink-0 sm:border-b-0 sm:border-r sm:p-6">
+          <Link href="/" className="font-semibold text-lg block">
+            Progetto Italia
+          </Link>
+          <p className="text-xs text-slate-500 mt-1 mb-4 sm:mb-6">appunti di analisi personali</p>
+          <nav className="flex flex-wrap gap-x-3 gap-y-1 text-sm sm:flex-col sm:gap-0 sm:space-y-1">
+            {SETTORI.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/${s.slug}`}
+                className="block rounded px-0 py-0.5 text-slate-600 hover:text-slate-900 sm:px-2 sm:py-1.5 sm:hover:bg-slate-100"
+              >
+                {s.nome}
+              </Link>
+            ))}
+          </nav>
+        </aside>
+        <main className="min-w-0 flex-1 px-6 py-10 sm:px-10">
+          <div className="max-w-3xl">{children}</div>
+        </main>
       </body>
     </html>
   );

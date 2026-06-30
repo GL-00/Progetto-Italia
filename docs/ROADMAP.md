@@ -2,9 +2,10 @@
 
 ## Visione
 
-Costruire, in modo incrementale, una piattaforma di analisi economico-industriale
-sull'ecosistema italiano basata solo su fonti autorevoli e certificate, che copra
-progressivamente le aree tematiche indicate nel [README](../README.md). Vedi
+Uno strumento di lavoro **personale** per fare analisi economico-industriali
+sull'ecosistema italiano, basato solo su fonti autorevoli e certificate, che copra
+progressivamente le aree tematiche indicate nel [README](../README.md). Non è un sito
+pubblico: serve a raccogliere fonti, scrivere analisi e tenerne traccia nel tempo. Vedi
 [ARCHITETTURA.md](ARCHITETTURA.md) per le scelte tecniche.
 
 ## Fase 0 — Fondamenta (in corso)
@@ -19,11 +20,13 @@ progressivamente le aree tematiche indicate nel [README](../README.md). Vedi
 Obiettivo: validare il formato con contenuti reali, senza ancora costruire
 infrastruttura complessa.
 
-- [x] Scaffold Next.js + MDX in `/apps/web` (layout minimo, lista articoli, pagina articolo)
+- [x] Scaffold Next.js + MDX in `/apps/web`, in stile dashboard di lavoro (non sito
+  editoriale): sidebar per area, home con copertura e analisi recenti
 - [x] 2–3 analisi pilota in 1–2 settori (es. `spazio-osservazione-terra`,
   `energia-green-economy`)
 - [ ] Ricerca testuale base (Pagefind)
-- [ ] Deploy pubblico (Vercel o equivalente)
+- [ ] Accesso oltre al locale (eventuale deploy privato) — **decisione in sospeso**,
+  per ora si usa con `npm run dev`
 
 ## Fase 2 — Dati e visualizzazione
 
@@ -35,18 +38,15 @@ infrastruttura complessa.
 ## Fase 3 — Espansione
 
 - [ ] Copertura di tutti i settori del README
-- [ ] Versione inglese per contenuti di interesse internazionale (space economy,
-  difesa/dual-use)
 - [ ] Automazione parziale dell'aggiornamento dati (job periodici)
 
 ## Fase 4 — Eventuale (da validare quando/se serve)
 
-- [ ] Autenticazione per contenuti riservati o ad accesso limitato
-- [ ] Collaborazione multi-autore con workflow di review basato su PR
+- [ ] Autenticazione, solo se si decide di accedere da un deploy privato
+  (vedi decisione in sospeso in Fase 1)
 - [ ] Alert su nuove pubblicazioni/paper rilevanti per i settori monitorati
 
 ## Prossimi passi immediati
 
 1. Aggiungere ricerca testuale base (Pagefind) sul sito
-2. Decidere hosting/account per il deploy pubblico (Vercel o equivalente)
-3. Procedere con la Fase 2 (primo script ETL e visualizzazioni dati)
+2. Procedere con la Fase 2 (primo script ETL e visualizzazioni dati)
