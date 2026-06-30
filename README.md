@@ -14,6 +14,7 @@ Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scien
 - [Roadmap](docs/ROADMAP.md)
 - [Architettura](docs/ARCHITETTURA.md)
 - [Linee guida editoriali](docs/LINEE-GUIDA-EDITORIALI.md)
+- [Quadro teorico](docs/QUADRO-TEORICO.md)
 
 ## Uso locale
 
