@@ -28,12 +28,14 @@ infrastruttura complessa.
 - [ ] Accesso oltre al locale (eventuale deploy privato) — **decisione in sospeso**,
   per ora si usa con `npm run dev`
 
-## Fase 2 — Dati e visualizzazione
+## Fase 2 — Dati e visualizzazione (solo quando serve davvero)
 
-- [ ] Primo script ETL in `/scripts` per un settore (es. dati ESA/space economy o
-  energia da Eurostat)
-- [ ] Dashboard/grafici incorporati nelle analisi del settore scelto
-- [ ] Componente mappa (MapLibre) per contenuti geospaziali/telerilevamento
+Non una pipeline da costruire a prescindere: si attiva la prima volta che un'analisi
+specifica richiede di elaborare un dataset (es. confrontare più anni), non prima.
+
+- [ ] Primo script una tantum, quando capita il primo caso reale che lo richiede
+- [ ] Componente grafico/mappa incorporato in un'analisi, se quell'analisi ne ha
+  davvero bisogno
 
 ## Fase 3 — Espansione
 

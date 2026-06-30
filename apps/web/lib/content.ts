@@ -41,16 +41,26 @@ export function getSettore(slug: string): Settore | undefined {
   return SETTORI.find((s) => s.slug === slug);
 }
 
-export function getArticles(settoreSlug: string): Article[] {
-  const dir = path.join(CONTENT_DIR, settoreSlug);
+// I sottotemi sono semplici sottocartelle create quando servono (vedi ARCHITETTURA.md):
+// si cercano i file .mdx a qualunque profondità sotto la cartella del settore, invece
+// di imporre un livello fisso.
+function findMdxFiles(dir: string): string[] {
   if (!fs.existsSync(dir)) return [];
 
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
-  const articles = files.map((file) => {
-    const raw = fs.readFileSync(path.join(dir, file), "utf8");
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) return findMdxFiles(entryPath);
+    return entry.name.endsWith(".mdx") ? [entryPath] : [];
+  });
+}
+
+export function getArticles(settoreSlug: string): Article[] {
+  const dir = path.join(CONTENT_DIR, settoreSlug);
+  const articles = findMdxFiles(dir).map((filePath) => {
+    const raw = fs.readFileSync(filePath, "utf8");
     const { data, content } = matter(raw);
     return {
-      slug: file.replace(/\.mdx$/, ""),
+      slug: path.basename(filePath, ".mdx"),
       frontmatter: data as ArticleFrontmatter,
       content,
     };
@@ -60,8 +70,9 @@ export function getArticles(settoreSlug: string): Article[] {
 }
 
 export function getArticle(settoreSlug: string, slug: string): Article | null {
-  const filePath = path.join(CONTENT_DIR, settoreSlug, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
+  const dir = path.join(CONTENT_DIR, settoreSlug);
+  const filePath = findMdxFiles(dir).find((p) => path.basename(p, ".mdx") === slug);
+  if (!filePath) return null;
 
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
