@@ -15,6 +15,7 @@ Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scien
 - [Architettura](docs/ARCHITETTURA.md)
 - [Linee guida editoriali](docs/LINEE-GUIDA-EDITORIALI.md)
 - [Quadro teorico](docs/QUADRO-TEORICO.md)
+- [Fonti di riferimento](docs/FONTI-DI-RIFERIMENTO.md)
 
 ## Uso locale
 
