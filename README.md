@@ -9,3 +9,7 @@ Tra i settori di maggiore interesse vi sono:
 - lingue rare e dialetti d’area;
 - infografica, editing, elaborazioni e produzioni di prodotti e supporti grafici, mappe e grafici.
 Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scientifiche (paper) sugli argomenti.
+
+## Documentazione
+- [Roadmap](docs/ROADMAP.md)
+- [Architettura](docs/ARCHITETTURA.md)
