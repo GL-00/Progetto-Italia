@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progetto Italia — Analisi economico-industriale dell'ecosistema italiano</title>
+  <meta name="description" content="Piattaforma di analisi dell'economia italiana: panoramica macro (PIL, bilancia commerciale, export) e catene del valore settoriali da monte a valle con le aziende che vi operano.">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇮🇹</text></svg>">
+</head>
+<body>
+  <header class="site-header">
+    <div class="tricolore" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-name">Progetto Italia</span>
+        <span class="brand-sub">analisi economico-industriale</span>
+      </a>
+      <nav class="main-nav" aria-label="Navigazione principale">
+        <a href="#/" data-nav="home">Panoramica</a>
+        <a href="#/settori" data-nav="settori">Settori e filiere</a>
+        <a href="#/aziende" data-nav="aziende">Aziende</a>
+        <a href="#/metodologia" data-nav="metodologia">Metodologia e fonti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app" class="container" aria-live="polite"></main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Progetto Italia — piattaforma di analisi economico-industriale dell'ecosistema italiano.</span>
+      <span>Dati 2024 (consuntivi e stime) · fonti: ISTAT, Banca d'Italia, Eurostat e associazioni di categoria.</span>
+    </div>
+  </footer>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/charts.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
