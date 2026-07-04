@@ -82,6 +82,11 @@ Un'analisi vive sempre nella cartella del settore verticale che tratta
 (`/content/<settore>/...`); se applica una prospettiva lo dichiara nei tag, non cambia
 cartella.
 
+Un terzo asse, distinto da entrambi: le **tecniche di analisi** (il *come* si
+struttura il ragionamento, non il *dove* o il *quale tema*) — per ora la sola
+[Struttura-Condotta-Performance (SCP)](QUADRO-TEORICO.md#struttura-condotta-performance-scp),
+documentata nel quadro teorico.
+
 ## 5. Flusso editoriale e qualità delle fonti
 
 1. Individuazione di una fonte autorevole e certificata (paper peer-reviewed, report

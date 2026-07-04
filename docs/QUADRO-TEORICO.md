@@ -152,15 +152,52 @@ prossimi appunti condivisi.
   efficacia, efficienza, indipendenza, accountability, trasparenza e equità delle
   procedure.
 
+## Tecniche di analisi
+
+Oltre ai concetti sopra (i "mattoni"), il progetto usa tecniche di analisi esplicite —
+modi di organizzare il ragionamento, applicabili a qualunque settore verticale. Per ora
+ce n'è una sola; altre si aggiungeranno qui quando emergono nell'uso.
+
+### Struttura-Condotta-Performance (SCP)
+
+Fondato da Mason e Bain (Scuola di Harvard, vedi
+[Struttura del mercato e concentrazione](#struttura-del-mercato-e-concentrazione)), è
+la tecnica di riferimento per documentare un argomento o condurre un'analisi
+orizzontale: lega in sequenza causale (con possibili retroazioni) tre livelli.
+
+- **Struttura** — concentrazione, barriere all'entrata, differenziazione del prodotto,
+  grado di integrazione verticale esistente nel settore. Vedi
+  [Struttura del mercato e concentrazione](#struttura-del-mercato-e-concentrazione) e
+  [Barriere all'entrata](#barriere-allentrata).
+- **Condotta** — politiche di prezzo, R&S e innovazione, integrazione verticale,
+  bundling/discriminazione, comportamento collusivo o competitivo. Vedi
+  [Condotta: prezzi e oligopolio](#condotta-prezzi-e-oligopolio),
+  [Integrazione verticale e costi di transazione](#integrazione-verticale-e-costi-di-transazione),
+  [Bundling, tying e discriminazione di prezzo](#bundling-tying-e-discriminazione-di-prezzo-come-leve-strategiche).
+- **Performance** — il risultato economico che struttura e condotta producono:
+  efficienza produttiva e allocativa, redditività (profitti sopra il normale come
+  possibile segnale di potere di mercato piuttosto che di merito), tasso di
+  innovazione e progresso tecnico, qualità e varietà dei prodotti, effetti
+  sull'occupazione. È la componente meno sviluppata finora in questo documento — da
+  completare quando un'analisi orizzontale la richiederà su un caso concreto.
+
+Per strutturare la sezione "Analisi" di un documento con SCP: prima la struttura del
+mercato (chi sono gli attori, quanto è concentrato, quali barriere), poi la condotta
+osservabile (prezzi, R&S, alleanze/integrazioni), infine — quando i dati lo permettono
+— una valutazione di performance. Non è un requisito rigido: è uno scheletro utile,
+soprattutto per i settori a forte intervento statale del progetto (difesa, spazio,
+energia).
+
 ## Come si usa (per ora)
 
 Quando un'analisi tratta un settore concentrato, regolato o con forte intervento
-statale (es. difesa, spazio, energia), questi concetti aiutano a passare dal dato al
-giudizio: che struttura di mercato c'è (oligopolio? barriere alte?), che condotta
-adottano le imprese (prezzi, integrazione verticale, bundling), e se è in gioco un
-argomento di politica industriale (protezione di un'industria strategica/nascente).
-Come collegare esplicitamente un'analisi a uno o più di questi concetti (tag, sezione
-dedicata, altro) resta da decidere insieme all'architettura del resto del dominio.
+statale (es. difesa, spazio, energia), SCP aiuta a passare dal dato al giudizio: che
+struttura di mercato c'è (oligopolio? barriere alte?), che condotta adottano le imprese
+(prezzi, integrazione verticale, bundling), e se è in gioco un argomento di politica
+industriale (protezione di un'industria strategica/nascente). Un'analisi collega
+esplicitamente questi concetti tramite i `tags` del frontmatter — vedi
+[ARCHITETTURA.md](ARCHITETTURA.md#settori-verticali-vs-prospettive-orizzontali) per la
+distinzione tra settori verticali e prospettive orizzontali.
 
 ## Origine e verifiche
 

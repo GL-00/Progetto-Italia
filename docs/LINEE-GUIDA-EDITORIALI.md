@@ -62,6 +62,11 @@ segnala in `tags`, usando esattamente questi nomi.
 
 ## Template
 
+Per la sezione "Analisi", uno scheletro utile (non obbligatorio) è la tecnica
+Struttura-Condotta-Performance — vedi
+[QUADRO-TEORICO.md](QUADRO-TEORICO.md#struttura-condotta-performance-scp): struttura
+del mercato, poi condotta delle imprese, poi performance quando i dati lo permettono.
+
 ```mdx
 ---
 title: ""
