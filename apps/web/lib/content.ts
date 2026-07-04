@@ -14,8 +14,6 @@ export const SETTORI: Settore[] = [
   { slug: "corporate-ma-rs", nome: "Corporate, M&A e R&S" },
   { slug: "difesa-dual-use", nome: "Difesa e dual-use" },
   { slug: "spazio-osservazione-terra", nome: "Spazio e osservazione della Terra" },
-  { slug: "lingue-aree", nome: "Lingue e aree" },
-  { slug: "cartografia-infografica", nome: "Cartografia e infografica" },
 ];
 
 export type ArticleFrontmatter = {

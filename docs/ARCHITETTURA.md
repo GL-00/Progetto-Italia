@@ -66,10 +66,6 @@ Mappate dalle aree di interesse indicate nel README:
   (analisi economico-industriale e di policy, non contenuti tecnico-progettuali)
 - `spazio-osservazione-terra` — sistemi satellitari, programmi internazionali, space
   economy, telerilevamento
-- `lingue-aree` — lingue rare e dialetti d'area, a supporto linguistico/culturale
-  dell'analisi
-- `cartografia-infografica` — mappe, grafici, prodotti visivi, trasversale agli altri
-  settori
 
 ## 5. Flusso editoriale e qualità delle fonti
 
