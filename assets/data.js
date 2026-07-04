@@ -174,81 +174,106 @@ const SETTORI = [
   },
 
   {
-    id: "spazio",
+    id: "spazio-osservazione-terra",
     icona: "🛰️",
-    nome: "Spazio e Space Economy",
-    tagline: "Una delle poche filiere spaziali complete al mondo: dal lanciatore al dato satellitare interpretato.",
+    nome: "Spazio e Osservazione della Terra",
+    tagline: "Una delle poche filiere spaziali complete al mondo — dal lanciatore al dato interpretato — con una leadership specifica nell'Osservazione della Terra: radar SAR, iperspettrale e la nuova costellazione nazionale IRIDE.",
     kpi: [
-      { label: "Fatturato spazio", value: "≈ €3 mld" },
+      { label: "Fatturato spazio", value: "≈ €3,1 mld" },
       { label: "Addetti qualificati", value: "≈ 12.000" },
       { label: "Contributo ESA", value: "3° paese (≈ €3,1 mld/triennio)" },
-      { label: "PNRR spazio", value: "€2,3 mld" },
+      { label: "Programma IRIDE", value: "€1,1 mld (PNRR)" },
     ],
+    focus: {
+      titolo: "Perché l'Osservazione della Terra è strategica",
+      testo: "Il telerilevamento e l'interpretazione delle immagini satellitari sono un asset dual-use: alimentano difesa e intelligence, monitoraggio ambientale e del territorio, agricoltura di precisione, gestione delle emergenze e sorveglianza marittima. L'Italia presidia l'intera catena — costruisce i satelliti radar e iperspettrali, li opera dal Fucino, distribuisce e interpreta i dati — un caso raro di autonomia end-to-end in Europa.",
+      metriche: [
+        { k: "COSMO-SkyMed", v: "Costellazione SAR dual-use (ASI + Difesa)" },
+        { k: "PRISMA", v: "Satellite iperspettrale, tra i primi al mondo" },
+        { k: "IRIDE", v: "≈ 60 satelliti LEO entro il 2026" },
+        { k: "Copernicus", v: "Sentinel-1 SAR costruito in Italia" },
+      ],
+    },
     catena: [
       {
         fase: "Ricerca, agenzie e formazione",
         posizione: "MONTE",
-        descrizione: "Programmazione pubblica, ricerca scientifica e pipeline di competenze.",
+        descrizione: "Programmazione pubblica, ricerca scientifica e pipeline di competenze; l'ASI è agenzia di riferimento e cliente-guida delle missioni EO nazionali.",
         aziende: [
-          { nome: "ASI", ruolo: "Agenzia Spaziale Italiana — programmazione e missioni nazionali" },
+          { nome: "ASI", ruolo: "Agenzia Spaziale Italiana — programmazione, COSMO-SkyMed, PRISMA, IRIDE" },
           { nome: "CIRA", ruolo: "Ricerca aerospaziale, rientro atmosferico (Space Rider)" },
-          { nome: "INAF / CNR", ruolo: "Astrofisica e scienze spaziali" },
-          { nome: "PoliMi, PoliTo, Sapienza", ruolo: "Ingegneria aerospaziale, osservatorio Space Economy" },
+          { nome: "INAF / CNR-IREA", ruolo: "Astrofisica e ricerca sul telerilevamento e l'interferometria SAR" },
+          { nome: "PoliMi, PoliTo, Sapienza, Tor Vergata", ruolo: "Ingegneria aerospaziale, geomatica, osservatorio Space Economy" },
         ],
       },
       {
-        fase: "Lanciatori e propulsione",
+        fase: "Lanciatori e accesso allo spazio",
         posizione: "MONTE",
-        descrizione: "Accesso autonomo europeo allo spazio per carichi piccoli e medi.",
+        descrizione: "Accesso autonomo europeo allo spazio per carichi piccoli e medi: fondamentale per mettere in orbita costellazioni EO nazionali.",
         aziende: [
           { nome: "Avio", ruolo: "Vega C e propulsione solida (Colleferro); motori P120C anche per Ariane 6" },
+          { nome: "Sitael", ruolo: "Propulsione elettrica per il mantenimento in orbita dei satelliti (Mola di Bari)" },
         ],
       },
       {
-        fase: "Manifattura satellitare e infrastrutture orbitali",
+        fase: "Satelliti EO e payload (upstream)",
         posizione: "CENTRO",
-        descrizione: "Satelliti, moduli abitati, payload e piccole piattaforme.",
+        descrizione: "Il cuore dell'Osservazione della Terra: piattaforme e sensori radar (SAR), ottici e iperspettrali. Qui l'Italia è tra i leader mondiali del radar spaziale.",
         aziende: [
-          { nome: "Thales Alenia Space Italia", ruolo: "Satelliti e moduli abitati: oltre il 40% del volume pressurizzato della ISS è costruito a Torino" },
-          { nome: "Leonardo", ruolo: "Sensori, ottiche, robotica spaziale, celle solari" },
-          { nome: "Sitael", ruolo: "Piccoli satelliti e propulsione elettrica (Mola di Bari)" },
-          { nome: "Argotec", ruolo: "Smallsat: missioni LICIACube e ArgoMoon (Torino)" },
-          { nome: "OHB Italia", ruolo: "Sistemi e missioni scientifiche" },
+          { nome: "Thales Alenia Space Italia", ruolo: "Prime di COSMO-SkyMed e del SAR di Sentinel-1 (Copernicus); moduli abitati ISS a Torino" },
+          { nome: "Leonardo", ruolo: "Strumento iperspettrale di PRISMA, ottiche, star tracker, sensori atmosferici, celle solari" },
+          { nome: "OHB Italia", ruolo: "Prime della piattaforma PRISMA e di missioni scientifiche" },
+          { nome: "Argotec", ruolo: "Smallsat e microsatelliti (LICIACube, ArgoMoon), segmento IRIDE" },
+          { nome: "Sitael / Tyvak International", ruolo: "Piccole piattaforme e nanosatelliti per costellazioni EO" },
         ],
       },
       {
-        fase: "Lancio in orbita, operazioni e ground segment",
+        fase: "Operazioni, ground segment e lancio",
         posizione: "CENTRO",
-        descrizione: "Controllo missione, logistica orbitale, stazioni di terra.",
+        descrizione: "Controllo missione, ricezione ed elaborazione a terra, logistica orbitale: la spina dorsale che trasforma il segnale in dato utilizzabile.",
         aziende: [
-          { nome: "Telespazio", ruolo: "Centro spaziale del Fucino, tra i maggiori teleporti civili al mondo" },
-          { nome: "D-Orbit", ruolo: "Logistica orbitale e space cargo (ION)" },
-          { nome: "Leaf Space", ruolo: "Ground station as a service" },
+          { nome: "Telespazio", ruolo: "Centro spaziale del Fucino, tra i maggiori teleporti civili al mondo; operazioni COSMO-SkyMed e IRIDE" },
+          { nome: "D-Orbit", ruolo: "Logistica orbitale e space cargo (ION), rilascio di smallsat" },
+          { nome: "Leaf Space", ruolo: "Ground station as a service per costellazioni" },
+          { nome: "e-GEOS", ruolo: "Ricezione, archiviazione e processing dei dati radar (JV Telespazio 80% / ASI 20%)" },
         ],
       },
       {
-        fase: "Dati, applicazioni e servizi",
+        fase: "Dati EO, geoinformazione e telerilevamento",
         posizione: "VALLE",
-        descrizione: "Osservazione della Terra, geoinformazione, telerilevamento e interpretazione delle immagini.",
+        descrizione: "Distribuzione dei dati e loro trasformazione in prodotti geospaziali: interpretazione delle immagini, mappe tematiche, interferometria per il monitoraggio di frane e subsidenza.",
         aziende: [
-          { nome: "e-GEOS (Telespazio/ASI)", ruolo: "Dati COSMO-SkyMed, emergenze Copernicus" },
-          { nome: "Planetek Italia", ruolo: "Geoinformazione e piattaforme EO (Bari)" },
-          { nome: "Latitudo 40", ruolo: "Analytics satellitari per città e clima" },
-          { nome: "Programma IRIDE", ruolo: "Costellazione nazionale EO finanziata dal PNRR" },
+          { nome: "e-GEOS (Telespazio/ASI)", ruolo: "Distribuzione dati COSMO-SkyMed; Copernicus Emergency Management Service" },
+          { nome: "Planetek Italia", ruolo: "Geoinformazione, monitoraggio del territorio e piattaforme EO (Bari)" },
+          { nome: "Aresys", ruolo: "Processori SAR e interferometria (spin-off PoliMi)" },
+          { nome: "NAIS / Geo-K / Survey Lab", ruolo: "Servizi di telerilevamento, cartografia e monitoraggio infrastrutture" },
+        ],
+      },
+      {
+        fase: "Applicazioni, analytics e servizi al mercato",
+        posizione: "VALLE",
+        descrizione: "L'ultimo miglio del valore: analytics basati su intelligenza artificiale per città, clima, agricoltura, assicurazioni e sicurezza. È il segmento più dinamico e più frammentato.",
+        aziende: [
+          { nome: "Latitudo 40", ruolo: "Analytics satellitari con AI per città, clima e rischio (Napoli)" },
+          { nome: "Programma IRIDE", ruolo: "Costellazione nazionale EO (PNRR): upstream + downstream + hub di servizi, operativa entro il 2026" },
+          { nome: "AIKO / Deep Blue", ruolo: "Autonomia di bordo con AI e human factors per le operazioni EO" },
+          { nome: "Assicurazioni e PA", ruolo: "Utenti finali: agricoltura di precisione, parametrico, protezione civile, catasto" },
         ],
       },
     ],
     forza: [
-      "Filiera completa monte-valle, rara a livello mondiale; leadership nel radar ad apertura sintetica (COSMO-SkyMed)",
-      "Eccellenza nei moduli abitati e nelle infrastrutture orbitali (Torino hub mondiale)",
-      "Telerilevamento e interpretazione immagini: asset strategico civile e di intelligence",
+      "Filiera completa monte-valle, rara al mondo; leadership nel radar ad apertura sintetica (COSMO-SkyMed) e nell'iperspettrale (PRISMA)",
+      "Autonomia end-to-end nell'Osservazione della Terra: costruzione satelliti, operazioni dal Fucino, distribuzione e interpretazione dei dati",
+      "IRIDE: una delle maggiori costellazioni EO europee, finanziata dal PNRR, che integra upstream, downstream e hub di servizi nazionali",
+      "Eccellenza nei moduli abitati e nelle infrastrutture orbitali (Torino, hub mondiale della ISS)",
     ],
     criticita: [
-      "Scala industriale e capitali privati limitati rispetto a USA e Francia",
+      "Scala industriale e capitali privati limitati rispetto a USA e Francia; downstream molto frammentato",
       "Ritardi e costi del programma Vega; dipendenza temporanea da lanci esteri",
-      "Downstream frammentato: molte startup, pochi campioni di scala",
+      "Valorizzazione economica del dato EO ancora bassa: molte startup, pochi campioni di scala capaci di fare mercato",
+      "Dipendenza estera per componentistica elettronica e ottiche critiche di alcuni payload",
     ],
-    fonti: ["ASI", "ESA", "Osservatorio Space Economy PoliMi", "PNRR — Missione 1"],
+    fonti: ["ASI", "ESA", "e-GEOS", "Copernicus / Commissione UE", "Osservatorio Space Economy PoliMi", "PNRR — Missione 1 (IRIDE)"],
   },
 
   {
@@ -858,8 +883,13 @@ const SETTORI = [
 
 /* Palette categorica di riferimento (validata) — slot per settore */
 const SECTOR_SLOTS = {
-  difesa: 1, spazio: 5, energia: 3, meccanica: 2, automotive: 6,
+  difesa: 1, "spazio-osservazione-terra": 5, energia: 3, meccanica: 2, automotive: 6,
   farmaceutica: 7, agroalimentare: 4, moda: 8, elettronica: 1, nautica: 2,
+};
+
+/* Reindirizzamenti da slug storici a slug correnti (retrocompatibilità URL) */
+const SECTOR_ALIASES = {
+  spazio: "spazio-osservazione-terra",
 };
 
 const FONTI_GENERALI = [

@@ -17,7 +17,7 @@ function colorOf(id) { return `var(--series-${slotOf(id)})`; }
 const routes = [
   { re: /^$/, render: renderHome },
   { re: /^settori$/, render: renderSettori },
-  { re: /^settore\/([a-z]+)$/, render: (m) => renderSettore(m[1]) },
+  { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -196,6 +196,11 @@ function renderSettori() {
    SETTORE (dettaglio con catena del valore)
    ============================================================ */
 function renderSettore(id) {
+  // retrocompatibilità: reindirizza gli slug storici a quelli correnti
+  if (typeof SECTOR_ALIASES !== "undefined" && SECTOR_ALIASES[id]) {
+    location.replace("#/settore/" + SECTOR_ALIASES[id]);
+    return;
+  }
   const s = SETTORI.find((x) => x.id === id);
   if (!s) { renderSettori(); return; }
   const root = $app();
@@ -211,6 +216,27 @@ function renderSettore(id) {
     </div>`;
   head.appendChild(kpiRow(s.kpi));
   root.appendChild(head);
+
+  /* Focus tematico (opzionale, presente solo su alcuni settori) */
+  if (s.focus) {
+    const fs = document.createElement("div");
+    fs.className = "section";
+    const fc = document.createElement("div");
+    fc.className = "focus-card";
+    fc.style.setProperty("--sector-color", colorOf(s.id));
+    fc.innerHTML = `
+      <div class="focus-body">
+        <div class="kicker">Focus</div>
+        <h3>${esc(s.focus.titolo)}</h3>
+        <p>${esc(s.focus.testo)}</p>
+      </div>
+      <div class="focus-metrics">
+        ${s.focus.metriche.map((m) => `
+          <div class="focus-metric"><div class="fm-k">${esc(m.k)}</div><div class="fm-v">${esc(m.v)}</div></div>`).join("")}
+      </div>`;
+    fs.appendChild(fc);
+    root.appendChild(fs);
+  }
 
   /* Catena del valore */
   const sc = sectionEl("Catena del valore", "Da monte a valle",
