@@ -45,6 +45,11 @@ tags: ["tag1", "tag2"]
 Tutti i campi sono obbligatori tranne `tags` (opzionale). `fonti` deve contenere almeno
 un elemento.
 
+Se l'analisi applica esplicitamente una delle quattro prospettive orizzontali definite
+in [ARCHITETTURA.md](ARCHITETTURA.md#settori-verticali-vs-prospettive-orizzontali) —
+M&A, R&S, Sicurezza economico-finanziaria, Patrimonio industriale e tecnologico — la si
+segnala in `tags`, usando esattamente questi nomi.
+
 ## Checklist prima della pubblicazione
 
 - [ ] Ogni dato/affermazione quantitativa ha una fonte corrispondente in `fonti`

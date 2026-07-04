@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllArticles, getCopertura } from "@/lib/content";
+import { PROSPETTIVE, getAllArticles, getCopertura } from "@/lib/content";
 
 export default function HomePage() {
   const copertura = getCopertura();
@@ -37,7 +37,9 @@ export default function HomePage() {
       )}
 
       <section>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">Aree</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">
+          Settori (dove si documenta per argomenti)
+        </h2>
         <ul className="divide-y divide-slate-200 rounded-lg border border-slate-200">
           {copertura.map(({ settore, count, ultimaData }) => (
             <li key={settore.slug}>
@@ -50,6 +52,25 @@ export default function HomePage() {
                   {count > 0 ? `${count} · ${ultimaData}` : "da iniziare"}
                 </span>
               </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">
+          Prospettive di analisi (orizzontali)
+        </h2>
+        <p className="text-sm text-slate-500 mb-3">
+          Si applicano trasversalmente ai settori sopra tramite i tag di
+          un&apos;analisi — non hanno una cartella propria (vedi{" "}
+          <code className="text-xs bg-slate-100 rounded px-1 py-0.5">docs/ARCHITETTURA.md</code>
+          ).
+        </p>
+        <ul className="flex flex-wrap gap-2">
+          {PROSPETTIVE.map((p) => (
+            <li key={p} className="text-sm bg-slate-100 rounded px-2 py-1 text-slate-600">
+              {p}
             </li>
           ))}
         </ul>

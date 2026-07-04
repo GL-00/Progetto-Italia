@@ -7,14 +7,25 @@ export type Settore = {
   nome: string;
 };
 
+// Settori verticali: i domini sostanziali dove si documenta per argomenti (fatti,
+// attori, dati). Vedi ARCHITETTURA.md per la distinzione dalle prospettive orizzontali.
 export const SETTORI: Settore[] = [
-  { slug: "sicurezza-economico-finanziaria", nome: "Sicurezza economico-finanziaria" },
-  { slug: "patrimonio-industriale-tecnologico", nome: "Patrimonio industriale e tecnologico" },
   { slug: "energia-green-economy", nome: "Energia e green economy" },
-  { slug: "corporate-ma-rs", nome: "Corporate, M&A e R&S" },
-  { slug: "difesa-dual-use", nome: "Difesa e dual-use" },
   { slug: "spazio-osservazione-terra", nome: "Spazio e osservazione della Terra" },
+  { slug: "difesa-dual-use", nome: "Difesa e dual-use" },
+  { slug: "intelligenza-artificiale", nome: "Intelligenza artificiale" },
 ];
+
+// Prospettive di analisi orizzontali: le lenti del quadro teorico applicate
+// trasversalmente ai settori sopra. Non hanno una cartella propria — un'analisi le
+// segnala nei tag del frontmatter quando le applica esplicitamente (vedi
+// LINEE-GUIDA-EDITORIALI.md).
+export const PROSPETTIVE = [
+  "M&A",
+  "R&S",
+  "Sicurezza economico-finanziaria",
+  "Patrimonio industriale e tecnologico",
+] as const;
 
 export type ArticleFrontmatter = {
   title: string;

@@ -5,7 +5,8 @@ Tra i settori di maggiore interesse vi sono:
 - armamenti, missilistica e tecnologie associate, nonché materiali dual use e reti di procurement;
 - sistemi satellitari, infrastrutture e programmi internazionali in ambito spaziale e aereospaziale;
 - space economy in ambito nazionale ed internazionale;
-- telerilevamento e interpretazione di immagini satellitari.
+- telerilevamento e interpretazione di immagini satellitari;
+- intelligenza artificiale: filiera e applicazioni economico-industriali.
 Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scientifiche (paper) sugli argomenti.
 
 ## Documentazione

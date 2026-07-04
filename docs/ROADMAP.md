@@ -10,14 +10,21 @@ pubblico: serve a raccogliere fonti, scrivere analisi e tenerne traccia nel temp
 
 ## Metodo: prima per argomenti, poi orizzontale
 
-Si documenta il dominio **per argomenti** (fatti, attori, dati, con fonti — un
-argomento alla volta, dentro il suo sottotema), costruendo ampiezza prima di
-profondità. L'applicazione sistematica del [quadro teorico](QUADRO-TEORICO.md) — l'
-**analisi orizzontale** che confronta più argomenti tra loro (es. barriere all'entrata
-a confronto tra difesa, spazio ed energia) — arriva in un secondo momento, quando c'è
-abbastanza copertura perché il confronto abbia senso. Non è un tipo di documento
-diverso né uno schema separato: è solo la sequenza di lavoro — un'analisi può nascere
-fattuale e diventare più interpretativa quando la riprendi in mano.
+Si documenta il dominio **per argomenti** dentro ciascun **settore verticale** — Energia
+e green economy, Spazio e osservazione della Terra, Difesa e dual-use, Intelligenza
+artificiale — fatti, attori, dati, con fonti, un argomento alla volta, costruendo
+ampiezza prima di profondità.
+
+L'**analisi orizzontale** applica sistematicamente una delle quattro **prospettive**
+del [quadro teorico](QUADRO-TEORICO.md) — M&A, R&S, Sicurezza economico-finanziaria,
+Patrimonio industriale e tecnologico — a più settori verticali insieme (es. barriere
+all'entrata a confronto tra difesa, spazio ed energia, dalla prospettiva patrimonio
+industriale). Arriva in un secondo momento, quando c'è abbastanza copertura verticale
+perché il confronto abbia senso. Non è un tipo di documento diverso né uno schema
+separato: un'analisi verticale può già segnalare nei tag una prospettiva che applica;
+un'analisi orizzontale ne applica una a più settori insieme. Vedi
+[ARCHITETTURA.md](ARCHITETTURA.md#settori-verticali-vs-prospettive-orizzontali) per il
+dettaglio.
 
 ## Fase 0 — Fondamenta (in corso)
 
@@ -50,11 +57,12 @@ specifica richiede di elaborare un dataset (es. confrontare più anni), non prim
 
 ## Fase 3 — Espansione
 
-- [ ] Documentare per argomenti: copertura dei settori del README, un argomento alla
+- [ ] Documentare per argomenti: copertura dei 4 settori verticali, un argomento alla
   volta (fatti, attori, dati con fonti) — prima l'ampiezza, non ancora l'analisi
   orizzontale
-- [ ] Quando c'è copertura sufficiente: prime analisi orizzontali che confrontano più
-  argomenti/settori applicando il quadro teorico (vedi "Metodo" sopra)
+- [ ] Quando c'è copertura sufficiente: prime analisi orizzontali che applicano una
+  prospettiva (M&A, R&S, Sicurezza economico-finanziaria, Patrimonio industriale e
+  tecnologico) a più settori insieme (vedi "Metodo" sopra)
 - [ ] Automazione parziale dell'aggiornamento dati (job periodici)
 
 ## Fase 4 — Eventuale (da validare quando/se serve)

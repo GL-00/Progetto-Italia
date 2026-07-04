@@ -47,25 +47,40 @@ multi-autore con workflow di review).
 /apps/web/                         dashboard Next.js per consultare e navigare le analisi
 ```
 
-I sottotemi non si pianificano tutti in anticipo per tutti gli 8 settori: la cartella
+I sottotemi non si pianificano tutti in anticipo per tutti i settori verticali: la cartella
 si crea quando c'è davvero la prima analisi da scriverci. Ogni file MDX è autosufficiente
 — cita le sue fonti (qualitative e quantitative) direttamente nel testo, come già fatto
 nei pilota e in `QUADRO-TEORICO.md`. Nessun registro fonti separato, nessun ID, nessuna
 entità "soggetto"/"indicatore"/"evento" da mantenere a parte.
 
-### Aree tematiche (`/content/<settore>`)
+### Settori verticali vs prospettive orizzontali
 
-Mappate dalle aree di interesse indicate nel README:
+Due categorie distinte, non equivalenti — vedi anche il
+["Metodo" in ROADMAP.md](ROADMAP.md#metodo-prima-per-argomenti-poi-orizzontale).
 
-- `sicurezza-economico-finanziaria` — mercati finanziari/creditizi, evasione/elusione
-  fiscale, antiriciclaggio
-- `patrimonio-industriale-tecnologico` — know-how, proprietà industriale
+**Settori (verticali)** — i domini sostanziali dove si documenta per argomenti (fatti,
+attori, dati), ciascuno con la propria cartella `/content/<settore>`:
+
 - `energia-green-economy` — transizione energetica, rinnovabili, approvvigionamento
-- `corporate-ma-rs` — funzioni corporate, M&A, R&S
-- `difesa-dual-use` — armamenti, missilistica, materiali dual-use, reti di procurement
-  (analisi economico-industriale e di policy, non contenuti tecnico-progettuali)
 - `spazio-osservazione-terra` — sistemi satellitari, programmi internazionali, space
   economy, telerilevamento
+- `difesa-dual-use` — armamenti, missilistica, materiali dual-use, reti di procurement
+  (analisi economico-industriale e di policy, non contenuti tecnico-progettuali)
+- `intelligenza-artificiale` — filiera e applicazioni economico-industriali dell'IA
+
+**Prospettive di analisi (orizzontali)** — le lenti del
+[quadro teorico](QUADRO-TEORICO.md) applicate trasversalmente a più settori verticali
+insieme. Non sono cartelle a sé: un'analisi le segnala nei `tags` del frontmatter
+quando le applica esplicitamente.
+
+- M&A
+- R&S
+- Sicurezza economico-finanziaria
+- Patrimonio industriale e tecnologico
+
+Un'analisi vive sempre nella cartella del settore verticale che tratta
+(`/content/<settore>/...`); se applica una prospettiva lo dichiara nei tag, non cambia
+cartella.
 
 ## 5. Flusso editoriale e qualità delle fonti
 
