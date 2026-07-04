@@ -8,6 +8,17 @@ progressivamente le aree tematiche indicate nel [README](../README.md). Non è u
 pubblico: serve a raccogliere fonti, scrivere analisi e tenerne traccia nel tempo. Vedi
 [ARCHITETTURA.md](ARCHITETTURA.md) per le scelte tecniche.
 
+## Metodo: prima per argomenti, poi orizzontale
+
+Si documenta il dominio **per argomenti** (fatti, attori, dati, con fonti — un
+argomento alla volta, dentro il suo sottotema), costruendo ampiezza prima di
+profondità. L'applicazione sistematica del [quadro teorico](QUADRO-TEORICO.md) — l'
+**analisi orizzontale** che confronta più argomenti tra loro (es. barriere all'entrata
+a confronto tra difesa, spazio ed energia) — arriva in un secondo momento, quando c'è
+abbastanza copertura perché il confronto abbia senso. Non è un tipo di documento
+diverso né uno schema separato: è solo la sequenza di lavoro — un'analisi può nascere
+fattuale e diventare più interpretativa quando la riprendi in mano.
+
 ## Fase 0 — Fondamenta (in corso)
 
 - [x] README con visione e aree di interesse
@@ -39,7 +50,11 @@ specifica richiede di elaborare un dataset (es. confrontare più anni), non prim
 
 ## Fase 3 — Espansione
 
-- [ ] Copertura di tutti i settori del README
+- [ ] Documentare per argomenti: copertura dei settori del README, un argomento alla
+  volta (fatti, attori, dati con fonti) — prima l'ampiezza, non ancora l'analisi
+  orizzontale
+- [ ] Quando c'è copertura sufficiente: prime analisi orizzontali che confrontano più
+  argomenti/settori applicando il quadro teorico (vedi "Metodo" sopra)
 - [ ] Automazione parziale dell'aggiornamento dati (job periodici)
 
 ## Fase 4 — Eventuale (da validare quando/se serve)
