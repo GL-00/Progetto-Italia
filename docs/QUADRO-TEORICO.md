@@ -155,8 +155,8 @@ prossimi appunti condivisi.
 ## Tecniche di analisi
 
 Oltre ai concetti sopra (i "mattoni"), il progetto usa tecniche di analisi esplicite —
-modi di organizzare il ragionamento, applicabili a qualunque settore verticale. Per ora
-ce n'è una sola; altre si aggiungeranno qui quando emergono nell'uso.
+modi di organizzare il ragionamento, applicabili a qualunque settore verticale. Altre si
+aggiungeranno qui quando emergono nell'uso.
 
 ### Struttura-Condotta-Performance (SCP)
 
@@ -187,6 +187,37 @@ osservabile (prezzi, R&S, alleanze/integrazioni), infine — quando i dati lo pe
 — una valutazione di performance. Non è un requisito rigido: è uno scheletro utile,
 soprattutto per i settori a forte intervento statale del progetto (difesa, spazio,
 energia).
+
+### Teoria dei mercati contendibili (contestable markets)
+
+Baumol, Panzar e Willig (1982) — vedi anche
+[Barriere all'entrata](#barriere-allentrata). Sposta il centro dell'analisi dalla
+struttura effettiva del mercato (quante imprese, quanto sono concentrate) alla
+**contendibilità**: quanto sono liberi entrata e uscita, quanto sono "sommersi" (sunk)
+i costi per chi entra. Un mercato può comportarsi in modo competitivo anche con
+un'unica impresa (monopolio naturale) se l'entrata è a costo zero e reversibile
+(*hit-and-run entry*) — è la minaccia di entrata, non il numero di concorrenti
+effettivi, a disciplinare la condotta.
+
+Utile quando la domanda è "questo settore concentrato è davvero un problema, o le
+barriere sono abbastanza basse da renderlo comunque competitivo?" — una domanda che SCP
+da solo, nella sua versione più meccanica struttura→condotta→performance, rischia di
+dare per scontata nella direzione sbagliata (concentrato quindi anticompetitivo, senza
+verificare la contendibilità).
+
+### Economia dei costi di transazione (make vs. buy)
+
+Coase, Williamson — vedi anche
+[Integrazione verticale e costi di transazione](#integrazione-verticale-e-costi-di-transazione).
+Non parte dalla struttura del mercato ma dalla singola transazione: si esaminano
+specificità degli asset coinvolti, incertezza e frequenza della transazione, insieme a
+razionalità limitata e opportunismo degli attori, per stabilire se sia più efficiente
+organizzare un'attività internamente (integrazione verticale) o tramite il mercato
+(fornitori esterni).
+
+Utile per leggere le scelte di integrazione o esternalizzazione di un'impresa o di una
+filiera — es. perché un prime contractor della difesa o dello spazio integra
+internamente alcune fasi produttive e ne esternalizza altre a una rete di fornitori.
 
 ## Come si usa (per ora)
 

@@ -83,9 +83,11 @@ Un'analisi vive sempre nella cartella del settore verticale che tratta
 cartella.
 
 Un terzo asse, distinto da entrambi: le **tecniche di analisi** (il *come* si
-struttura il ragionamento, non il *dove* o il *quale tema*) — per ora la sola
-[Struttura-Condotta-Performance (SCP)](QUADRO-TEORICO.md#struttura-condotta-performance-scp),
-documentata nel quadro teorico.
+struttura il ragionamento, non il *dove* o il *quale tema*), documentate nel
+[quadro teorico](QUADRO-TEORICO.md#tecniche-di-analisi):
+[Struttura-Condotta-Performance](QUADRO-TEORICO.md#struttura-condotta-performance-scp),
+[teoria dei mercati contendibili](QUADRO-TEORICO.md#teoria-dei-mercati-contendibili-contestable-markets),
+[economia dei costi di transazione](QUADRO-TEORICO.md#economia-dei-costi-di-transazione-make-vs-buy).
 
 ## 5. Flusso editoriale e qualità delle fonti
 
