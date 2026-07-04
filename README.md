@@ -15,6 +15,7 @@ Avvalersi solo di fonti autorevoli e certificate. Analisi di pubblicazioni scien
 - [Linee guida editoriali](docs/LINEE-GUIDA-EDITORIALI.md)
 - [Quadro teorico](docs/QUADRO-TEORICO.md)
 - [Fonti di riferimento](docs/FONTI-DI-RIFERIMENTO.md)
+- [Cronologia economica (1900-2026)](docs/CRONOLOGIA-ECONOMICA.md)
 
 ## Uso locale
 
