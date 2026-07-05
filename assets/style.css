@@ -311,6 +311,26 @@ body {
   border: 1px solid var(--grid); border-radius: 99px; padding: 2px 9px;
 }
 
+/* ---------- Matrice materie × settori ---------- */
+.matrix-table th.mx-col { text-align: center; padding: 10px 6px; }
+.matrix-table th.mx-col a { text-decoration: none; font-size: 17px; }
+.matrix-table td.mx-cell { text-align: center; padding: 8px 6px; }
+.matrix-table td.td-company { min-width: 190px; }
+.mx-name { color: var(--text-primary); text-decoration: none; cursor: pointer; }
+.mx-name:hover { color: var(--accent); }
+.mx-dot { font-size: 14px; cursor: default; border: none; padding: 0; background: none; }
+
+.mat-list { display: flex; flex-direction: column; gap: 14px; }
+.mat-card { scroll-margin-top: 90px; }
+.mat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.mat-head h3 { margin: 0; }
+.mat-row { margin: 0 0 8px; font-size: 13.5px; color: var(--text-secondary); }
+.mat-row strong { color: var(--text-primary); }
+.mat-sectors { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.mat-sectors .badge-sector { text-decoration: none; }
+.factor-sectors { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.factor-sectors a { text-decoration: none; font-size: 15px; }
+
 /* ---------- Forza / criticità ---------- */
 .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 @media (max-width: 800px) { .swot-grid { grid-template-columns: 1fr; } }

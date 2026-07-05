@@ -1131,6 +1131,191 @@ const SECTOR_ALIASES = {
   spazio: "spazio-osservazione-terra",
 };
 
+/* ============================================================
+   ANALISI ORIZZONTALE — materie prime critiche e fattori comuni
+   Aggregazione trasversale degli approvvigionamenti settoriali
+   in famiglie canoniche: un materiale → tutti i settori esposti.
+   ============================================================ */
+
+const MATERIE_CRITICHE = [
+  {
+    id: "terre-rare",
+    nome: "Terre rare e magneti permanenti",
+    rischio: "critico",
+    dominio: "Cina: ~90% della raffinazione mondiale e ~98% dei magneti importati in UE. Licenze export da aprile 2025; domande per usi militari respinte per policy da dicembre 2025.",
+    presidi: "Nessuna raffinazione UE su scala. Risposta: RESourceEU (acquisti congiunti e stoccaggi), Critical Raw Materials Act, ricerca su magneti senza terre rare.",
+    settori: {
+      difesa: "Attuatori di missili e munizioni guidate, radar, sonar, guerra elettronica",
+      "spazio-osservazione-terra": "Ruote di reazione, attuatori, tubi a onda progressiva (TWT)",
+      energia: "Generatori direct-drive delle turbine eoliche",
+      automotive: "Magneti NdFeB dei motori di trazione elettrica",
+      elettronica: "Motori ad alta efficienza, sensori, acustica",
+    },
+  },
+  {
+    id: "gallio-germanio",
+    nome: "Gallio, germanio e composti III-V",
+    rischio: "critico",
+    dominio: "Cina ~98% del gallio raffinato; bandi e licenze dal 2023-24. Germanio da riciclo e da zinco solo marginale in UE (Umicore).",
+    presidi: "Recupero da riciclo in crescita; nessuna produzione primaria UE significativa. Impatto diretto su radar GaN, visori IR, celle solari spaziali.",
+    settori: {
+      difesa: "Radar AESA (GaN), ottiche e visori a infrarossi, semiconduttori RF",
+      "spazio-osservazione-terra": "Substrati al germanio delle celle solari multigiunzione",
+      elettronica: "GaN per potenza e RF, LED, optoelettronica",
+    },
+  },
+  {
+    id: "semiconduttori",
+    nome: "Semiconduttori e microelettronica",
+    rischio: "critico",
+    dominio: "Logica avanzata concentrata a Taiwan e Corea; FPGA qualificati ed EDA sotto giurisdizione USA (ITAR/EAR); MCU automotive da pochi fornitori globali.",
+    presidi: "ST (power, MEMS, SiC a Catania e Agrate), LFoundry, MEMC (wafer), Technoprobe (test). EU Chips Act come leva; la crisi 2021-23 ha già fermato auto e macchinari.",
+    settori: {
+      difesa: "Elettronica rad-hard, MMIC, spolette intelligenti, C4ISR",
+      "spazio-osservazione-terra": "FPGA spaziali, computer di bordo, payload",
+      meccanica: "CNC, PLC, azionamenti: il 'cervello' delle macchine",
+      automotive: "MCU e semiconduttori di potenza: fino a 3.500 chip per veicolo",
+      energia: "Inverter fotovoltaici, elettronica di rete, smart meter",
+      elettronica: "Il cuore della filiera stessa",
+      nautica: "Elettronica di bordo e navigazione",
+    },
+  },
+  {
+    id: "litio-batterie",
+    nome: "Litio, grafite e celle per batterie",
+    rischio: "critico",
+    dominio: "Raffinazione dominata dalla Cina (litio ~65%, grafite ~90%); celle da CATL, BYD, LG, Samsung SDI. L'Italia non ha una gigafactory operativa su scala.",
+    presidi: "Gigafactory ACC di Termoli congelata; assemblaggio pacchi su celle estere. Il 30-40% del valore di un veicolo elettrico resta fuori dal paese.",
+    settori: {
+      energia: "Storage utility-scale e accumuli distribuiti",
+      automotive: "Pacchi batteria dei veicoli elettrici",
+    },
+  },
+  {
+    id: "silicio",
+    nome: "Silicio: polysilicon e wafer",
+    rischio: "critico",
+    dominio: "Polysilicon cinese ~85% e wafer fotovoltaici ~97%; wafer elettronici dominati da Shin-Etsu e SUMCO (Giappone).",
+    presidi: "MEMC (GlobalWafers) a Novara e Merano tra le poche capacità wafer in UE; anche la gigafactory 3Sun dipende da celle e wafer importati.",
+    settori: {
+      elettronica: "Substrato di ogni chip (fette da 200 e 300 mm)",
+      energia: "Moduli fotovoltaici, inclusa 3Sun Catania",
+    },
+  },
+  {
+    id: "api-intermedi",
+    nome: "Intermedi farmaceutici e principi attivi",
+    rischio: "critico",
+    dominio: "Cina e India dominano intermedi e building block; fermentazione delle penicilline (6-APA) quasi interamente cinese.",
+    presidi: "Italia 1° produttore UE di API ma a valle dei precursori asiatici; ACS Dobfar tra gli ultimi produttori occidentali di sterili antibiotici. Risposta: Critical Medicines Act.",
+    settori: {
+      farmaceutica: "Sintesi degli API e antibiotici essenziali",
+    },
+  },
+  {
+    id: "acciai-speciali",
+    nome: "Acciai speciali e metallurgia",
+    rischio: "alto",
+    dominio: "Base siderurgica nazionale presente ma sotto stress: la crisi dell'ex Ilva riduce l'autonomia sui piani; acciai elettrici (GOES) e navali da pochissimi player mondiali.",
+    presidi: "Acciaierie bresciane e venete, Lucchini RS, fonderie dei distretti: un presidio reale, gravato dal costo dell'energia e dal rottame importato.",
+    settori: {
+      difesa: "Blindature, scafi militari, affusti",
+      meccanica: "Basamenti, alberi, ingranaggi",
+      automotive: "Acciai alto-resistenziali per scocche",
+      nautica: "Lamiere navali per crociere e megayacht",
+      energia: "Acciai a grano orientato per i trasformatori",
+    },
+  },
+  {
+    id: "titanio-superleghe",
+    nome: "Titanio e superleghe",
+    rischio: "alto",
+    dominio: "Fino al 2022 la Russia (VSMPO) era il primo fornitore di titanio aeronautico; nichel e cobalto delle superleghe da Indonesia, Russia e RD Congo con raffinazione cinese.",
+    presidi: "In UE non si produce spugna di titanio; fonderie di precisione limitate. Avio Aero e le lavorazioni italiane operano su materiale importato.",
+    settori: {
+      difesa: "Cellule, carrelli, palette e dischi delle turbine",
+      "spazio-osservazione-terra": "Strutture e serbatoi",
+      energia: "Palette delle turbine a gas",
+    },
+  },
+  {
+    id: "rame",
+    nome: "Rame e conduttori",
+    rischio: "alto",
+    dominio: "Estrazione concentrata in Cile, Perù e RD Congo; raffinazione cinese in crescita; domanda mondiale in accelerazione con l'elettrificazione, prezzi ai massimi.",
+    presidi: "Prysmian (1° produttore mondiale di cavi) trasforma in Italia; il riciclo europeo copre solo parte del fabbisogno.",
+    settori: {
+      energia: "Reti di trasmissione, cavi HVDC, trasformatori",
+      automotive: "Cablaggi di bordo, motori elettrici, ricarica",
+      elettronica: "Interconnessioni e leadframe",
+      nautica: "Impiantistica di bordo",
+    },
+  },
+  {
+    id: "energetici-propellenti",
+    nome: "Energetici e propellenti",
+    rischio: "alto",
+    dominio: "Linter di cotone per la nitrocellulosa in gran parte cinese; capacità europea di esplosivi in ricostruzione post-2022 (piano ASAP).",
+    presidi: "Avio tra i pochissimi produttori europei di perclorato d'ammonio: un asset strategico nazionale che serve missilistica e lanciatori.",
+    settori: {
+      difesa: "Munizionamento, testate, propellenti",
+      "spazio-osservazione-terra": "Motori a razzo solidi (P120C, Zefiro)",
+    },
+  },
+  {
+    id: "gas-speciali",
+    nome: "Gas nobili e gas speciali",
+    rischio: "alto",
+    dominio: "Il neon arrivava per metà dall'Ucraina prima del 2022; xenon e kripton da pochi impianti di separazione aria; elio da USA, Qatar e Algeria.",
+    presidi: "Capacità di recupero in costruzione in Europa; per la propulsione elettrica satellitare lo xenon resta un input conteso.",
+    settori: {
+      "spazio-osservazione-terra": "Xenon per la propulsione elettrica dei satelliti",
+      elettronica: "Neon e gas di processo per litografia ed etching",
+    },
+  },
+  {
+    id: "chimica-biotech",
+    nome: "Chimica speciale e consumabili biotech",
+    rischio: "alto",
+    dominio: "Fotoresist quasi solo giapponesi; filtri sterili e single-use da un oligopolio (Merck, Sartorius, Pall); chimica tessile e coloranti in gran parte asiatici.",
+    presidi: "Presidio toscano nei tannini vegetali; De Nora negli elettrodi; per fotoresist e single-use l'Italia e l'Europa restano clienti, non produttori.",
+    settori: {
+      elettronica: "Fotoresist, gas e chimica ultrapura di processo",
+      farmaceutica: "Filtri sterili, single-use, reagenti biotech",
+      moda: "Coloranti, tannini e chimica di nobilitazione",
+    },
+  },
+  {
+    id: "materie-agricole",
+    nome: "Materie prime agricole e acqua",
+    rischio: "alto",
+    dominio: "Grano duro importato al 35-40% (Canada in testa); soia proteica da Sud America sotto vincoli EUDR; fertilizzanti azotati legati al prezzo del gas.",
+    presidi: "Contratti di filiera nazionali in crescita; il vincolo che peggiora più in fretta è l'acqua irrigua del bacino padano (siccità ricorrenti).",
+    settori: {
+      agroalimentare: "Pasta, zootecnia delle DOP, ortofrutta e rese agricole",
+    },
+  },
+  {
+    id: "fibre-pelli",
+    nome: "Fibre nobili, pellami e legni pregiati",
+    rischio: "alto",
+    dominio: "Merino australiano, cashmere mongolo, seta greggia cinese (>80%), pelli grezze dai macelli globali; teak birmano sotto sanzioni UE/USA.",
+    presidi: "La nobilitazione è il presidio: Biella, Como, Prato (rigenerato), concia toscana e veneta. La tracciabilità (EUDR, UFLPA, passaporto digitale) è il nuovo requisito d'accesso.",
+    settori: {
+      moda: "Lane, seta, cotone tracciato, pelli e cuoio",
+      nautica: "Teak delle coperte e legni pregiati degli interni",
+    },
+  },
+];
+
+/* Fattori produttivi comuni a più filiere (dalla lettura dei 10 settori) */
+const FATTORI_TRASVERSALI = [
+  { nome: "Energia a costo italiano", icona: "⚡", nota: "Il prezzo elettrico sopra la media UE è un dazio occulto su fonderie, tintorie, vetrerie, fab, sterilizzazione e cantieri: penalizza proprio gli stadi a monte che l'Italia presidia.", settori: ["difesa", "meccanica", "automotive", "farmaceutica", "elettronica", "moda", "agroalimentare", "energia"] },
+  { nome: "Capitale umano tecnico", icona: "🎓", nota: "Saldatori navali, tecnici RF, ingegneri di processo, artigiani del lusso, montatori trasfertisti: il collo di bottiglia demografico è il fattore più citato in tutte e dieci le filiere.", settori: ["difesa", "spazio-osservazione-terra", "energia", "meccanica", "automotive", "farmaceutica", "agroalimentare", "moda", "elettronica", "nautica"] },
+  { nome: "Capitale paziente e finanza di commessa", icona: "🏦", nota: "Programmi pluriennali pagati a milestone: il circolante e le garanzie (CDP, SACE, BEI, fondi EDF) decidono le gare quanto la tecnologia.", settori: ["difesa", "spazio-osservazione-terra", "energia", "meccanica", "automotive", "nautica"] },
+  { nome: "Compliance come fattore produttivo", icona: "📋", nota: "ITAR/EAR, GMP, EUDR, UFLPA, golden power, passaporto digitale: la conformità normativa è ormai un input della produzione — chi non traccia non esporta.", settori: ["difesa", "spazio-osservazione-terra", "farmaceutica", "moda", "agroalimentare", "nautica"] },
+];
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },

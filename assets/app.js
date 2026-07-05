@@ -18,6 +18,7 @@ const routes = [
   { re: /^$/, render: renderHome },
   { re: /^settori$/, render: renderSettori },
   { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
+  { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -267,6 +268,10 @@ function renderSettore(id) {
         <div class="factor-card"><h4>${esc(f.nome)}</h4><p>${esc(f.nota)}</p></div>`).join("");
       sa.appendChild(fg);
     }
+    const cross = document.createElement("p");
+    cross.className = "fonti-line";
+    cross.innerHTML = `Le stesse dipendenze attraversano più filiere: <a href="#/materie-critiche">vedi l'analisi orizzontale delle materie prime critiche →</a>`;
+    sa.appendChild(cross);
     root.appendChild(sa);
   }
 
@@ -367,6 +372,131 @@ function showChipTip(a, e) {
   chipTipEl.style.top = y + "px";
 }
 function hideChipTip() { if (chipTipEl) chipTipEl.style.opacity = "0"; }
+
+/* ============================================================
+   MATERIE PRIME CRITICHE (analisi orizzontale)
+   ============================================================ */
+function renderMaterie() {
+  const root = $app();
+  const critici = MATERIE_CRITICHE.filter((m) => m.rischio === "critico").length;
+  const cinaDom = MATERIE_CRITICHE.filter((m) => /Cina/.test(m.dominio)).length;
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Analisi orizzontale</div>
+    <h1>Materie prime critiche e fattori comuni</h1>
+    <p class="lead">La lettura trasversale delle dieci filiere: ogni famiglia di materiali con tutti i settori
+    che ne dipendono, chi controlla l'offerta, e i presìdi italiani da proteggere. Le stesse dipendenze
+    ricorrono ovunque — ed è proprio la ricorrenza a renderle strategiche.</p>`;
+  hero.appendChild(kpiRow([
+    { label: "Famiglie di materiali", value: String(MATERIE_CRITICHE.length), delta: "aggregate dalle 10 filiere", trend: "flat" },
+    { label: "A rischio critico", value: String(critici), delta: "dipendenza senza alternativa a breve", trend: "warn" },
+    { label: "Dominio cinese", value: `${cinaDom} famiglie`, delta: "raffinazione più che estrazione", trend: "warn" },
+    { label: "Fattori comuni", value: String(FATTORI_TRASVERSALI.length), delta: "energia, persone, capitale, regole", trend: "flat" },
+  ]));
+  root.appendChild(hero);
+
+  /* Matrice materiali × settori */
+  const sm = sectionEl("La matrice delle dipendenze", "Chi dipende da cosa",
+    "Ogni riga è una famiglia di materiali, ogni colonna un settore: il simbolo indica l'esposizione e il suo livello di rischio. Passa sopra una cella per il dettaglio dell'impiego.");
+  const glyph = { critico: "⛔", alto: "⚠", medio: "●" };
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  const table = document.createElement("table");
+  table.className = "data-table matrix-table";
+  table.innerHTML = `
+    <thead><tr>
+      <th>Materiale</th>
+      ${SETTORI.map((s) => `<th class="mx-col"><a href="#/settore/${s.id}" title="${esc(s.nome)}">${s.icona}</a></th>`).join("")}
+      <th>Rischio</th>
+    </tr></thead>`;
+  const tbody = document.createElement("tbody");
+  MATERIE_CRITICHE.forEach((m) => {
+    const tr = document.createElement("tr");
+    const tdName = document.createElement("td");
+    tdName.className = "td-company";
+    tdName.innerHTML = `<a class="mx-name" href="#/materie-critiche" onclick="return false">${esc(m.nome)}</a>`;
+    tdName.querySelector("a").addEventListener("click", () => {
+      const el = document.getElementById("mat-" + m.id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    tr.appendChild(tdName);
+    SETTORI.forEach((s) => {
+      const td = document.createElement("td");
+      td.className = "mx-cell";
+      const uso = m.settori[s.id];
+      if (uso) {
+        const dot = document.createElement("span");
+        dot.className = `mx-dot rischio-${m.rischio}`;
+        dot.textContent = glyph[m.rischio];
+        dot.setAttribute("role", "img");
+        dot.setAttribute("aria-label", `${s.nome}: ${uso}`);
+        dot.addEventListener("pointermove", (e) => showChipTip({ nome: `${s.icona} ${s.nome}`, ruolo: uso }, e));
+        dot.addEventListener("pointerleave", hideChipTip);
+        td.appendChild(dot);
+      }
+      tr.appendChild(td);
+    });
+    const tdR = document.createElement("td");
+    tdR.innerHTML = `<span class="rischio rischio-${esc(m.rischio)}">${glyph[m.rischio]} ${esc(m.rischio)}</span>`;
+    tr.appendChild(tdR);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  tw.appendChild(table);
+  sm.appendChild(tw);
+  root.appendChild(sm);
+
+  /* Schede per famiglia */
+  const sf = sectionEl("Le famiglie in dettaglio", "Dipendenze, impieghi e presìdi italiani", "");
+  const list = document.createElement("div");
+  list.className = "mat-list";
+  MATERIE_CRITICHE.forEach((m) => {
+    const c = document.createElement("div");
+    c.className = "card mat-card";
+    c.id = "mat-" + m.id;
+    c.innerHTML = `
+      <div class="mat-head">
+        <h3>${esc(m.nome)}</h3>
+        <span class="rischio rischio-${esc(m.rischio)}">${glyph[m.rischio]} ${esc(m.rischio)}</span>
+      </div>
+      <p class="mat-row"><strong>Chi controlla l'offerta.</strong> ${esc(m.dominio)}</p>
+      <p class="mat-row"><strong>Presìdi e risposte.</strong> ${esc(m.presidi)}</p>
+      <div class="mat-sectors">
+        ${Object.entries(m.settori).map(([id, uso]) => {
+          const s = SETTORI.find((x) => x.id === id);
+          return s ? `<a class="badge-sector" href="#/settore/${id}" title="${esc(uso)}"><span class="badge-dot" style="background:${colorOf(id)}"></span>${s.icona} ${esc(s.nome)}</a>` : "";
+        }).join("")}
+      </div>`;
+    list.appendChild(c);
+  });
+  sf.appendChild(list);
+  root.appendChild(sf);
+
+  /* Fattori trasversali */
+  const st = sectionEl("Oltre i materiali", "I fattori produttivi comuni",
+    "Quattro vincoli che attraversano tutte le filiere: più strutturali di qualunque materia prima.");
+  const fg = document.createElement("div");
+  fg.className = "factor-grid";
+  FATTORI_TRASVERSALI.forEach((f) => {
+    const fc = document.createElement("div");
+    fc.className = "factor-card";
+    fc.innerHTML = `<h4>${f.icona} ${esc(f.nome)}</h4><p>${esc(f.nota)}</p>
+      <div class="factor-sectors">${f.settori.map((id) => {
+        const s = SETTORI.find((x) => x.id === id);
+        return s ? `<a href="#/settore/${id}" title="${esc(s.nome)}">${s.icona}</a>` : "";
+      }).join("")}</div>`;
+    fg.appendChild(fc);
+  });
+  st.appendChild(fg);
+  root.appendChild(st);
+
+  const fonti = document.createElement("p");
+  fonti.className = "fonti-line";
+  fonti.innerHTML = `<strong>Fonti:</strong> aggregazione delle schede settoriali (EPRS/CSIS, IEA, Commissione UE — CRMA, Chips Act, Critical Medicines Act, RESourceEU) — <a href="#/metodologia">metodologia e avvertenze</a>`;
+  root.appendChild(fonti);
+}
 
 /* ============================================================
    AZIENDE (indice ricercabile)
