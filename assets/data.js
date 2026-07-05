@@ -213,6 +213,25 @@ const SETTORI = [
       { label: "Contributo ESA", value: "3° paese (≈ €3,1 mld/triennio)" },
       { label: "Programma IRIDE", value: "€1,1 mld (PNRR)" },
     ],
+    approvvigionamento: {
+      intro: "Nello spazio il collo di bottiglia non è il volume ma la qualifica: ogni componente deve superare anni di certificazione al volo (radiazioni, termovuoto, vibrazioni) e spesso esiste un solo fornitore al mondo. La filiera italiana dipende dall'estero per elettronica rad-hard, germanio e gas nobili, ma presidia in casa alcuni punti rari: le celle solari di CESI, il perclorato d'ammonio di Avio, l'ottica di precisione. I controlli export — cinesi sulle materie prime, americani (ITAR/EAR) sui componenti — sono un fattore produttivo a tutti gli effetti.",
+      materiali: [
+        { materiale: "Elettronica rad-hard e FPGA spaziali", impiego: "Computer di bordo, elaborazione payload, guida dei lanciatori", fornitura: "FPGA qualificati dominati da fornitori USA sotto ITAR/EAR; l'Europa presidia con ST (rad-hard), Teledyne e2v e Microchip (Francia). Qualifiche ESCC lunghe anni", rischio: "critico" },
+        { materiale: "Germanio (substrati per celle solari)", impiego: "Celle fotovoltaiche multigiunzione dei pannelli satellitari", fornitura: "Cina primo produttore mondiale, sotto licenza dal 2023-24; raffinazione UE quasi solo Umicore (Belgio). CESI a valle dipende dai substrati importati", rischio: "critico" },
+        { materiale: "Terre rare e magneti (SmCo, NdFeB)", impiego: "Ruote di reazione, attuatori, tubi a onda progressiva (TWT), sensori", fornitura: "Controlli export cinesi 2025 con diniego per usi militari: colpiscono direttamente i satelliti dual-use come COSMO-SkyMed", rischio: "critico" },
+        { materiale: "Xenon e kripton", impiego: "Propulsione elettrica dei satelliti (Sitael) e station keeping", fornitura: "Sottoprodotto della separazione dell'aria; l'Ucraina era fornitore chiave fino al 2022, prezzi ancora volatili; capacità di recupero in costruzione", rischio: "alto" },
+        { materiale: "Idrazina e propellenti liquidi", impiego: "Propulsione satellitare e stadio AVUM di Vega", fornitura: "Pochi fornitori qualificati; il regolamento REACH ne restringe l'uso in UE e spinge la transizione ai green propellant", rischio: "alto" },
+        { materiale: "Propellenti solidi (perclorato d'ammonio, HTPB, polvere di Al)", impiego: "Motori P120C, Zefiro e boosters", fornitura: "Perclorato: Avio tra i pochissimi produttori europei (asset strategico italiano); leganti HTPB da fornitori contati", rischio: "medio" },
+        { materiale: "Ottiche, vetri speciali e carburo di silicio", impiego: "Telescopi per osservazione della Terra, specchi e banchi ottici (PRISMA)", fornitura: "Vetri Zerodur da Schott (Germania), SiC da Mersen Boostec (Francia); lavorazione e ottica di precisione in Italia (Leonardo, Media Lario)", rischio: "medio" },
+        { materiale: "Compositi e materiali strutturali", impiego: "Casing dei lanciatori (filament winding), strutture e pannelli satellitari", fornitura: "Precursore PAN da Giappone/USA; avvolgimento e integrazione ad Avio (Colleferro) e nelle facility di Thales Alenia Space", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Capitale umano AIT e GNC", nota: "Ingegneri di assemblaggio-integrazione-test e di guida-navigazione: pochi, formati sui programmi, contesi anche dalle big tech. La pipeline universitaria è il vero asset." },
+        { nome: "Infrastrutture di qualifica", nota: "Camere termovuoto, tavole vibranti, camere anecoiche: CIRA e i laboratori di Thales/Leonardo in Italia; l'accesso ai centri ESA (ESTEC) resta strategico." },
+        { nome: "Domanda pubblica àncora", nota: "ASI, ESA, PNRR/IRIDE e Difesa finanziano la filiera: il mercato istituzionale è il volano, il venture capital spaziale italiano è ancora sottile." },
+        { nome: "Regole e conformità", nota: "ITAR/EAR sui componenti USA, coordinamento delle frequenze ITU, policy dei dati EO: la compliance normativa è un fattore produttivo, non un dettaglio legale." },
+      ],
+    },
     focus: {
       titolo: "Perché l'Osservazione della Terra è strategica",
       testo: "Il telerilevamento e l'interpretazione delle immagini satellitari sono un asset dual-use: alimentano difesa e intelligence, monitoraggio ambientale e del territorio, agricoltura di precisione, gestione delle emergenze e sorveglianza marittima. L'Italia presidia l'intera catena — costruisce i satelliti radar e iperspettrali, li opera dal Fucino, distribuisce e interpreta i dati — un caso raro di autonomia end-to-end in Europa.",
@@ -228,6 +247,7 @@ const SETTORI = [
         fase: "Ricerca, agenzie e formazione",
         posizione: "MONTE",
         descrizione: "Programmazione pubblica, ricerca scientifica e pipeline di competenze; l'ASI è agenzia di riferimento e cliente-guida delle missioni EO nazionali.",
+        input: ["Capitale umano STEM", "Fondi ASI / ESA / PNRR", "Laboratori e simulazione", "Cooperazione internazionale"],
         aziende: [
           { nome: "ASI", ruolo: "Agenzia Spaziale Italiana — programmazione, COSMO-SkyMed, PRISMA, IRIDE" },
           { nome: "CIRA", ruolo: "Ricerca aerospaziale, rientro atmosferico (Space Rider)" },
@@ -239,6 +259,7 @@ const SETTORI = [
         fase: "Lanciatori e accesso allo spazio",
         posizione: "MONTE",
         descrizione: "Accesso autonomo europeo allo spazio per carichi piccoli e medi: fondamentale per mettere in orbita costellazioni EO nazionali.",
+        input: ["Propellenti solidi (perclorato, HTPB)", "Compositi filament winding", "Avionica di lancio", "Spazioporto (Kourou)", "Idrazina (AVUM)"],
         aziende: [
           { nome: "Avio", ruolo: "Vega C e propulsione solida (Colleferro); motori P120C anche per Ariane 6" },
           { nome: "Sitael", ruolo: "Propulsione elettrica per il mantenimento in orbita dei satelliti (Mola di Bari)" },
@@ -248,6 +269,7 @@ const SETTORI = [
         fase: "Satelliti EO e payload (upstream)",
         posizione: "CENTRO",
         descrizione: "Il cuore dell'Osservazione della Terra: piattaforme e sensori radar (SAR), ottici e iperspettrali. Qui l'Italia è tra i leader mondiali del radar spaziale.",
+        input: ["Elettronica rad-hard e FPGA", "Celle solari su germanio (CESI)", "Ottiche e vetri speciali", "Magneti e ruote di reazione", "Camere termovuoto (AIT)"],
         aziende: [
           { nome: "Thales Alenia Space Italia", ruolo: "Prime di COSMO-SkyMed e del SAR di Sentinel-1 (Copernicus); moduli abitati ISS a Torino" },
           { nome: "Leonardo", ruolo: "Strumento iperspettrale di PRISMA, ottiche, star tracker, sensori atmosferici, celle solari" },
@@ -260,6 +282,7 @@ const SETTORI = [
         fase: "Operazioni, ground segment e lancio",
         posizione: "CENTRO",
         descrizione: "Controllo missione, ricezione ed elaborazione a terra, logistica orbitale: la spina dorsale che trasforma il segnale in dato utilizzabile.",
+        input: ["Antenne e teleporti", "Spettro e frequenze ITU", "Xenon per propulsione elettrica", "Cybersecurity dei collegamenti"],
         aziende: [
           { nome: "Telespazio", ruolo: "Centro spaziale del Fucino, tra i maggiori teleporti civili al mondo; operazioni COSMO-SkyMed e IRIDE" },
           { nome: "D-Orbit", ruolo: "Logistica orbitale e space cargo (ION), rilascio di smallsat" },
@@ -271,6 +294,7 @@ const SETTORI = [
         fase: "Dati EO, geoinformazione e telerilevamento",
         posizione: "VALLE",
         descrizione: "Distribuzione dei dati e loro trasformazione in prodotti geospaziali: interpretazione delle immagini, mappe tematiche, interferometria per il monitoraggio di frane e subsidenza.",
+        input: ["Calcolo e storage massivi", "Algoritmi SAR e interferometria", "Dati ancillari (GNSS, meteo)", "Licenze e policy dei dati"],
         aziende: [
           { nome: "e-GEOS (Telespazio/ASI)", ruolo: "Distribuzione dati COSMO-SkyMed; Copernicus Emergency Management Service" },
           { nome: "Planetek Italia", ruolo: "Geoinformazione, monitoraggio del territorio e piattaforme EO (Bari)" },
@@ -282,6 +306,7 @@ const SETTORI = [
         fase: "Applicazioni, analytics e servizi al mercato",
         posizione: "VALLE",
         descrizione: "L'ultimo miglio del valore: analytics basati su intelligenza artificiale per città, clima, agricoltura, assicurazioni e sicurezza. È il segmento più dinamico e più frammentato.",
+        input: ["AI e modelli geospaziali", "Infrastruttura cloud", "Domanda pubblica àncora (PA)", "Competenze di dominio verticale"],
         aziende: [
           { nome: "Latitudo 40", ruolo: "Analytics satellitari con AI per città, clima e rischio (Napoli)" },
           { nome: "Programma IRIDE", ruolo: "Costellazione nazionale EO (PNRR): upstream + downstream + hub di servizi, operativa entro il 2026" },
@@ -302,7 +327,7 @@ const SETTORI = [
       "Valorizzazione economica del dato EO ancora bassa: molte startup, pochi campioni di scala capaci di fare mercato",
       "Dipendenza estera per componentistica elettronica e ottiche critiche di alcuni payload",
     ],
-    fonti: ["ASI", "ESA", "e-GEOS", "Copernicus / Commissione UE", "Osservatorio Space Economy PoliMi", "PNRR — Missione 1 (IRIDE)"],
+    fonti: ["ASI", "ESA", "e-GEOS", "Copernicus / Commissione UE", "Osservatorio Space Economy PoliMi", "PNRR — Missione 1 (IRIDE)", "ESA — componenti EEE e ESCC", "EPRS / CSIS — materie prime critiche"],
   },
 
   {
