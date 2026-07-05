@@ -404,4 +404,70 @@ function shutdownModel(container) {
 /* esc locale (nome distinto per non collidere con app.js nel bundle) */
 function escHtml(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 
-window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars, shutdownModel };
+/* ============================================================
+   COST SCATTER — posizionamento dei settori per struttura di costo
+   x = intensità energetica (1-5), y = intensità costi fissi/isteresi (1-5)
+   colore alone = vulnerabilità allo shutdown, emoji = settore.
+   sectorsById: mappa id → {icona, nome}
+   ============================================================ */
+function costScatter(container, data, sectorsById) {
+  const W = 640, H = 400, padL = 52, padR = 18, padT = 22, padB = 46;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const X = (v) => padL + ((v - 1) / 4) * plotW;
+  const Y = (v) => padT + plotH - ((v - 1) / 4) * plotH;
+  const vulnColor = { alta: "var(--div-neg)", media: "var(--series-3)", bassa: "var(--div-pos)" };
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": "Posizionamento dei settori per struttura di costo" });
+
+  // quadranti
+  el("rect", { x: X(3), y: Y(5), width: X(5) - X(3), height: Y(3) - Y(5), fill: "var(--div-neg)", opacity: 0.07 }, svg);
+  el("rect", { x: X(1), y: Y(3), width: X(3) - X(1), height: Y(1) - Y(3), fill: "var(--div-pos)", opacity: 0.07 }, svg);
+
+  // griglia
+  for (let v = 1; v <= 5; v++) {
+    el("line", { x1: X(v), y1: Y(1), x2: X(v), y2: Y(5), class: "viz-grid" }, svg);
+    el("line", { x1: X(1), y1: Y(v), x2: X(5), y2: Y(v), class: "viz-grid" }, svg);
+  }
+  el("line", { x1: X(1), y1: Y(1), x2: X(5), y2: Y(1), class: "viz-baseline" }, svg);
+  el("line", { x1: X(1), y1: Y(1), x2: X(1), y2: Y(5), class: "viz-baseline" }, svg);
+
+  // etichette quadranti
+  const ql1 = el("text", { x: X(5) - 6, y: Y(3) + 18, "text-anchor": "end", class: "cs-quad" }, svg);
+  ql1.textContent = "sala macchine sotto pressione";
+  const ql2 = el("text", { x: X(1) + 6, y: Y(3) - 10, class: "cs-quad" }, svg);
+  ql2.textContent = "leggere e resilienti";
+
+  // assi
+  const xl = el("text", { x: padL + plotW / 2, y: H - 8, "text-anchor": "middle", class: "viz-axis-label" }, svg);
+  xl.textContent = "Intensità energetica del costo →";
+  const yl = el("text", { x: 15, y: padT + plotH / 2, "text-anchor": "middle", class: "viz-axis-label", transform: `rotate(-90 15 ${padT + plotH / 2})` }, svg);
+  yl.textContent = "Costi fissi e isteresi →";
+  ["basso", "alto"].forEach((t, i) => {
+    const a = el("text", { x: i ? X(5) : X(1), y: H - 26, "text-anchor": "middle", class: "cs-axmark" }, svg); a.textContent = t;
+    const b = el("text", { x: 30, y: i ? Y(5) + 4 : Y(1), class: "cs-axmark" }, svg); b.textContent = t;
+  });
+
+  // punti
+  data.forEach((d) => {
+    const s = sectorsById[d.id] || { icona: "•", nome: d.id };
+    const r = d.vulnerabilita === "alta" ? 15 : d.vulnerabilita === "media" ? 12 : 10;
+    const g = el("g", { class: "viz-mark", style: "cursor:default" }, svg);
+    el("circle", { cx: X(d.x), cy: Y(d.y), r, fill: vulnColor[d.vulnerabilita], opacity: 0.9, stroke: "var(--surface-1)", "stroke-width": 2 }, g);
+    const t = el("text", { x: X(d.x), y: Y(d.y), "text-anchor": "middle", "dominant-baseline": "central", class: "cs-emoji" }, g);
+    t.textContent = s.icona;
+    bindTip(g, () => `<strong>${s.icona} ${s.nome}</strong><br>Vulnerabilità shutdown: ${d.vulnerabilita}<br><span class="tip-detail">${d.nota}</span>`);
+  });
+
+  container.appendChild(svg);
+
+  const leg = document.createElement("div");
+  leg.className = "viz-legend";
+  leg.innerHTML =
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--div-neg)"></span><span class="viz-legend-text">Vulnerabilità alta</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-3)"></span><span class="viz-legend-text">media</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--div-pos)"></span><span class="viz-legend-text">bassa</span></span>` +
+    `<span class="viz-legend-note">posizione = struttura di costo · colore = vulnerabilità netta (include la protezione della domanda)</span>`;
+  container.appendChild(leg);
+}
+
+window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars, shutdownModel, costScatter };

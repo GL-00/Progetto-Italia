@@ -626,6 +626,51 @@ function renderPolitiche() {
   ssm.appendChild(smc);
   root.appendChild(ssm);
 
+  /* Profilo di costo dei settori — l'analisi estesa a tutte le filiere */
+  const spc = sectionEl("Il modello esteso", "Profilo di costo dei dieci settori",
+    "Dove si colloca ogni filiera nel modello: la posizione dipende dalla struttura di costo (quanto pesano energia e costi fissi), la vulnerabilità netta anche dalla protezione della domanda. In alto a destra chi non può spegnere e paga molta energia; in basso a sinistra chi è leggero e resiliente.");
+  const sbyId = {};
+  SETTORI.forEach((s) => { sbyId[s.id] = { icona: s.icona, nome: s.nome }; });
+  const scard = document.createElement("div");
+  scard.className = "card";
+  Charts.costScatter(scard, PROFILI_COSTO, sbyId);
+  spc.appendChild(scard);
+
+  // tabella: composizione del costo variabile + isteresi + vulnerabilità
+  const legend = document.createElement("div");
+  legend.className = "viz-legend cost-legend";
+  legend.innerHTML =
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-3)"></span><span class="viz-legend-text">Energia</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-1)"></span><span class="viz-legend-text">Materie prime</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-2)"></span><span class="viz-legend-text">Lavoro</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--baseline)"></span><span class="viz-legend-text">Altro</span></span>`;
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  const rows = PROFILI_COSTO.map((d) => {
+    const s = SETTORI.find((x) => x.id === d.id);
+    const bar = `<div class="cost-bar" title="Energia ${d.comp.energia}% · Materie ${d.comp.materie}% · Lavoro ${d.comp.lavoro}% · Altro ${d.comp.altro}%">
+      <span style="width:${d.comp.energia}%;background:var(--series-3)"></span>
+      <span style="width:${d.comp.materie}%;background:var(--series-1)"></span>
+      <span style="width:${d.comp.lavoro}%;background:var(--series-2)"></span>
+      <span style="width:${d.comp.altro}%;background:var(--baseline)"></span></div>`;
+    return `<tr>
+      <td class="td-company"><a class="badge-sector" href="#/settore/${d.id}"><span class="badge-dot" style="background:${colorOf(d.id)}"></span>${s.icona} ${esc(s.nome)}</a><div class="reg-nota">${esc(d.nota)}</div></td>
+      <td class="cost-bar-cell">${bar}</td>
+      <td><span class="rischio rischio-${d.isteresi === "alto" ? "alto" : d.isteresi === "medio" ? "medio" : "medio"}" style="${d.isteresi === "basso" ? "opacity:.6" : ""}">${esc(d.isteresi)}</span></td>
+      <td><span class="lettura lettura-${d.vulnerabilita === "alta" ? "attenzione" : d.vulnerabilita === "media" ? "neutrale" : "ancora"}">${esc(d.vulnerabilita)}</span></td>
+    </tr>`;
+  }).join("");
+  tw.innerHTML = `<table class="data-table profilo-table">
+    <thead><tr><th>Settore</th><th>Composizione del costo variabile</th><th>Isteresi (costo di riavvio)</th><th>Vulnerabilità shutdown</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+  spc.appendChild(legend);
+  spc.appendChild(tw);
+  const pcnote = document.createElement("p");
+  pcnote.className = "viz-note";
+  pcnote.textContent = "Lettura: energia e semiconduttori stanno in alto a destra — alti costi fissi, molta energia, impianti che non si spengono — ma sono meno fragili di quanto la sola struttura suggerisca perché domanda essenziale e sostegno strategico li proteggono. L'automotive è il più vulnerabile: struttura pesante e domanda in crisi insieme. Difesa, spazio, farmaceutica e nautica sono ancorati dalla committenza pubblica, dai prezzi regolati o dal portafoglio ordini. I valori sono caratterizzazioni analitiche qualitative, non contabilità puntuale.";
+  spc.appendChild(pcnote);
+  root.appendChild(spc);
+
   /* Proof of concept */
   const spoc = sectionEl("Prove di fattibilità", "L'Italia sa già farlo",
     "Tre precedenti dimostrano che il vincolo non è la capacità: è il regime ordinario.");

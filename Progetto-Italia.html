@@ -373,6 +373,19 @@ body {
 .policy-caveat strong { color: var(--text-primary); }
 .policy-scenario { display: block; margin-top: 8px; color: var(--text-muted); }
 
+/* Cost scatter — posizionamento settori */
+.cs-quad { fill: var(--text-muted); font-size: 11px; font-weight: 700; font-style: italic; opacity: 0.8; }
+.cs-axmark { fill: var(--text-muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; }
+.cs-emoji { font-size: 15px; }
+
+/* Profilo di costo — tabella e mini stacked bar */
+.cost-legend { margin: 16px 0 8px; }
+.profilo-table td.td-company { min-width: 210px; white-space: normal; }
+.profilo-table td.cost-bar-cell { min-width: 200px; }
+.cost-bar { display: flex; height: 16px; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); min-width: 180px; }
+.cost-bar span { height: 100%; }
+.cost-bar span + span { border-left: 1px solid var(--surface-1); }
+
 /* Modello shutdown — curve di costo interattive */
 .sm-wrap { display: flex; flex-direction: column; gap: 12px; }
 .sm-controls { display: flex; gap: 22px; flex-wrap: wrap; }
@@ -2193,6 +2206,28 @@ const CAPITALE_ESTERO = {
   fonti: "Banca d'Italia — posizione patrimoniale sull'estero e bilancia dei pagamenti; UNCTAD — World Investment Report; Relazione annuale al Parlamento sull'esercizio del golden power; comunicati societari",
 };
 
+/* ============================================================
+   PROFILI DI COSTO PER SETTORE
+   Caratterizzazione qualitativa (non contabilità puntuale):
+   x = intensità energetica del costo (1-5, include gli stadi a monte)
+   y = intensità dei costi fissi e isteresi (1-5)
+   comp = composizione indicativa del costo variabile (% ~100)
+   → posizione tipica rispetto alla soglia di shutdown.
+   ============================================================ */
+
+const PROFILI_COSTO = [
+  { id: "difesa", x: 2.0, y: 4.0, comp: { energia: 10, materie: 45, lavoro: 35, altro: 10 }, isteresi: "medio", vulnerabilita: "bassa", nota: "Costi fissi alti e lavoro qualificato; la domanda pubblica pluriennale ripara dalla soglia di shutdown." },
+  { id: "spazio-osservazione-terra", x: 1.8, y: 4.2, comp: { energia: 10, materie: 30, lavoro: 50, altro: 10 }, isteresi: "medio", vulnerabilita: "bassa", nota: "Il costo è soprattutto capitale umano (assemblaggio-integrazione-test); poco energivoro, ancorato alla committenza istituzionale." },
+  { id: "energia", x: 5.0, y: 4.8, comp: { energia: 70, materie: 5, lavoro: 10, altro: 15 }, isteresi: "alto", vulnerabilita: "media", nota: "Costo variabile ≈ combustibile: la generazione vive sul prezzo marginale del gas. Impianti a forte isteresi, difficili da spegnere." },
+  { id: "meccanica", x: 3.0, y: 2.8, comp: { energia: 12, materie: 50, lavoro: 30, altro: 8 }, isteresi: "basso", vulnerabilita: "media", nota: "Fabbricazione discreta: si può fermare senza danni. Materie e componenti dominano; l'energia pesa nelle fonderie a monte." },
+  { id: "automotive", x: 2.8, y: 4.0, comp: { energia: 8, materie: 62, lavoro: 20, altro: 10 }, isteresi: "medio", vulnerabilita: "alta", nota: "Linee ad alto costo fisso e batterie a dominare il variabile; volumi in crisi e monocliente alzano la vulnerabilità." },
+  { id: "farmaceutica", x: 3.0, y: 4.3, comp: { energia: 12, materie: 45, lavoro: 30, altro: 13 }, isteresi: "alto", vulnerabilita: "bassa", nota: "Alto fisso e vincoli GMP, ma prezzi regolati, domanda inelastica e margini elevati: resiliente allo shock." },
+  { id: "agroalimentare", x: 3.2, y: 2.6, comp: { energia: 10, materie: 65, lavoro: 18, altro: 7 }, isteresi: "medio", vulnerabilita: "media", nota: "Materie prime agricole dominano il variabile; il rischio è il clima e i margini sottili più che lo shutdown energetico." },
+  { id: "moda", x: 3.4, y: 2.0, comp: { energia: 8, materie: 47, lavoro: 38, altro: 7 }, isteresi: "medio", vulnerabilita: "media", nota: "Bimodale: brand leggeri e resilienti a valle, nobilitazione (tintorie, concia) energivora e fragile a monte." },
+  { id: "elettronica", x: 4.2, y: 5.0, comp: { energia: 28, materie: 37, lavoro: 20, altro: 15 }, isteresi: "alto", vulnerabilita: "media", nota: "Il caso limite: fab miliardarie che girano 24/7, energia e acqua pesanti, impossibile spegnere. Fragile ma strategica." },
+  { id: "nautica", x: 2.2, y: 3.4, comp: { energia: 8, materie: 52, lavoro: 33, altro: 7 }, isteresi: "basso", vulnerabilita: "bassa", nota: "Progetti a commessa: si può pausare tra un ordine e l'altro; materie e maestranze dominano, poco energivoro." },
+];
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
@@ -2611,7 +2646,73 @@ function shutdownModel(container) {
 /* esc locale (nome distinto per non collidere con app.js nel bundle) */
 function escHtml(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 
-window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars, shutdownModel };
+/* ============================================================
+   COST SCATTER — posizionamento dei settori per struttura di costo
+   x = intensità energetica (1-5), y = intensità costi fissi/isteresi (1-5)
+   colore alone = vulnerabilità allo shutdown, emoji = settore.
+   sectorsById: mappa id → {icona, nome}
+   ============================================================ */
+function costScatter(container, data, sectorsById) {
+  const W = 640, H = 400, padL = 52, padR = 18, padT = 22, padB = 46;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const X = (v) => padL + ((v - 1) / 4) * plotW;
+  const Y = (v) => padT + plotH - ((v - 1) / 4) * plotH;
+  const vulnColor = { alta: "var(--div-neg)", media: "var(--series-3)", bassa: "var(--div-pos)" };
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": "Posizionamento dei settori per struttura di costo" });
+
+  // quadranti
+  el("rect", { x: X(3), y: Y(5), width: X(5) - X(3), height: Y(3) - Y(5), fill: "var(--div-neg)", opacity: 0.07 }, svg);
+  el("rect", { x: X(1), y: Y(3), width: X(3) - X(1), height: Y(1) - Y(3), fill: "var(--div-pos)", opacity: 0.07 }, svg);
+
+  // griglia
+  for (let v = 1; v <= 5; v++) {
+    el("line", { x1: X(v), y1: Y(1), x2: X(v), y2: Y(5), class: "viz-grid" }, svg);
+    el("line", { x1: X(1), y1: Y(v), x2: X(5), y2: Y(v), class: "viz-grid" }, svg);
+  }
+  el("line", { x1: X(1), y1: Y(1), x2: X(5), y2: Y(1), class: "viz-baseline" }, svg);
+  el("line", { x1: X(1), y1: Y(1), x2: X(1), y2: Y(5), class: "viz-baseline" }, svg);
+
+  // etichette quadranti
+  const ql1 = el("text", { x: X(5) - 6, y: Y(3) + 18, "text-anchor": "end", class: "cs-quad" }, svg);
+  ql1.textContent = "sala macchine sotto pressione";
+  const ql2 = el("text", { x: X(1) + 6, y: Y(3) - 10, class: "cs-quad" }, svg);
+  ql2.textContent = "leggere e resilienti";
+
+  // assi
+  const xl = el("text", { x: padL + plotW / 2, y: H - 8, "text-anchor": "middle", class: "viz-axis-label" }, svg);
+  xl.textContent = "Intensità energetica del costo →";
+  const yl = el("text", { x: 15, y: padT + plotH / 2, "text-anchor": "middle", class: "viz-axis-label", transform: `rotate(-90 15 ${padT + plotH / 2})` }, svg);
+  yl.textContent = "Costi fissi e isteresi →";
+  ["basso", "alto"].forEach((t, i) => {
+    const a = el("text", { x: i ? X(5) : X(1), y: H - 26, "text-anchor": "middle", class: "cs-axmark" }, svg); a.textContent = t;
+    const b = el("text", { x: 30, y: i ? Y(5) + 4 : Y(1), class: "cs-axmark" }, svg); b.textContent = t;
+  });
+
+  // punti
+  data.forEach((d) => {
+    const s = sectorsById[d.id] || { icona: "•", nome: d.id };
+    const r = d.vulnerabilita === "alta" ? 15 : d.vulnerabilita === "media" ? 12 : 10;
+    const g = el("g", { class: "viz-mark", style: "cursor:default" }, svg);
+    el("circle", { cx: X(d.x), cy: Y(d.y), r, fill: vulnColor[d.vulnerabilita], opacity: 0.9, stroke: "var(--surface-1)", "stroke-width": 2 }, g);
+    const t = el("text", { x: X(d.x), y: Y(d.y), "text-anchor": "middle", "dominant-baseline": "central", class: "cs-emoji" }, g);
+    t.textContent = s.icona;
+    bindTip(g, () => `<strong>${s.icona} ${s.nome}</strong><br>Vulnerabilità shutdown: ${d.vulnerabilita}<br><span class="tip-detail">${d.nota}</span>`);
+  });
+
+  container.appendChild(svg);
+
+  const leg = document.createElement("div");
+  leg.className = "viz-legend";
+  leg.innerHTML =
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--div-neg)"></span><span class="viz-legend-text">Vulnerabilità alta</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-3)"></span><span class="viz-legend-text">media</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--div-pos)"></span><span class="viz-legend-text">bassa</span></span>` +
+    `<span class="viz-legend-note">posizione = struttura di costo · colore = vulnerabilità netta (include la protezione della domanda)</span>`;
+  container.appendChild(leg);
+}
+
+window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars, shutdownModel, costScatter };
 
 </script>
   <script>
@@ -3242,6 +3343,51 @@ function renderPolitiche() {
   smc.appendChild(smnote);
   ssm.appendChild(smc);
   root.appendChild(ssm);
+
+  /* Profilo di costo dei settori — l'analisi estesa a tutte le filiere */
+  const spc = sectionEl("Il modello esteso", "Profilo di costo dei dieci settori",
+    "Dove si colloca ogni filiera nel modello: la posizione dipende dalla struttura di costo (quanto pesano energia e costi fissi), la vulnerabilità netta anche dalla protezione della domanda. In alto a destra chi non può spegnere e paga molta energia; in basso a sinistra chi è leggero e resiliente.");
+  const sbyId = {};
+  SETTORI.forEach((s) => { sbyId[s.id] = { icona: s.icona, nome: s.nome }; });
+  const scard = document.createElement("div");
+  scard.className = "card";
+  Charts.costScatter(scard, PROFILI_COSTO, sbyId);
+  spc.appendChild(scard);
+
+  // tabella: composizione del costo variabile + isteresi + vulnerabilità
+  const legend = document.createElement("div");
+  legend.className = "viz-legend cost-legend";
+  legend.innerHTML =
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-3)"></span><span class="viz-legend-text">Energia</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-1)"></span><span class="viz-legend-text">Materie prime</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-2)"></span><span class="viz-legend-text">Lavoro</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--baseline)"></span><span class="viz-legend-text">Altro</span></span>`;
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  const rows = PROFILI_COSTO.map((d) => {
+    const s = SETTORI.find((x) => x.id === d.id);
+    const bar = `<div class="cost-bar" title="Energia ${d.comp.energia}% · Materie ${d.comp.materie}% · Lavoro ${d.comp.lavoro}% · Altro ${d.comp.altro}%">
+      <span style="width:${d.comp.energia}%;background:var(--series-3)"></span>
+      <span style="width:${d.comp.materie}%;background:var(--series-1)"></span>
+      <span style="width:${d.comp.lavoro}%;background:var(--series-2)"></span>
+      <span style="width:${d.comp.altro}%;background:var(--baseline)"></span></div>`;
+    return `<tr>
+      <td class="td-company"><a class="badge-sector" href="#/settore/${d.id}"><span class="badge-dot" style="background:${colorOf(d.id)}"></span>${s.icona} ${esc(s.nome)}</a><div class="reg-nota">${esc(d.nota)}</div></td>
+      <td class="cost-bar-cell">${bar}</td>
+      <td><span class="rischio rischio-${d.isteresi === "alto" ? "alto" : d.isteresi === "medio" ? "medio" : "medio"}" style="${d.isteresi === "basso" ? "opacity:.6" : ""}">${esc(d.isteresi)}</span></td>
+      <td><span class="lettura lettura-${d.vulnerabilita === "alta" ? "attenzione" : d.vulnerabilita === "media" ? "neutrale" : "ancora"}">${esc(d.vulnerabilita)}</span></td>
+    </tr>`;
+  }).join("");
+  tw.innerHTML = `<table class="data-table profilo-table">
+    <thead><tr><th>Settore</th><th>Composizione del costo variabile</th><th>Isteresi (costo di riavvio)</th><th>Vulnerabilità shutdown</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+  spc.appendChild(legend);
+  spc.appendChild(tw);
+  const pcnote = document.createElement("p");
+  pcnote.className = "viz-note";
+  pcnote.textContent = "Lettura: energia e semiconduttori stanno in alto a destra — alti costi fissi, molta energia, impianti che non si spengono — ma sono meno fragili di quanto la sola struttura suggerisca perché domanda essenziale e sostegno strategico li proteggono. L'automotive è il più vulnerabile: struttura pesante e domanda in crisi insieme. Difesa, spazio, farmaceutica e nautica sono ancorati dalla committenza pubblica, dai prezzi regolati o dal portafoglio ordini. I valori sono caratterizzazioni analitiche qualitative, non contabilità puntuale.";
+  spc.appendChild(pcnote);
+  root.appendChild(spc);
 
   /* Proof of concept */
   const spoc = sectionEl("Prove di fattibilità", "L'Italia sa già farlo",

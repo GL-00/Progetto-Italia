@@ -364,6 +364,19 @@ body {
 .policy-caveat strong { color: var(--text-primary); }
 .policy-scenario { display: block; margin-top: 8px; color: var(--text-muted); }
 
+/* Cost scatter — posizionamento settori */
+.cs-quad { fill: var(--text-muted); font-size: 11px; font-weight: 700; font-style: italic; opacity: 0.8; }
+.cs-axmark { fill: var(--text-muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; }
+.cs-emoji { font-size: 15px; }
+
+/* Profilo di costo — tabella e mini stacked bar */
+.cost-legend { margin: 16px 0 8px; }
+.profilo-table td.td-company { min-width: 210px; white-space: normal; }
+.profilo-table td.cost-bar-cell { min-width: 200px; }
+.cost-bar { display: flex; height: 16px; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); min-width: 180px; }
+.cost-bar span { height: 100%; }
+.cost-bar span + span { border-left: 1px solid var(--surface-1); }
+
 /* Modello shutdown — curve di costo interattive */
 .sm-wrap { display: flex; flex-direction: column; gap: 12px; }
 .sm-controls { display: flex; gap: 22px; flex-wrap: wrap; }

@@ -1625,6 +1625,28 @@ const CAPITALE_ESTERO = {
   fonti: "Banca d'Italia — posizione patrimoniale sull'estero e bilancia dei pagamenti; UNCTAD — World Investment Report; Relazione annuale al Parlamento sull'esercizio del golden power; comunicati societari",
 };
 
+/* ============================================================
+   PROFILI DI COSTO PER SETTORE
+   Caratterizzazione qualitativa (non contabilità puntuale):
+   x = intensità energetica del costo (1-5, include gli stadi a monte)
+   y = intensità dei costi fissi e isteresi (1-5)
+   comp = composizione indicativa del costo variabile (% ~100)
+   → posizione tipica rispetto alla soglia di shutdown.
+   ============================================================ */
+
+const PROFILI_COSTO = [
+  { id: "difesa", x: 2.0, y: 4.0, comp: { energia: 10, materie: 45, lavoro: 35, altro: 10 }, isteresi: "medio", vulnerabilita: "bassa", nota: "Costi fissi alti e lavoro qualificato; la domanda pubblica pluriennale ripara dalla soglia di shutdown." },
+  { id: "spazio-osservazione-terra", x: 1.8, y: 4.2, comp: { energia: 10, materie: 30, lavoro: 50, altro: 10 }, isteresi: "medio", vulnerabilita: "bassa", nota: "Il costo è soprattutto capitale umano (assemblaggio-integrazione-test); poco energivoro, ancorato alla committenza istituzionale." },
+  { id: "energia", x: 5.0, y: 4.8, comp: { energia: 70, materie: 5, lavoro: 10, altro: 15 }, isteresi: "alto", vulnerabilita: "media", nota: "Costo variabile ≈ combustibile: la generazione vive sul prezzo marginale del gas. Impianti a forte isteresi, difficili da spegnere." },
+  { id: "meccanica", x: 3.0, y: 2.8, comp: { energia: 12, materie: 50, lavoro: 30, altro: 8 }, isteresi: "basso", vulnerabilita: "media", nota: "Fabbricazione discreta: si può fermare senza danni. Materie e componenti dominano; l'energia pesa nelle fonderie a monte." },
+  { id: "automotive", x: 2.8, y: 4.0, comp: { energia: 8, materie: 62, lavoro: 20, altro: 10 }, isteresi: "medio", vulnerabilita: "alta", nota: "Linee ad alto costo fisso e batterie a dominare il variabile; volumi in crisi e monocliente alzano la vulnerabilità." },
+  { id: "farmaceutica", x: 3.0, y: 4.3, comp: { energia: 12, materie: 45, lavoro: 30, altro: 13 }, isteresi: "alto", vulnerabilita: "bassa", nota: "Alto fisso e vincoli GMP, ma prezzi regolati, domanda inelastica e margini elevati: resiliente allo shock." },
+  { id: "agroalimentare", x: 3.2, y: 2.6, comp: { energia: 10, materie: 65, lavoro: 18, altro: 7 }, isteresi: "medio", vulnerabilita: "media", nota: "Materie prime agricole dominano il variabile; il rischio è il clima e i margini sottili più che lo shutdown energetico." },
+  { id: "moda", x: 3.4, y: 2.0, comp: { energia: 8, materie: 47, lavoro: 38, altro: 7 }, isteresi: "medio", vulnerabilita: "media", nota: "Bimodale: brand leggeri e resilienti a valle, nobilitazione (tintorie, concia) energivora e fragile a monte." },
+  { id: "elettronica", x: 4.2, y: 5.0, comp: { energia: 28, materie: 37, lavoro: 20, altro: 15 }, isteresi: "alto", vulnerabilita: "media", nota: "Il caso limite: fab miliardarie che girano 24/7, energia e acqua pesanti, impossibile spegnere. Fragile ma strategica." },
+  { id: "nautica", x: 2.2, y: 3.4, comp: { energia: 8, materie: 52, lavoro: 33, altro: 7 }, isteresi: "basso", vulnerabilita: "bassa", nota: "Progetti a commessa: si può pausare tra un ordine e l'altro; materie e maestranze dominano, poco energivoro." },
+];
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
