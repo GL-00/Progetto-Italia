@@ -551,6 +551,37 @@ function renderMaterie() {
   st.appendChild(fg);
   root.appendChild(st);
 
+  /* Lettura di policy — fattori di produzione e competitività */
+  const sp = sectionEl("Lettura di policy", "Fattori di produzione e competitività", LETTURA_POLICY.intro);
+
+  const pc = document.createElement("div");
+  pc.className = "table-wrap";
+  pc.innerHTML = `
+    <table class="data-table policy-table">
+      <thead><tr><th>Scomposizione del gap di costo (MGI)</th><th>Il fattore corrispondente in questa piattaforma</th></tr></thead>
+      <tbody>
+        ${LETTURA_POLICY.corrispondenze.map((r) => `
+          <tr><td class="td-company">${esc(r.mgi)}</td><td class="td-role">${esc(r.nostro)}</td></tr>`).join("")}
+      </tbody>
+    </table>`;
+  sp.appendChild(pc);
+
+  const tesi = document.createElement("div");
+  tesi.className = "policy-thesis";
+  tesi.innerHTML = `<div class="kicker">La tesi</div><p>${esc(LETTURA_POLICY.tesi)}</p>`;
+  sp.appendChild(tesi);
+
+  const caveat = document.createElement("div");
+  caveat.className = "policy-caveat";
+  caveat.innerHTML = `<strong>Il limite dell'approccio.</strong> ${esc(LETTURA_POLICY.caveat)}<br><span class="policy-scenario">${esc(LETTURA_POLICY.scenario)}</span>`;
+  sp.appendChild(caveat);
+
+  const pfonte = document.createElement("p");
+  pfonte.className = "fonti-line";
+  pfonte.innerHTML = `<strong>Fonte:</strong> ${esc(LETTURA_POLICY.fonte)}`;
+  sp.appendChild(pfonte);
+  root.appendChild(sp);
+
   const fonti = document.createElement("p");
   fonti.className = "fonti-line";
   fonti.innerHTML = `<strong>Fonti:</strong> aggregazione delle schede settoriali (EPRS/CSIS, IEA, Commissione UE — CRMA, Chips Act, Critical Medicines Act, RESourceEU) — <a href="#/metodologia">metodologia e avvertenze</a>`;

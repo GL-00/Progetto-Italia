@@ -1474,6 +1474,27 @@ const FATTORI_TRASVERSALI = [
   { nome: "Compliance come fattore produttivo", icona: "📋", nota: "ITAR/EAR, GMP, EUDR, UFLPA, golden power, passaporto digitale: la conformità normativa è ormai un input della produzione — chi non traccia non esporta.", settori: ["difesa", "spazio-osservazione-terra", "farmaceutica", "moda", "agroalimentare", "nautica"] },
 ];
 
+/* ============================================================
+   LETTURA DI POLICY — fattori di produzione e competitività
+   Incrocio tra la mappa dei fattori della piattaforma e l'analisi
+   McKinsey Global Institute sui levelised cost dei progetti
+   industriali greenfield (2026).
+   ============================================================ */
+
+const LETTURA_POLICY = {
+  intro: "L'analisi del McKinsey Global Institute sui costi di avvio dei progetti industriali greenfield stima che, prima di tasse e sussidi, insediare capacità produttiva in Europa e negli USA costi il 50-300% in più rispetto alle localizzazioni più competitive. La scomposizione di quel gap coincide quasi voce per voce con i fattori trasversali emersi dalle nostre dieci filiere: due percorsi diversi — top-down sui costi, bottom-up sulle catene del valore — che arrivano alla stessa diagnosi.",
+  corrispondenze: [
+    { mgi: "Energia e feedstock (~30% del gap)", nostro: "\"Energia a costo italiano\": il dazio occulto su fonderie, tintorie, vetrerie, fab e sterilizzazione — proprio gli stadi a monte che l'Italia presidia" },
+    { mgi: "Costruzione e permessi (~33%)", nostro: "\"Permitting e consenso\" (energia), \"bacini, banchine e demanio\" (nautica): il collo di bottiglia autorizzativo citato in più filiere" },
+    { mgi: "Costo del lavoro (~25%)", nostro: "\"Capitale umano tecnico\": noi ne misuriamo la scarsità (ricambio generazionale), MGI il costo — due facce dello stesso vincolo" },
+    { mgi: "Time-to-market (~10%)", nostro: "\"Compliance come fattore produttivo\": GMP, qualifiche militari, EUDR — il tempo regolatorio è un costo di produzione" },
+  ],
+  tesi: "L'Italia è forse il paese europeo con più da guadagnare da riforme sui fattori di produzione. I vantaggi che emergono quando i costi degli input si normalizzano — brand, differenziazione, saper fare, distretti — sono esattamente le righe blu della mappa qui sopra, già di classe mondiale. Il paese non ha bisogno che lo Stato gli scelga i settori: li ha già scelti la storia dei distretti. Ha bisogno che fonderie, tintorie, fab e cantieri smettano di pagare un dazio occulto su energia, permessi e circolante.",
+  caveat: "Il limite dell'approccio: nessuna riforma dei fattori risolve un monopolio. Per terre rare, fotoresist o litografia (la matrice delle dipendenze qui sopra) servono strumenti strategici — stoccaggi, diversificazione, CRMA. Ma chiudere il gap di costo riduce la scala di sussidi e dazi necessari: meno costo fiscale, meno distorsione.",
+  scenario: "Lo scenario MGI stima che un pacchetto di misure di competitività potrebbe chiudere il divario di costo verso le localizzazioni più economiche fino al 70% negli USA e al 60% in Europa.",
+  fonte: "McKinsey Global Institute — levelised cost dei progetti industriali greenfield (2026); Financial Times",
+};
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
