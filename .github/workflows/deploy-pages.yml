@@ -38,10 +38,8 @@ jobs:
           # disattiva l'elaborazione Jekyll (serviamo file statici cosi come sono)
           touch _site/.nojekyll
 
-      - name: Configura Pages (abilita se disattivato)
+      - name: Configura Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Carica l'artefatto del sito
         uses: actions/upload-pages-artifact@v3
