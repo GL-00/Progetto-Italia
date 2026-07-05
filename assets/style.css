@@ -275,6 +275,42 @@ body {
   text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); margin-bottom: 10px;
 }
 
+/* ---------- Approvvigionamento ---------- */
+.supply-table td.td-company { white-space: normal; min-width: 150px; }
+.supply-table td.td-role { min-width: 200px; }
+.rischio {
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 3px 10px; border-radius: 99px; border: 1px solid;
+}
+.rischio-critico { color: var(--critical); border-color: var(--critical); }
+.rischio-alto { color: var(--warn-s); border-color: var(--warn-s); }
+.rischio-medio { color: var(--text-secondary); border-color: var(--baseline); }
+
+.factor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; }
+.factor-card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: var(--shadow);
+  border-top: 3px solid var(--sector-color, var(--accent));
+}
+.factor-card h4 { margin: 0 0 5px; font-size: 14px; }
+.factor-card p { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
+
+/* input per stadio, nella catena */
+.chain-inputs {
+  margin: 0 0 12px; padding: 9px 10px; border-radius: 9px;
+  border: 1px dashed var(--baseline); background: transparent;
+  display: flex; flex-wrap: wrap; gap: 5px; align-items: center;
+}
+.ci-label {
+  flex-basis: 100%; font-size: 10px; font-weight: 800; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px;
+}
+.input-chip {
+  font-size: 11.5px; color: var(--text-secondary); background: var(--page);
+  border: 1px solid var(--grid); border-radius: 99px; padding: 2px 9px;
+}
+
 /* ---------- Forza / criticità ---------- */
 .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 @media (max-width: 800px) { .swot-grid { grid-template-columns: 1fr; } }

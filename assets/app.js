@@ -238,9 +238,41 @@ function renderSettore(id) {
     root.appendChild(fs);
   }
 
+  /* Approvvigionamento — materie prime e fattori produttivi (opzionale) */
+  if (s.approvvigionamento) {
+    const ap = s.approvvigionamento;
+    const sa = sectionEl("A monte della filiera", "Approvvigionamento: materie prime e fattori produttivi", ap.intro);
+
+    const tw = document.createElement("div");
+    tw.className = "table-wrap";
+    tw.innerHTML = `
+      <table class="data-table supply-table">
+        <thead><tr><th>Materiale / input</th><th>Impiego nella filiera</th><th>Approvvigionamento e dipendenze</th><th>Rischio</th></tr></thead>
+        <tbody>
+          ${ap.materiali.map((m) => `
+            <tr>
+              <td class="td-company">${esc(m.materiale)}</td>
+              <td class="td-role">${esc(m.impiego)}</td>
+              <td class="td-role">${esc(m.fornitura)}</td>
+              <td><span class="rischio rischio-${esc(m.rischio)}">${m.rischio === "critico" ? "⛔" : m.rischio === "alto" ? "⚠" : "●"} ${esc(m.rischio)}</span></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+    sa.appendChild(tw);
+
+    if (ap.fattori && ap.fattori.length) {
+      const fg = document.createElement("div");
+      fg.className = "factor-grid";
+      fg.innerHTML = ap.fattori.map((f) => `
+        <div class="factor-card"><h4>${esc(f.nome)}</h4><p>${esc(f.nota)}</p></div>`).join("");
+      sa.appendChild(fg);
+    }
+    root.appendChild(sa);
+  }
+
   /* Catena del valore */
   const sc = sectionEl("Catena del valore", "Da monte a valle",
-    "Ogni stadio mostra le principali aziende che vi operano. Scorri orizzontalmente per percorrere la filiera.");
+    "Ogni stadio mostra gli input necessari e le principali aziende che vi operano. Scorri orizzontalmente per percorrere la filiera.");
   const scroller = document.createElement("div");
   scroller.className = "chain-scroller";
   const labels = document.createElement("div");
@@ -264,6 +296,11 @@ function renderSettore(id) {
       <span class="chain-pos pos-${st.posizione}">${st.posizione} · ${i + 1}/${s.catena.length}</span>
       <h4>${esc(st.fase)}</h4>
       <p class="cs-desc">${esc(st.descrizione)}</p>
+      ${st.input && st.input.length ? `
+      <div class="chain-inputs">
+        <span class="ci-label">Input richiesti</span>
+        ${st.input.map((x) => `<span class="input-chip">${esc(x)}</span>`).join("")}
+      </div>` : ""}
       <div class="chain-companies"></div>`;
     const box = stage.querySelector(".chain-companies");
     st.aziende.forEach((a) => {

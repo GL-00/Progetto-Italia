@@ -106,11 +106,32 @@ const SETTORI = [
       { label: "Spesa per la difesa", value: "≈ 2% PIL (criteri NATO, 2025)" },
       { label: "Export autorizzato", value: "≈ €6 mld/anno" },
     ],
+    approvvigionamento: {
+      intro: "Nessuna piattaforma d'arma nasce senza una catena di approvvigionamento globale alle spalle. La filiera dipende da materie prime critiche in larga parte extra-europee: dai controlli cinesi del 2025 sull'export di terre rare e magneti (licenze da aprile; uso militare negato per policy da dicembre) il tema è passato da industriale a pienamente strategico. L'UE risponde con il Critical Raw Materials Act e con RESourceEU (acquisti congiunti e stoccaggi); l'Italia con il Fondo nazionale made in Italy e il golden power.",
+      materiali: [
+        { materiale: "Terre rare e magneti (NdFeB, SmCo)", impiego: "Attuatori di missili e munizioni guidate, radar, sonar, motori elettrici, guerra elettronica", fornitura: "Cina: ~90% della raffinazione mondiale e ~98% dei magneti importati in UE. Licenze export da apr 2025; domande per uso militare respinte per policy da dic 2025", rischio: "critico" },
+        { materiale: "Gallio, germanio, antimonio", impiego: "Radar AESA (GaN), ottiche e visori a infrarossi, semiconduttori RF, primer di munizioni", fornitura: "Cina dominante (gallio ~98%); bandi e licenze dal 2023-24. Recupero UE solo marginale (riciclo, sottoprodotto dello zinco per il germanio)", rischio: "critico" },
+        { materiale: "Titanio aeronautico", impiego: "Cellule, carrelli d'atterraggio, parti motore, scafi speciali", fornitura: "Fino al 2022 la Russia (VSMPO) era il primo fornitore; riorientamento su USA, Giappone e Kazakistan. In UE non si produce spugna di titanio", rischio: "alto" },
+        { materiale: "Superleghe di nichel e cobalto", impiego: "Palette e dischi delle turbine (Avio Aero), propulsione navale", fornitura: "Nichel da Indonesia e Russia; cobalto da RD Congo con raffinazione cinese. Fonderie di precisione europee limitate", rischio: "alto" },
+        { materiale: "Energetici e propellenti (nitrocellulosa, RDX, perclorato d'ammonio)", impiego: "Munizionamento, testate, motori a razzo e lanciatori", fornitura: "Linter di cotone in gran parte cinese; capacità europea in espansione post-2022 (piano ASAP). Perclorato: Avio tra i pochi produttori UE", rischio: "alto" },
+        { materiale: "Tungsteno", impiego: "Penetratori, contrappesi, utensili per lavorazioni meccaniche", fornitura: "Cina ~80% dell'estrazione mondiale; riaperture minerarie in corso in Portogallo e Spagna", rischio: "alto" },
+        { materiale: "Semiconduttori rad-hard e MMIC", impiego: "Guida di missili, satelliti militari, C4ISR, spolette intelligenti", fornitura: "Logica avanzata da Taiwan/USA; l'Europa presidia potenza e RF (ST, Infineon, UMS) ma con poche fonderie GaN", rischio: "alto" },
+        { materiale: "Acciai speciali, blindati e alluminio", impiego: "Scafi navali, blindature, strutture e affusti", fornitura: "Capacità siderurgica UE e italiana presente (acciai speciali lombardi, piastre nordeuropee); il fattore critico è il costo dell'energia", rischio: "medio" },
+        { materiale: "Compositi in fibra di carbonio", impiego: "Velivoli, UAV, missili, coperture radar-assorbenti", fornitura: "Precursore PAN da Giappone e USA; trasformazione e laminazione in Italia (Leonardo a Foggia e Grottaglie)", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Energia", nota: "Siderurgia, chimica degli energetici e cantieristica sono energivore: i prezzi elettrici italiani, tra i più alti d'Europa, pesano su tutta la subfornitura." },
+        { nome: "Capitale umano", nota: "Ingegneri sistemisti, tecnici RF, saldatori navali certificati: collo di bottiglia demografico, presidiato con accademie aziendali (Fincantieri, Leonardo)." },
+        { nome: "Capitale paziente", nota: "Programmi pluridecennali richiedono finanza dedicata: CDP, fondi europei EDF e SAFE, e regole bancarie/ESG in evoluzione sul settore." },
+        { nome: "Certificazioni e golden power", nota: "Qualifiche militari dei materiali (AQAP/MIL-STD) e screening degli investimenti esteri: barriera all'ingresso e insieme protezione del know-how." },
+      ],
+    },
     catena: [
       {
         fase: "R&S e materiali avanzati",
         posizione: "MONTE",
         descrizione: "Ricerca su materiali, propulsione e tecnologie dual use; centri pubblici e laboratori industriali.",
+        input: ["Capitale umano STEM", "Supercalcolo (HPC davinci-1)", "Finanziamenti EDF / PNRR", "Materiali sperimentali e banchi prova"],
         aziende: [
           { nome: "CIRA", ruolo: "Centro Italiano Ricerche Aerospaziali (Capua)" },
           { nome: "Leonardo Labs", ruolo: "Rete di laboratori corporate su AI, materiali, quantum" },
@@ -123,6 +144,7 @@ const SETTORI = [
         fase: "Componenti e sottosistemi",
         posizione: "MONTE",
         descrizione: "Elettronica di difesa, attuazione, munizionamento, equipaggiamenti: il tessuto di media impresa specializzata.",
+        input: ["Semiconduttori GaN / MMIC", "Terre rare per magneti", "Germanio e ottiche IR", "Energetici (nitrocellulosa, RDX)", "Meccanica di precisione"],
         aziende: [
           { nome: "Elettronica Group", ruolo: "Guerra elettronica (Roma)" },
           { nome: "Microtecnica (Collins)", ruolo: "Attuatori e controlli di volo" },
@@ -135,6 +157,7 @@ const SETTORI = [
         fase: "Sistemi e piattaforme",
         posizione: "CENTRO",
         descrizione: "I costruttori di piattaforme: elicotteri, velivoli, navi, veicoli blindati, missili, armi leggere.",
+        input: ["Acciai blindati e navali", "Titanio e alluminio aeronautico", "Superleghe per turbine", "Compositi in fibra di carbonio", "Sottosistemi qualificati"],
         aziende: [
           { nome: "Leonardo", ruolo: "Elicotteri, velivoli, elettronica per la difesa — ricavi 2024 ≈ €17,8 mld" },
           { nome: "Fincantieri", ruolo: "Navi militari (FREMM, PPA, sommergibili U212 NFS)" },
@@ -147,6 +170,7 @@ const SETTORI = [
         fase: "Integrazione e prime contractor",
         posizione: "CENTRO",
         descrizione: "Capocommessa dei grandi programmi nazionali e internazionali; system-of-systems e C4ISR.",
+        input: ["Software e crittografia", "Capacità satellitari (SICRAL)", "Systems engineering", "Banchi di integrazione e poligoni"],
         aziende: [
           { nome: "Leonardo", ruolo: "GCAP (con UK e Giappone), Eurofighter, NH90" },
           { nome: "Orizzonte Sistemi Navali", ruolo: "JV Fincantieri-Leonardo per i programmi navali" },
@@ -157,6 +181,7 @@ const SETTORI = [
         fase: "Servizi, MRO, addestramento ed export",
         posizione: "VALLE",
         descrizione: "Supporto logistico, manutenzione, simulazione e addestramento; l'export è regolato dalla L.185/90.",
+        input: ["Ricambi qualificati", "Logistica protetta", "Simulatori e sistemi di addestramento", "Personale certificato"],
         aziende: [
           { nome: "Leonardo — divisione training", ruolo: "International Flight Training School (con Aeronautica Militare)" },
           { nome: "Fincantieri Services", ruolo: "Supporto in servizio delle flotte" },
@@ -174,7 +199,7 @@ const SETTORI = [
       "Scala ridotta rispetto ai prime USA; frammentazione della domanda europea",
       "Ricambio generazionale delle competenze specialistiche nelle PMI della filiera",
     ],
-    fonti: ["AIAD", "Documento Programmatico Pluriennale Difesa", "SIPRI", "Relazione annuale export L.185/90"],
+    fonti: ["AIAD", "Documento Programmatico Pluriennale Difesa", "SIPRI", "Relazione annuale export L.185/90", "EPRS / CSIS — controlli export terre rare", "Commissione UE — CRMA e RESourceEU"],
   },
 
   {
