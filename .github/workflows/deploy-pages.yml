@@ -1,0 +1,53 @@
+name: Deploy to GitHub Pages
+
+# Pubblica automaticamente la piattaforma su GitHub Pages a ogni push
+# sul branch di sviluppo. Abilita Pages da solo (enablement: true), quindi
+# non serve toccare le impostazioni del repository.
+
+on:
+  push:
+    branches: ["claude/italy-economy-value-chains-il1y55"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita deploy sovrapposti; l'ultimo push vince.
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assembla il sito statico
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r assets _site/
+          cp Progetto-Italia.html _site/
+          # disattiva l'elaborazione Jekyll (serviamo file statici cosi come sono)
+          touch _site/.nojekyll
+
+      - name: Configura Pages (abilita se disattivato)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Carica l'artefatto del sito
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy su GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
