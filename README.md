@@ -37,6 +37,19 @@ assets/charts.js    motore grafici SVG senza dipendenze (donut, barre, colonne, 
 assets/app.js       router e renderer delle pagine
 ```
 
+### File autonomo per Safari / uso offline
+
+`Progetto-Italia.html` è una versione **a file singolo** dell'intera piattaforma: stili, dati, grafici e logica sono incorporati, quindi si apre con doppio clic in Safari (o qualsiasi browser) **senza server**. È un artefatto generato — non va modificato a mano.
+
+Resta sempre allineato ai sorgenti grazie a `build.mjs` e a un hook git versionato:
+
+```bash
+node build.mjs                        # rigenera Progetto-Italia.html dai sorgenti
+git config core.hooksPath .githooks   # (una volta, dopo il clone) attiva la rigenerazione automatica a ogni commit
+```
+
+Con l'hook attivo, ogni `git commit` ricostruisce il file singolo dai sorgenti e lo include nel commit: sviluppando la piattaforma, il file da aprire in Safari si aggiorna da solo.
+
 ### Come aggiornare i dati
 
 Tutti i contenuti vivono in `assets/data.js`:
