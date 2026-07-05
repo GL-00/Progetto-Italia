@@ -95,7 +95,7 @@ function renderHome() {
   g1.className = "grid-2";
   const c1 = card("Valore aggiunto per macro-settore", "quota % sul totale — ISTAT, conti nazionali");
   Charts.donutChart(c1, MACRO.pilComposizione, {
-    centerValue: "€2.192", centerLabel: "mld di PIL", ariaLabel: "Composizione del PIL per macro-settore",
+    centerValue: "€2.258", centerLabel: "mld di PIL", ariaLabel: "Composizione del PIL per macro-settore",
   });
   const c2 = card("Dentro i servizi", "quota % sul valore aggiunto totale");
   Charts.hBarChart(c2, MACRO.serviziDettaglio, { unit: "%", labelWidth: 280, ariaLabel: "Dettaglio del terziario" });
@@ -113,7 +113,7 @@ function renderHome() {
     "Il surplus è generato da meccanica, farmaceutica, moda e agroalimentare; il deficit da energia, chimica di base ed elettronica di consumo.");
   const g2 = document.createElement("div");
   g2.className = "grid-2";
-  const c3 = card("Export e import di beni", "mld € correnti, 2019–2024");
+  const c3 = card("Export e import di beni", "mld € correnti, 2019–2025");
   Charts.tradeColumns(c3, MACRO.bilancia);
   const c4 = card("Saldo commerciale", "mld €: surplus in blu, deficit in rosso");
   Charts.balanceBars(c4, MACRO.bilancia);
@@ -127,16 +127,16 @@ function renderHome() {
 
   /* --- Chi traina l'export --- */
   const s3 = sectionEl("Motori dell'export", "Cosa vende l'Italia, e a chi",
-    "La meccanica strumentale è da decenni la prima voce; la farmaceutica è la più dinamica. Germania, Stati Uniti e Francia assorbono un terzo delle vendite estere.");
+    "La meccanica strumentale è da decenni la prima voce; la farmaceutica, con il +28,5% del 2025, è diventata la seconda. Germania, Stati Uniti e Francia assorbono un terzo delle vendite estere.");
   const g3 = document.createElement("div");
   g3.className = "grid-2";
-  const c5 = card("Prime voci dell'export di beni", "mld €, valori indicativi 2024 — ISTAT coe");
+  const c5 = card("Prime voci dell'export di beni", "mld €, valori indicativi 2025 — ISTAT coe");
   Charts.hBarChart(c5, MACRO.topExport, { unit: "", labelWidth: 280, ariaLabel: "Prime voci dell'export" });
   const c6 = card("Principali mercati di sbocco", "quota % dell'export di beni");
   Charts.hBarChart(c6, MACRO.partner, { unit: "%", decimals: 1, labelWidth: 160, ariaLabel: "Principali mercati" });
   const n6 = document.createElement("p");
   n6.className = "viz-note";
-  n6.textContent = "Gli Stati Uniti sono il primo mercato extra-UE e il primo per surplus bilaterale (≈ €39 mld): l'esposizione ai dazi USA è oggi il principale rischio commerciale del paese.";
+  n6.textContent = "Nel 2025, l'anno dei dazi, l'export verso gli USA è cresciuto del +7,2% (surplus bilaterale €34,2 mld): l'Italia è stata l'unica grande economia UE ad aumentare le vendite oltreoceano, mentre Germania e Spagna arretravano di oltre il 9%.";
   c6.appendChild(n6);
   g3.append(c5, c6);
   s3.appendChild(g3);

@@ -383,28 +383,30 @@ table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; mi
   <footer class="site-footer">
     <div class="footer-inner">
       <span>Progetto Italia — piattaforma di analisi economico-industriale dell'ecosistema italiano.</span>
-      <span>Dati 2024 (consuntivi e stime) · fonti: ISTAT, Banca d'Italia, Eurostat e associazioni di categoria.</span>
+      <span>Dati 2025 (consuntivi e stime) · fonti: ISTAT, Banca d'Italia, Eurostat e associazioni di categoria.</span>
     </div>
   </footer>
 
   <script>
 /* ============================================================
    Progetto Italia — Dataset analitico
-   Valori indicativi riferiti al 2024 (consuntivi e stime),
+   Valori indicativi riferiti al 2025 (consuntivi e stime),
    salvo diversa indicazione. Fonti primarie: ISTAT, Banca
    d'Italia, Eurostat, MEF, associazioni di categoria citate
    in ogni scheda. Importi in miliardi di euro (mld €).
+   Ultimo aggiornamento dati: luglio 2026 (consuntivi ISTAT
+   2025 pubblicati a febbraio-marzo 2026).
    ============================================================ */
 
 const MACRO = {
-  anno: 2024,
+  anno: 2025,
   kpi: [
-    { label: "PIL nominale", value: "€2.192 mld", delta: "+0,7% reale", trend: "up" },
-    { label: "Export di beni", value: "€623,5 mld", delta: "2° manifattura UE", trend: "flat" },
-    { label: "Saldo commerciale", value: "+€54,9 mld", delta: "dal -€34 mld del 2022", trend: "up" },
-    { label: "Occupati", value: "24,1 mln", delta: "tasso occupazione 62,2%", trend: "up" },
-    { label: "Debito pubblico", value: "135,3% PIL", delta: "≈ €3.000 mld", trend: "warn" },
-    { label: "Inflazione (IPCA)", value: "+1,1%", delta: "rientrata dai picchi 2022", trend: "up" },
+    { label: "PIL nominale", value: "€2.258 mld", delta: "+0,5% reale nel 2025", trend: "up" },
+    { label: "Export di beni", value: "≈ €644 mld", delta: "+3,3% nonostante i dazi USA", trend: "up" },
+    { label: "Saldo commerciale", value: "+€50,7 mld", delta: "deficit energetico in calo", trend: "up" },
+    { label: "Occupati", value: "24,3 mln", delta: "disoccupazione 6,1%: minimo dal 2007", trend: "up" },
+    { label: "Debito pubblico", value: "≈ 136% PIL", delta: "≈ €3.100 mld", trend: "warn" },
+    { label: "Inflazione (IPCA)", value: "+1,6%", delta: "dal +1,1% del 2024", trend: "flat" },
   ],
 
   // Composizione del valore aggiunto per macro-settore (% sul totale)
@@ -427,47 +429,49 @@ const MACRO = {
   ],
 
   // Bilancia commerciale beni (mld €) — ISTAT, coe.istat.it
+  // Nota: 2024 e 2025 secondo la revisione ISTAT di febbraio 2026.
   bilancia: [
     { anno: 2019, exp: 476, imp: 423 },
     { anno: 2020, exp: 436, imp: 373 },
     { anno: 2021, exp: 516, imp: 476 },
     { anno: 2022, exp: 625, imp: 659 },
     { anno: 2023, exp: 626, imp: 592 },
-    { anno: 2024, exp: 623, imp: 569 },
+    { anno: 2024, exp: 623, imp: 575 },
+    { anno: 2025, exp: 644, imp: 593 },
   ],
   bilanciaNota:
-    "Il rosso del 2022 è interamente energetico: lo shock dei prezzi di gas e petrolio ha gonfiato l'import di oltre €110 mld. Al netto dell'energia, la manifattura italiana genera stabilmente uno dei cinque maggiori surplus commerciali al mondo (≈ €100 mld), trainato da meccanica, farmaceutica, moda e agroalimentare.",
+    "Il rosso del 2022 è interamente energetico: lo shock dei prezzi di gas e petrolio ha gonfiato l'import di oltre €110 mld. Nel 2025 l'export è tornato a crescere (+3,3%) nonostante i dazi USA, con un surplus di €50,7 mld e un deficit energetico in calo. Al netto dell'energia, la manifattura italiana genera stabilmente uno dei maggiori surplus commerciali al mondo, trainato da meccanica, farmaceutica, moda e agroalimentare.",
 
-  // Prime voci dell'export di beni, mld € (classificazione ATECO, valori indicativi 2024)
+  // Prime voci dell'export di beni, mld € (classificazione ATECO, valori indicativi 2025)
   topExport: [
     { label: "Macchinari e apparecchi", value: 89, nota: "1ª voce: meccanica strumentale, packaging, macchine utensili" },
-    { label: "Moda e accessori (tessile, abbigliamento, pelle)", value: 62, nota: "Include l'occhialeria e la pelletteria delle grandi maison" },
-    { label: "Alimentari, bevande e tabacco", value: 59, nota: "€69 mld l'agroalimentare esteso; vino €8,1 mld" },
-    { label: "Mezzi di trasporto", value: 57, nota: "Auto premium, componentistica, nautica, aerospazio" },
-    { label: "Farmaceutica", value: 54, nota: "Export quasi triplicato in dieci anni" },
-    { label: "Metalli e prodotti in metallo", value: 53, nota: "Acciai speciali, rubinetteria, forgiati" },
+    { label: "Farmaceutica", value: 69, nota: "+28,5% nel 2025: 2ª voce, +248% in dieci anni" },
+    { label: "Alimentari, bevande e tabacco", value: 62, nota: "+4,3% nel 2025; vino ≈ €8 mld" },
+    { label: "Moda e accessori (tessile, abbigliamento, pelle)", value: 60, nota: "Include l'occhialeria e la pelletteria delle grandi maison" },
+    { label: "Metalli e prodotti in metallo", value: 58, nota: "+9,8% nel 2025: acciai speciali, rubinetteria, forgiati" },
+    { label: "Mezzi di trasporto", value: 57, nota: "Aerospazio e navale +11,6%; automotive in calo" },
     { label: "Chimica, gomma e plastica", value: 52, nota: "Chimica fine e specialità" },
     { label: "Elettronica ed elettrotecnica", value: 35, nota: "Cavi, apparecchiature elettriche, semiconduttori" },
     { label: "Mobili e arredo", value: 20, nota: "Design: 1° esportatore UE di mobili" },
   ],
 
-  // Quote dei principali mercati di sbocco (% export beni, 2024)
+  // Quote dei principali mercati di sbocco (% export beni, 2025, valori indicativi)
   partner: [
-    { label: "Germania", value: 11.4 },
-    { label: "Stati Uniti", value: 10.7 },
-    { label: "Francia", value: 10.1 },
+    { label: "Germania", value: 11.3 },
+    { label: "Stati Uniti", value: 11.1 },
+    { label: "Francia", value: 10.0 },
     { label: "Spagna", value: 5.5 },
-    { label: "Svizzera", value: 4.8 },
-    { label: "Regno Unito", value: 4.4 },
-    { label: "Polonia", value: 3.3 },
-    { label: "Cina", value: 2.5 },
+    { label: "Svizzera", value: 4.7 },
+    { label: "Regno Unito", value: 4.3 },
+    { label: "Polonia", value: 3.2 },
+    { label: "Cina", value: 2.4 },
   ],
 
   // Dove l'Italia si differenzia
   differenziazione: [
     { icona: "🏭", titolo: "2ª manifattura d'Europa", testo: "Dietro solo alla Germania per valore aggiunto manifatturiero; tra i cinque paesi al mondo con surplus manifatturiero superiore a $100 mld (Fondazione Edison su dati WTO)." },
     { icona: "📦", titolo: "Leader mondiale del packaging", testo: "La \"packaging valley\" emiliana (IMA, Coesia, Marchesini, Sacmi) domina le macchine per il confezionamento farmaceutico e alimentare: ~80% della produzione esportata." },
-    { icona: "💊", titolo: "Hub farmaceutico d'Europa", testo: "1°-2° produttore UE di farmaci e 1° per principi attivi; polo mondiale del conto terzi (CDMO) e del vetro farmaceutico (Stevanato)." },
+    { icona: "💊", titolo: "Hub farmaceutico d'Europa", testo: "1°-2° produttore UE di farmaci e 1° per principi attivi; 2° esportatore mondiale di farmaci confezionati. Export a €69 mld nel 2025 (+248% in dieci anni)." },
     { icona: "🛥️", titolo: "1° al mondo nei superyacht", testo: "Circa metà del portafoglio ordini globale di yacht sopra i 24 metri (Global Order Book); leadership assoluta nelle navi da crociera con Fincantieri." },
     { icona: "🛰️", titolo: "Potenza spaziale completa", testo: "Tra i pochi paesi con l'intera filiera: lanciatori (Avio), satelliti (Thales Alenia Space), servizi (Telespazio). 3° contributore ESA, leadership nel radar (COSMO-SkyMed)." },
     { icona: "🧀", titolo: "1° paese per prodotti DOP/IGP", testo: "856 denominazioni certificate, una \"DOP economy\" da €20 mld; 1° esportatore mondiale di vino in volume e riferimento del food premium." },
@@ -489,7 +493,7 @@ const SETTORI = [
     kpi: [
       { label: "Fatturato filiera", value: "≈ €18 mld" },
       { label: "Addetti diretti", value: "≈ 55.000" },
-      { label: "Spesa per la difesa", value: "≈ 1,5% PIL" },
+      { label: "Spesa per la difesa", value: "≈ 2% PIL (criteri NATO, 2025)" },
       { label: "Export autorizzato", value: "≈ €6 mld/anno" },
     ],
     catena: [
@@ -902,8 +906,8 @@ const SETTORI = [
     nome: "Farmaceutica e Life Sciences",
     tagline: "Il settore export che cresce più veloce: hub produttivo europeo per farmaci, principi attivi, vaccini e packaging farmaceutico.",
     kpi: [
-      { label: "Produzione", value: "≈ €52 mld (1°-2° UE)" },
-      { label: "Export", value: "≈ €54 mld (2024)" },
+      { label: "Produzione", value: "≈ €56 mld (1°-2° UE)" },
+      { label: "Export", value: "€69 mld (2025, +28,5%)" },
       { label: "Addetti", value: "≈ 70.000 (60% laureati)" },
       { label: "R&S + investimenti", value: "≈ €4 mld/anno" },
     ],
@@ -962,7 +966,7 @@ const SETTORI = [
       },
     ],
     forza: [
-      "Export quasi triplicato in dieci anni: qualità produttiva riconosciuta dalle big pharma globali (fill & finish, sterili, biologici)",
+      "Export +248% in dieci anni: dei €19 mld di crescita dell'export manifatturiero 2025, €15 mld vengono dal pharma (fill & finish, sterili, biologici)",
       "Filiera completa: API + produzione + vetro + macchine di confezionamento nello stesso sistema paese",
       "Polo vaccini di Siena (GSK) e nuovi mega-investimenti (Novo Nordisk ad Anagni)",
     ],
@@ -1653,7 +1657,7 @@ function renderHome() {
   g1.className = "grid-2";
   const c1 = card("Valore aggiunto per macro-settore", "quota % sul totale — ISTAT, conti nazionali");
   Charts.donutChart(c1, MACRO.pilComposizione, {
-    centerValue: "€2.192", centerLabel: "mld di PIL", ariaLabel: "Composizione del PIL per macro-settore",
+    centerValue: "€2.258", centerLabel: "mld di PIL", ariaLabel: "Composizione del PIL per macro-settore",
   });
   const c2 = card("Dentro i servizi", "quota % sul valore aggiunto totale");
   Charts.hBarChart(c2, MACRO.serviziDettaglio, { unit: "%", labelWidth: 280, ariaLabel: "Dettaglio del terziario" });
@@ -1671,7 +1675,7 @@ function renderHome() {
     "Il surplus è generato da meccanica, farmaceutica, moda e agroalimentare; il deficit da energia, chimica di base ed elettronica di consumo.");
   const g2 = document.createElement("div");
   g2.className = "grid-2";
-  const c3 = card("Export e import di beni", "mld € correnti, 2019–2024");
+  const c3 = card("Export e import di beni", "mld € correnti, 2019–2025");
   Charts.tradeColumns(c3, MACRO.bilancia);
   const c4 = card("Saldo commerciale", "mld €: surplus in blu, deficit in rosso");
   Charts.balanceBars(c4, MACRO.bilancia);
@@ -1685,16 +1689,16 @@ function renderHome() {
 
   /* --- Chi traina l'export --- */
   const s3 = sectionEl("Motori dell'export", "Cosa vende l'Italia, e a chi",
-    "La meccanica strumentale è da decenni la prima voce; la farmaceutica è la più dinamica. Germania, Stati Uniti e Francia assorbono un terzo delle vendite estere.");
+    "La meccanica strumentale è da decenni la prima voce; la farmaceutica, con il +28,5% del 2025, è diventata la seconda. Germania, Stati Uniti e Francia assorbono un terzo delle vendite estere.");
   const g3 = document.createElement("div");
   g3.className = "grid-2";
-  const c5 = card("Prime voci dell'export di beni", "mld €, valori indicativi 2024 — ISTAT coe");
+  const c5 = card("Prime voci dell'export di beni", "mld €, valori indicativi 2025 — ISTAT coe");
   Charts.hBarChart(c5, MACRO.topExport, { unit: "", labelWidth: 280, ariaLabel: "Prime voci dell'export" });
   const c6 = card("Principali mercati di sbocco", "quota % dell'export di beni");
   Charts.hBarChart(c6, MACRO.partner, { unit: "%", decimals: 1, labelWidth: 160, ariaLabel: "Principali mercati" });
   const n6 = document.createElement("p");
   n6.className = "viz-note";
-  n6.textContent = "Gli Stati Uniti sono il primo mercato extra-UE e il primo per surplus bilaterale (≈ €39 mld): l'esposizione ai dazi USA è oggi il principale rischio commerciale del paese.";
+  n6.textContent = "Nel 2025, l'anno dei dazi, l'export verso gli USA è cresciuto del +7,2% (surplus bilaterale €34,2 mld): l'Italia è stata l'unica grande economia UE ad aumentare le vendite oltreoceano, mentre Germania e Spagna arretravano di oltre il 9%.";
   c6.appendChild(n6);
   g3.append(c5, c6);
   s3.appendChild(g3);

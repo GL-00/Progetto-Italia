@@ -56,4 +56,4 @@ Tutti i contenuti vivono in `assets/data.js`:
 - `MACRO` — indicatori macro, composizione del PIL, bilancia commerciale, export, primati;
 - `SETTORI` — un oggetto per settore con `kpi`, `catena` (stadi con `posizione` MONTE/CENTRO/VALLE e `aziende`), `forza`, `criticita`, `fonti`.
 
-I valori sono riferiti al 2024 (consuntivi e stime); il simbolo ≈ segnala ordini di grandezza. Le aziende citate sono una selezione rappresentativa, non un censimento.
+I valori sono riferiti al 2025 (consuntivi ISTAT pubblicati a febbraio-marzo 2026 e stime delle associazioni di categoria); il simbolo ≈ segnala ordini di grandezza. Le aziende citate sono una selezione rappresentativa, non un censimento.
