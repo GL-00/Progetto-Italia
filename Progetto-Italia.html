@@ -1254,11 +1254,31 @@ const SETTORI = [
       { label: "Technoprobe", value: "Leader mondiale probe card" },
       { label: "Leva", value: "EU Chips Act" },
     ],
+    approvvigionamento: {
+      intro: "Nessuna filiera al mondo ha colli di bottiglia così estremi: a quasi ogni livello esiste un quasi-monopolio — ASML per la litografia, il Giappone per i fotoresist, la Cina per il gallio, Taiwan per i nodi avanzati. L'Italia presidia punti a monte rari e sottovalutati: i wafer di MEMC a Novara e Merano (tra le poche capacità europee), l'epitassia SiC di LPE, il campus integrato ST di Catania che internalizza i substrati in carburo di silicio. Il vincolo locale più concreto è banale e fisico: acqua ultrapura ed energia per le fab.",
+      materiali: [
+        { materiale: "Gallio, germanio e composti III-V", impiego: "GaN per RF e potenza, LED, substrati GaAs, optoelettronica", fornitura: "Cina ~98% del gallio raffinato, sotto bandi e licenze dal 2023; recupero da riciclo marginale. Impatto diretto su RF, difesa e ricarica rapida", rischio: "critico" },
+        { materiale: "Polysilicon elettronico e wafer di silicio", impiego: "Substrato di ogni chip: fette da 200 e 300 mm", fornitura: "Polysilicon grade elettronico da USA/Germania/Giappone; wafer dominati da Shin-Etsu e SUMCO (Giappone). L'Italia ospita MEMC (GlobalWafers, Taiwan) a Novara e Merano: presidio raro in UE", rischio: "alto" },
+        { materiale: "Fotoresist e fotomaschere", impiego: "Litografia: il disegno dei circuiti sul silicio", fornitura: "Quasi-monopolio giapponese (JSR, TOK, Shin-Etsu, Hoya): nessuna alternativa europea qualificata su scala", rischio: "alto" },
+        { materiale: "Gas speciali e chimica ultrapura", impiego: "Etching, deposizione, pulizia camere (neon, elio, NF3, acidi elettronici)", fornitura: "Il neon arrivava per metà dall'Ucraina prima del 2022; elio da USA/Qatar; chimica ultrapura da pochi player globali con logistica dedicata", rischio: "alto" },
+        { materiale: "Macchine litografiche e di processo", impiego: "Litografia (ASML), deposizione, impianto ionico, metrologia", fornitura: "ASML (Paesi Bassi) monopolista DUV/EUV; Applied Materials, LAM e TEL per il processo. Presidio italiano nell'epitassia: LPE (Baranzate, gruppo ASM)", rischio: "alto" },
+        { materiale: "Substrati SiC (carburo di silicio)", impiego: "Chip di potenza per auto elettrica e industria — il cuore di Catania", fornitura: "ST ha internalizzato i substrati nel campus di Catania (primo sito UE integrato a 200 mm); pressione dei produttori cinesi sui prezzi (crollati dal 2023)", rischio: "medio" },
+        { materiale: "Substrati per packaging (ABF) e leadframe", impiego: "Assemblaggio dei chip, probe card, interconnessioni", fornitura: "Substrati ABF concentrati in Giappone/Taiwan (Ajinomoto de facto standard); leadframe e ceramiche tecniche in gran parte asiatiche", rischio: "medio" },
+        { materiale: "Acqua ultrapura ed energia", impiego: "Una fab consuma come una piccola città: raffreddamento, lavaggi, cleanroom", fornitura: "Vincolo tutto locale: lo stress idrico siciliano tocca Catania, il costo elettrico italiano pesa su ogni wafer. Ricircolo e desalinizzazione diventano investimenti obbligati", rischio: "alto" },
+      ],
+      fattori: [
+        { nome: "Scala degli investimenti", nota: "Una fab da 200 mm costa miliardi: senza Chips Act europeo e incentivi nazionali nessun progetto sta in piedi contro i sussidi di USA e Asia." },
+        { nome: "Capitale umano microelettronico", nota: "Ingegneri di processo e progettisti analogici: i poli di Catania, Agrate e Pavia formano talenti che il mercato globale paga di più. Trattenerli è il vero investimento." },
+        { nome: "EDA e proprietà intellettuale", nota: "Il software di progettazione (Cadence, Synopsys — USA) e gli IP core (ARM — UK) sono licenze sotto giurisdizione estera: un fattore produttivo invisibile ma vincolante." },
+        { nome: "Ciclicità della domanda", nota: "Il power/automotive è ciclico: il rallentamento EV 2024-25 ha colpito ST. La diversificazione verso industriale, AI ed energia è la copertura naturale." },
+      ],
+    },
     catena: [
       {
         fase: "Materiali e wafer",
         posizione: "MONTE",
         descrizione: "Silicio, epitassia e materiali avanzati: pochi attori, altamente strategici.",
+        input: ["Polysilicon elettronico", "Energia e acqua ultrapura", "Crogioli di quarzo e grafite", "Logistica in classe cleanroom"],
         aziende: [
           { nome: "MEMC (GlobalWafers)", ruolo: "Wafer di silicio (Novara e Merano)" },
           { nome: "LPE (ASM)", ruolo: "Reattori epitassiali per SiC (Baranzate)" },
@@ -1269,6 +1289,7 @@ const SETTORI = [
         fase: "Progettazione e fabbricazione chip",
         posizione: "CENTRO",
         descrizione: "Power electronics, sensori MEMS e carburo di silicio: le specialità italiane.",
+        input: ["Wafer e substrati SiC", "Gas speciali e fotoresist", "Macchine litografiche (ASML)", "EDA e IP core (licenze estere)", "Gallio per GaN"],
         aziende: [
           { nome: "STMicroelectronics", ruolo: "Agrate Brianza e Catania: power, MEMS, SiC per auto elettriche" },
           { nome: "LFoundry", ruolo: "Fonderia analogica (Avezzano)" },
@@ -1279,6 +1300,7 @@ const SETTORI = [
         fase: "Test, packaging e attrezzature",
         posizione: "CENTRO",
         descrizione: "Il segmento dove l'Italia è leader mondiale nascosto.",
+        input: ["Leghe e microcontatti di precisione", "Ceramiche tecniche e PCB speciali", "Substrati ABF e leadframe", "Metrologia sub-micrometrica"],
         aziende: [
           { nome: "Technoprobe", ruolo: "1° mondiale nelle probe card per il test dei chip (Cernusco Lombardone)" },
           { nome: "SPEA", ruolo: "Sistemi automatici di test (Volpiano)" },
@@ -1288,6 +1310,7 @@ const SETTORI = [
         fase: "Sistemi embedded ed elettronica applicata",
         posizione: "VALLE",
         descrizione: "Edge computing, identificazione automatica, elettronica professionale.",
+        input: ["Chip e moduli (anche import)", "PCB e componentistica passiva", "Software embedded", "Certificazioni di settore (auto, medicale)"],
         aziende: [
           { nome: "SECO", ruolo: "Edge computing e IoT (Arezzo)" },
           { nome: "Datalogic", ruolo: "Scanner e visione industriale (Bologna)" },
@@ -1306,7 +1329,7 @@ const SETTORI = [
       "Scala degli investimenti fuori portata senza sostegno europeo (Chips Act)",
       "Fuga dei talenti STEM verso hub esteri meglio remunerati",
     ],
-    fonti: ["MIMIT", "Commissione UE — Chips Act", "Bilanci societari (STM, Technoprobe)"],
+    fonti: ["MIMIT", "Commissione UE — Chips Act", "Bilanci societari (STM, Technoprobe)", "SEMI", "EPRS / CSIS — materie prime critiche"],
   },
 
   {
