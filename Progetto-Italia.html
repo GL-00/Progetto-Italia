@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <!-- File autonomo generato da build.mjs — non modificare a mano: modifica i sorgenti in assets/ e ri-esegui `node build.mjs` -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progetto Italia — Analisi economico-industriale dell'ecosistema italiano</title>
+  <meta name="description" content="Piattaforma di analisi dell'economia italiana: panoramica macro (PIL, bilancia commerciale, export) e catene del valore settoriali da monte a valle con le aziende che vi operano.">
+  <style>
+/* ============================================================
+   Progetto Italia — Stile
+   Palette dati validata (dataviz reference) esposta come token.
+   ============================================================ */
+
+:root {
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+
+  --series-1: #2a78d6; --series-2: #1baf7a; --series-3: #eda100;
+  --series-4: #008300; --series-5: #4a3aa7; --series-6: #e34948;
+  --series-7: #e87ba4; --series-8: #eb6834;
+
+  --seq-250: #86b6ef; --seq-350: #5598e7; --seq-450: #2a78d6; --seq-600: #184f95;
+  --div-pos: #2a78d6; --div-neg: #e34948; --div-mid: #f0efec;
+  --good: #0ca30c; --warn-s: #ec835a; --critical: #d03b3b;
+
+  --accent: #2a78d6;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(11, 11, 11, 0.06), 0 4px 14px rgba(11, 11, 11, 0.05);
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+
+    --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500;
+    --series-4: #008300; --series-5: #9085e9; --series-6: #e66767;
+    --series-7: #d55181; --series-8: #d95926;
+
+    --seq-250: #86b6ef; --seq-350: #5598e7; --seq-450: #3987e5; --seq-600: #184f95;
+    --div-pos: #3987e5; --div-neg: #e66767; --div-mid: #383835;
+    --good: #0ca30c;
+    --accent: #3987e5;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+/* Artifact viewer theme toggle */
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface-1: #1a1a19; --text-primary: #ffffff;
+  --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+  --baseline: #383835; --border: rgba(255,255,255,.10);
+  --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500; --series-4: #008300;
+  --series-5: #9085e9; --series-6: #e66767; --series-7: #d55181; --series-8: #d95926;
+  --seq-450: #3987e5; --div-pos: #3987e5; --div-neg: #e66767; --div-mid: #383835;
+  --accent: #3987e5; --shadow: 0 1px 3px rgba(0,0,0,.4);
+}
+:root[data-theme="light"] {
+  --page: #f9f9f7; --surface-1: #fcfcfb; --text-primary: #0b0b0b;
+  --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
+  --baseline: #c3c2b7; --border: rgba(11,11,11,.10);
+  --series-1: #2a78d6; --series-2: #1baf7a; --series-3: #eda100; --series-4: #008300;
+  --series-5: #4a3aa7; --series-6: #e34948; --series-7: #e87ba4; --series-8: #eb6834;
+  --seq-450: #2a78d6; --div-pos: #2a78d6; --div-neg: #e34948; --div-mid: #f0efec;
+  --accent: #2a78d6; --shadow: 0 1px 3px rgba(11,11,11,.06), 0 4px 14px rgba(11,11,11,.05);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--page);
+  color: var(--text-primary);
+  line-height: 1.55;
+  font-size: 15px;
+}
+
+/* ---------- Header e navigazione ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+}
+.tricolore { height: 3px; display: flex; }
+.tricolore span { flex: 1; }
+.tricolore span:nth-child(1) { background: #008C45; }
+.tricolore span:nth-child(2) { background: #F4F5F0; }
+.tricolore span:nth-child(3) { background: #CD212A; }
+
+.header-inner {
+  max-width: 1180px; margin: 0 auto; padding: 10px 20px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: var(--text-primary); }
+.brand-name { font-weight: 750; font-size: 17px; letter-spacing: -0.01em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+
+.main-nav { display: flex; gap: 2px; margin-left: auto; flex-wrap: wrap; }
+.main-nav a {
+  padding: 7px 13px; border-radius: 8px; text-decoration: none;
+  color: var(--text-secondary); font-weight: 550; font-size: 14px;
+}
+.main-nav a:hover { background: var(--page); color: var(--text-primary); }
+.main-nav a.active { background: var(--accent); color: #fff; }
+
+/* ---------- Layout ---------- */
+.container { max-width: 1180px; margin: 0 auto; padding: 26px 20px 70px; }
+.section { margin-top: 38px; }
+.section-head { margin-bottom: 14px; }
+.section-head h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: -0.01em; }
+.section-head p { margin: 0; color: var(--text-secondary); max-width: 76ch; }
+.kicker {
+  text-transform: uppercase; letter-spacing: 0.09em; font-size: 11.5px;
+  font-weight: 700; color: var(--accent); margin-bottom: 4px;
+}
+
+.card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px;
+}
+.card h3 { margin: 0 0 4px; font-size: 16.5px; }
+.card .card-sub { color: var(--text-muted); font-size: 13px; margin: 0 0 14px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* ---------- Hero ---------- */
+.hero { padding: 34px 0 6px; }
+.hero h1 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 10px; letter-spacing: -0.02em; line-height: 1.15; }
+.hero p.lead { font-size: 16.5px; color: var(--text-secondary); max-width: 84ch; margin: 0; }
+
+/* ---------- KPI ---------- */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 22px; }
+.stat-tile {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow);
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-value { font-size: 24px; font-weight: 750; letter-spacing: -0.01em; margin: 2px 0; }
+.stat-delta { font-size: 12.5px; color: var(--text-secondary); }
+.stat-delta.up::before { content: "▲ "; color: var(--good); font-size: 10px; }
+.stat-delta.warn::before { content: "● "; color: var(--warn-s); font-size: 10px; }
+.stat-delta.flat::before { content: "◆ "; color: var(--text-muted); font-size: 10px; }
+
+/* ---------- Grafici ---------- */
+.viz-svg { width: 100%; height: auto; display: block; font-family: var(--font); }
+.viz-mark { transition: opacity 0.12s; cursor: default; }
+.viz-mark:hover { opacity: 0.82; }
+.viz-grid { stroke: var(--grid); stroke-width: 1; }
+.viz-baseline { stroke: var(--baseline); stroke-width: 1; }
+.viz-axis-label { fill: var(--text-muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.viz-cat-label { fill: var(--text-secondary); font-size: 12.5px; }
+.viz-value-label { fill: var(--text-primary); font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; }
+
+.donut-wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.donut-svg { width: 240px; max-width: 100%; flex-shrink: 0; }
+.donut-label { fill: #fff; font-size: 13px; font-weight: 700; }
+.donut-center-value { fill: var(--text-primary); font-size: 26px; font-weight: 750; }
+.donut-center-label { fill: var(--text-muted); font-size: 11.5px; }
+
+.viz-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.viz-legend-col { flex-direction: column; gap: 8px; align-items: flex-start; margin-top: 0; flex: 1; min-width: 200px; }
+.viz-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text-secondary); }
+.viz-legend-text strong { color: var(--text-primary); }
+.viz-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.viz-legend-note { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+.viz-tooltip {
+  position: fixed; z-index: 200; pointer-events: none; opacity: 0;
+  transition: opacity 0.1s; background: var(--text-primary); color: var(--page);
+  padding: 8px 11px; border-radius: 8px; font-size: 12.5px; line-height: 1.45;
+  max-width: 280px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); font-family: var(--font);
+}
+.tip-detail { opacity: 0.75; }
+
+.viz-note { font-size: 13px; color: var(--text-secondary); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--grid); }
+
+/* ---------- Differenziazione (card) ---------- */
+.diff-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 14px; }
+.diff-card {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px; box-shadow: var(--shadow);
+}
+.diff-card .diff-ico { font-size: 22px; }
+.diff-card h4 { margin: 6px 0 4px; font-size: 14.5px; }
+.diff-card p { margin: 0; font-size: 13px; color: var(--text-secondary); }
+
+/* ---------- Griglia settori ---------- */
+.sector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.sector-card {
+  display: block; text-decoration: none; color: var(--text-primary);
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.sector-card:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(11,11,11,0.12); }
+.sector-card::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 4px;
+  background: var(--sector-color, var(--accent));
+}
+.sector-card .sc-ico { font-size: 26px; }
+.sector-card h3 { margin: 8px 0 6px; font-size: 17px; }
+.sector-card p { margin: 0 0 12px; font-size: 13px; color: var(--text-secondary); }
+.sector-card .sc-kpis { display: flex; gap: 14px; flex-wrap: wrap; }
+.sector-card .sc-kpi { font-size: 12px; color: var(--text-muted); }
+.sector-card .sc-kpi strong { display: block; font-size: 14px; color: var(--text-primary); font-weight: 700; }
+.sector-card .sc-cta { font-size: 13px; font-weight: 650; color: var(--accent); margin-top: 12px; display: inline-block; }
+
+/* ---------- Pagina settore ---------- */
+.breadcrumb { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.sector-hero { display: flex; gap: 16px; align-items: flex-start; }
+.sector-hero .sh-ico {
+  font-size: 30px; width: 58px; height: 58px; border-radius: 14px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--sector-color, var(--accent));
+}
+.sector-hero h1 { margin: 0 0 6px; font-size: clamp(23px, 3.4vw, 32px); letter-spacing: -0.02em; }
+.sector-hero p { margin: 0; color: var(--text-secondary); font-size: 15.5px; max-width: 82ch; }
+
+/* ---------- Focus tematico ---------- */
+.focus-card {
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: 22px; align-items: center;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 22px; position: relative; overflow: hidden;
+}
+.focus-card::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--sector-color, var(--accent));
+}
+.focus-body h3 { margin: 4px 0 8px; font-size: 19px; letter-spacing: -0.01em; }
+.focus-body p { margin: 0; color: var(--text-secondary); font-size: 14.5px; }
+.focus-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.focus-metric { background: var(--page); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; }
+.focus-metric .fm-k { font-size: 13px; font-weight: 750; color: var(--text-primary); }
+.focus-metric .fm-v { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
+@media (max-width: 800px) { .focus-card { grid-template-columns: 1fr; } }
+
+/* ---------- Catena del valore ---------- */
+.chain-scroller { overflow-x: auto; padding-bottom: 10px; }
+.chain { display: flex; align-items: stretch; gap: 0; min-width: min-content; }
+.chain-stage {
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; width: 265px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+}
+.chain-pos {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em;
+  padding: 3px 9px; border-radius: 99px; display: inline-block; width: max-content;
+  color: #fff; background: var(--sector-color, var(--accent));
+}
+.chain-pos.pos-MONTE { opacity: 1; }
+.chain-pos.pos-CENTRO { opacity: 0.82; }
+.chain-pos.pos-VALLE { opacity: 0.64; }
+.chain-stage h4 { margin: 10px 0 6px; font-size: 15px; line-height: 1.3; }
+.chain-stage .cs-desc { font-size: 12.5px; color: var(--text-secondary); margin: 0 0 12px; }
+.chain-companies { display: flex; flex-direction: column; gap: 6px; margin-top: auto; }
+.company-chip {
+  font-size: 12.5px; padding: 6px 10px; border-radius: 8px;
+  background: var(--page); border: 1px solid var(--border);
+  color: var(--text-primary); font-weight: 600; cursor: default;
+}
+.company-chip:hover { border-color: var(--sector-color, var(--accent)); }
+.chain-arrow {
+  display: flex; align-items: center; padding: 0 4px; flex-shrink: 0;
+  color: var(--baseline);
+}
+.chain-arrow svg { width: 22px; height: 22px; }
+.chain-flow-labels {
+  display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); margin-bottom: 10px;
+}
+
+/* ---------- Forza / criticità ---------- */
+.swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 800px) { .swot-grid { grid-template-columns: 1fr; } }
+.swot-card ul { margin: 8px 0 0; padding-left: 0; list-style: none; }
+.swot-card li { padding: 7px 0 7px 26px; position: relative; font-size: 13.5px; color: var(--text-secondary); border-top: 1px solid var(--grid); }
+.swot-card li:first-child { border-top: 0; }
+.swot-card li::before { position: absolute; left: 2px; font-size: 13px; }
+.swot-card.forza li::before { content: "✔"; color: var(--good); }
+.swot-card.criticita li::before { content: "⚠"; color: var(--warn-s); }
+
+.fonti-line { font-size: 12.5px; color: var(--text-muted); margin-top: 20px; }
+.fonti-line strong { color: var(--text-secondary); }
+
+.sector-nav { display: flex; justify-content: space-between; gap: 14px; margin-top: 34px; }
+.sector-nav a {
+  text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 14px;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 16px; box-shadow: var(--shadow);
+}
+.sector-nav a:hover { border-color: var(--accent); }
+
+/* ---------- Indice aziende ---------- */
+.filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+.search-input {
+  flex: 1; min-width: 220px; padding: 10px 14px; font-size: 14px; font-family: var(--font);
+  border: 1px solid var(--border); border-radius: 10px; background: var(--surface-1); color: var(--text-primary);
+}
+.search-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.filter-chip {
+  padding: 7px 13px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--surface-1); border: 1px solid var(--border); color: var(--text-secondary); font-family: var(--font);
+}
+.filter-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.table-wrap { overflow-x: auto; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 720px; }
+.data-table th {
+  text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); padding: 12px 16px; border-bottom: 1px solid var(--grid); font-weight: 700;
+}
+.data-table td { padding: 10px 16px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+.data-table tr:last-child td { border-bottom: 0; }
+.data-table td.td-company { font-weight: 650; white-space: nowrap; }
+.data-table td.td-role { color: var(--text-secondary); }
+.badge-sector {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  padding: 3px 10px; border-radius: 99px; white-space: nowrap;
+  background: var(--page); border: 1px solid var(--border); color: var(--text-secondary);
+}
+.badge-dot { width: 8px; height: 8px; border-radius: 99px; }
+.badge-stage { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.results-count { font-size: 13px; color: var(--text-muted); margin: 0 0 10px; }
+
+/* ---------- Metodologia ---------- */
+.method-list { margin: 0; padding: 0; list-style: none; }
+.method-list li { padding: 12px 0; border-top: 1px solid var(--grid); font-size: 14px; }
+.method-list li:first-child { border-top: 0; }
+.method-list .m-name { font-weight: 700; }
+.method-list .m-scope { color: var(--text-secondary); }
+.disclaimer {
+  font-size: 13px; color: var(--text-secondary); background: var(--surface-1);
+  border-left: 3px solid var(--series-3); border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 22px;
+}
+
+/* ---------- Footer ---------- */
+.site-footer { border-top: 1px solid var(--border); margin-top: 40px; }
+.footer-inner { max-width: 1180px; margin: 0 auto; padding: 22px 20px; font-size: 12.5px; color: var(--text-muted); display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+
+@media (max-width: 640px) {
+  .header-inner { padding: 8px 14px; }
+  .container { padding: 18px 14px 60px; }
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+}
+
+</style>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇮🇹</text></svg>">
+</head>
+<body>
+  <header class="site-header">
+    <div class="tricolore" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-name">Progetto Italia</span>
+        <span class="brand-sub">analisi economico-industriale</span>
+      </a>
+      <nav class="main-nav" aria-label="Navigazione principale">
+        <a href="#/" data-nav="home">Panoramica</a>
+        <a href="#/settori" data-nav="settori">Settori e filiere</a>
+        <a href="#/aziende" data-nav="aziende">Aziende</a>
+        <a href="#/metodologia" data-nav="metodologia">Metodologia e fonti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app" class="container" aria-live="polite"></main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Progetto Italia — piattaforma di analisi economico-industriale dell'ecosistema italiano.</span>
+      <span>Dati 2024 (consuntivi e stime) · fonti: ISTAT, Banca d'Italia, Eurostat e associazioni di categoria.</span>
+    </div>
+  </footer>
+
+  <script>
+/* ============================================================
+   Progetto Italia — Dataset analitico
+   Valori indicativi riferiti al 2024 (consuntivi e stime),
+   salvo diversa indicazione. Fonti primarie: ISTAT, Banca
+   d'Italia, Eurostat, MEF, associazioni di categoria citate
+   in ogni scheda. Importi in miliardi di euro (mld €).
+   ============================================================ */
+
+const MACRO = {
+  anno: 2024,
+  kpi: [
+    { label: "PIL nominale", value: "€2.192 mld", delta: "+0,7% reale", trend: "up" },
+    { label: "Export di beni", value: "€623,5 mld", delta: "2° manifattura UE", trend: "flat" },
+    { label: "Saldo commerciale", value: "+€54,9 mld", delta: "dal -€34 mld del 2022", trend: "up" },
+    { label: "Occupati", value: "24,1 mln", delta: "tasso occupazione 62,2%", trend: "up" },
+    { label: "Debito pubblico", value: "135,3% PIL", delta: "≈ €3.000 mld", trend: "warn" },
+    { label: "Inflazione (IPCA)", value: "+1,1%", delta: "rientrata dai picchi 2022", trend: "up" },
+  ],
+
+  // Composizione del valore aggiunto per macro-settore (% sul totale)
+  pilComposizione: [
+    { label: "Servizi", value: 74, detail: "Commercio, turismo, finanza, PA, immobiliare, professioni" },
+    { label: "Industria in senso stretto", value: 19, detail: "di cui manifattura ≈ 15%" },
+    { label: "Costruzioni", value: 5, detail: "Spinta 2021-23 dai bonus edilizi" },
+    { label: "Agricoltura", value: 2, detail: "Ma a monte di un agroalimentare da €69 mld di export" },
+  ],
+
+  // Dettaglio dei servizi (% sul valore aggiunto totale)
+  serviziDettaglio: [
+    { label: "Commercio, trasporti, alloggio e ristorazione", value: 21 },
+    { label: "PA, istruzione e sanità", value: 16 },
+    { label: "Attività immobiliari", value: 13 },
+    { label: "Servizi professionali e alle imprese", value: 10 },
+    { label: "Finanza e assicurazioni", value: 5 },
+    { label: "Informazione e comunicazione (ICT)", value: 4 },
+    { label: "Altri servizi", value: 5 },
+  ],
+
+  // Bilancia commerciale beni (mld €) — ISTAT, coe.istat.it
+  bilancia: [
+    { anno: 2019, exp: 476, imp: 423 },
+    { anno: 2020, exp: 436, imp: 373 },
+    { anno: 2021, exp: 516, imp: 476 },
+    { anno: 2022, exp: 625, imp: 659 },
+    { anno: 2023, exp: 626, imp: 592 },
+    { anno: 2024, exp: 623, imp: 569 },
+  ],
+  bilanciaNota:
+    "Il rosso del 2022 è interamente energetico: lo shock dei prezzi di gas e petrolio ha gonfiato l'import di oltre €110 mld. Al netto dell'energia, la manifattura italiana genera stabilmente uno dei cinque maggiori surplus commerciali al mondo (≈ €100 mld), trainato da meccanica, farmaceutica, moda e agroalimentare.",
+
+  // Prime voci dell'export di beni, mld € (classificazione ATECO, valori indicativi 2024)
+  topExport: [
+    { label: "Macchinari e apparecchi", value: 89, nota: "1ª voce: meccanica strumentale, packaging, macchine utensili" },
+    { label: "Moda e accessori (tessile, abbigliamento, pelle)", value: 62, nota: "Include l'occhialeria e la pelletteria delle grandi maison" },
+    { label: "Alimentari, bevande e tabacco", value: 59, nota: "€69 mld l'agroalimentare esteso; vino €8,1 mld" },
+    { label: "Mezzi di trasporto", value: 57, nota: "Auto premium, componentistica, nautica, aerospazio" },
+    { label: "Farmaceutica", value: 54, nota: "Export quasi triplicato in dieci anni" },
+    { label: "Metalli e prodotti in metallo", value: 53, nota: "Acciai speciali, rubinetteria, forgiati" },
+    { label: "Chimica, gomma e plastica", value: 52, nota: "Chimica fine e specialità" },
+    { label: "Elettronica ed elettrotecnica", value: 35, nota: "Cavi, apparecchiature elettriche, semiconduttori" },
+    { label: "Mobili e arredo", value: 20, nota: "Design: 1° esportatore UE di mobili" },
+  ],
+
+  // Quote dei principali mercati di sbocco (% export beni, 2024)
+  partner: [
+    { label: "Germania", value: 11.4 },
+    { label: "Stati Uniti", value: 10.7 },
+    { label: "Francia", value: 10.1 },
+    { label: "Spagna", value: 5.5 },
+    { label: "Svizzera", value: 4.8 },
+    { label: "Regno Unito", value: 4.4 },
+    { label: "Polonia", value: 3.3 },
+    { label: "Cina", value: 2.5 },
+  ],
+
+  // Dove l'Italia si differenzia
+  differenziazione: [
+    { icona: "🏭", titolo: "2ª manifattura d'Europa", testo: "Dietro solo alla Germania per valore aggiunto manifatturiero; tra i cinque paesi al mondo con surplus manifatturiero superiore a $100 mld (Fondazione Edison su dati WTO)." },
+    { icona: "📦", titolo: "Leader mondiale del packaging", testo: "La \"packaging valley\" emiliana (IMA, Coesia, Marchesini, Sacmi) domina le macchine per il confezionamento farmaceutico e alimentare: ~80% della produzione esportata." },
+    { icona: "💊", titolo: "Hub farmaceutico d'Europa", testo: "1°-2° produttore UE di farmaci e 1° per principi attivi; polo mondiale del conto terzi (CDMO) e del vetro farmaceutico (Stevanato)." },
+    { icona: "🛥️", titolo: "1° al mondo nei superyacht", testo: "Circa metà del portafoglio ordini globale di yacht sopra i 24 metri (Global Order Book); leadership assoluta nelle navi da crociera con Fincantieri." },
+    { icona: "🛰️", titolo: "Potenza spaziale completa", testo: "Tra i pochi paesi con l'intera filiera: lanciatori (Avio), satelliti (Thales Alenia Space), servizi (Telespazio). 3° contributore ESA, leadership nel radar (COSMO-SkyMed)." },
+    { icona: "🧀", titolo: "1° paese per prodotti DOP/IGP", testo: "856 denominazioni certificate, una \"DOP economy\" da €20 mld; 1° esportatore mondiale di vino in volume e riferimento del food premium." },
+    { icona: "👓", titolo: "Capitale mondiale dell'occhialeria", testo: "Il distretto di Belluno con EssilorLuxottica, Safilo, Marcolin e De Rigo produce gran parte dell'eyewear di fascia alta mondiale." },
+    { icona: "🧵", titolo: "L'unica filiera completa del lusso", testo: "Circa metà della produzione mondiale di beni di lusso passa da fabbriche e laboratori italiani, anche per conto delle maison francesi." },
+  ],
+};
+
+/* ============================================================
+   SETTORI — catene del valore da monte a valle
+   ============================================================ */
+
+const SETTORI = [
+  {
+    id: "difesa",
+    icona: "🛡️",
+    nome: "Difesa e Sicurezza",
+    tagline: "Dai materiali avanzati ai sistemi d'arma: una filiera presente in tutti i domini — terra, mare, cielo, spazio e cyber.",
+    kpi: [
+      { label: "Fatturato filiera", value: "≈ €18 mld" },
+      { label: "Addetti diretti", value: "≈ 55.000" },
+      { label: "Spesa per la difesa", value: "≈ 1,5% PIL" },
+      { label: "Export autorizzato", value: "≈ €6 mld/anno" },
+    ],
+    catena: [
+      {
+        fase: "R&S e materiali avanzati",
+        posizione: "MONTE",
+        descrizione: "Ricerca su materiali, propulsione e tecnologie dual use; centri pubblici e laboratori industriali.",
+        aziende: [
+          { nome: "CIRA", ruolo: "Centro Italiano Ricerche Aerospaziali (Capua)" },
+          { nome: "Leonardo Labs", ruolo: "Rete di laboratori corporate su AI, materiali, quantum" },
+          { nome: "Avio Aero (GE)", ruolo: "Additive manufacturing e trasmissioni aeronautiche" },
+          { nome: "CETENA", ruolo: "Ricerca navale del gruppo Fincantieri" },
+          { nome: "Distretti aerospaziali", ruolo: "DAC Campania, DAP Puglia, Piemonte, Lazio" },
+        ],
+      },
+      {
+        fase: "Componenti e sottosistemi",
+        posizione: "MONTE",
+        descrizione: "Elettronica di difesa, attuazione, munizionamento, equipaggiamenti: il tessuto di media impresa specializzata.",
+        aziende: [
+          { nome: "Elettronica Group", ruolo: "Guerra elettronica (Roma)" },
+          { nome: "Microtecnica (Collins)", ruolo: "Attuatori e controlli di volo" },
+          { nome: "Magnaghi Aeronautica", ruolo: "Carrelli d'atterraggio" },
+          { nome: "Simmel Difesa (KNDS)", ruolo: "Munizionamento" },
+          { nome: "Fiocchi Munizioni", ruolo: "Munizioni di piccolo calibro" },
+        ],
+      },
+      {
+        fase: "Sistemi e piattaforme",
+        posizione: "CENTRO",
+        descrizione: "I costruttori di piattaforme: elicotteri, velivoli, navi, veicoli blindati, missili, armi leggere.",
+        aziende: [
+          { nome: "Leonardo", ruolo: "Elicotteri, velivoli, elettronica per la difesa — ricavi 2024 ≈ €17,8 mld" },
+          { nome: "Fincantieri", ruolo: "Navi militari (FREMM, PPA, sommergibili U212 NFS)" },
+          { nome: "MBDA Italia", ruolo: "Missilistica (Aster, CAMM-ER, Teseo)" },
+          { nome: "IDV — Iveco Defence Vehicles", ruolo: "Veicoli blindati e logistici" },
+          { nome: "Beretta", ruolo: "Armi leggere, dal 1526" },
+        ],
+      },
+      {
+        fase: "Integrazione e prime contractor",
+        posizione: "CENTRO",
+        descrizione: "Capocommessa dei grandi programmi nazionali e internazionali; system-of-systems e C4ISR.",
+        aziende: [
+          { nome: "Leonardo", ruolo: "GCAP (con UK e Giappone), Eurofighter, NH90" },
+          { nome: "Orizzonte Sistemi Navali", ruolo: "JV Fincantieri-Leonardo per i programmi navali" },
+          { nome: "Telespazio", ruolo: "Comunicazioni satellitari governative (SICRAL)" },
+        ],
+      },
+      {
+        fase: "Servizi, MRO, addestramento ed export",
+        posizione: "VALLE",
+        descrizione: "Supporto logistico, manutenzione, simulazione e addestramento; l'export è regolato dalla L.185/90.",
+        aziende: [
+          { nome: "Leonardo — divisione training", ruolo: "International Flight Training School (con Aeronautica Militare)" },
+          { nome: "Fincantieri Services", ruolo: "Supporto in servizio delle flotte" },
+          { nome: "Elettronica — Cy4Gate", ruolo: "Cyber intelligence e cyber security" },
+        ],
+      },
+    ],
+    forza: [
+      "Presenza in tutti i domini operativi e in tutti i grandi programmi europei (GCAP, Eurofighter, FREMM, MBDA)",
+      "Leadership mondiale negli elicotteri (AW139) e nel navale militare di superficie",
+      "Filiera dual use che alimenta anche spazio, avionica civile e cyber",
+    ],
+    criticita: [
+      "Dipendenza estera per semiconduttori, ottiche e alcune materie prime critiche",
+      "Scala ridotta rispetto ai prime USA; frammentazione della domanda europea",
+      "Ricambio generazionale delle competenze specialistiche nelle PMI della filiera",
+    ],
+    fonti: ["AIAD", "Documento Programmatico Pluriennale Difesa", "SIPRI", "Relazione annuale export L.185/90"],
+  },
+
+  {
+    id: "spazio-osservazione-terra",
+    icona: "🛰️",
+    nome: "Spazio e Osservazione della Terra",
+    tagline: "Una delle poche filiere spaziali complete al mondo — dal lanciatore al dato interpretato — con una leadership specifica nell'Osservazione della Terra: radar SAR, iperspettrale e la nuova costellazione nazionale IRIDE.",
+    kpi: [
+      { label: "Fatturato spazio", value: "≈ €3,1 mld" },
+      { label: "Addetti qualificati", value: "≈ 12.000" },
+      { label: "Contributo ESA", value: "3° paese (≈ €3,1 mld/triennio)" },
+      { label: "Programma IRIDE", value: "€1,1 mld (PNRR)" },
+    ],
+    focus: {
+      titolo: "Perché l'Osservazione della Terra è strategica",
+      testo: "Il telerilevamento e l'interpretazione delle immagini satellitari sono un asset dual-use: alimentano difesa e intelligence, monitoraggio ambientale e del territorio, agricoltura di precisione, gestione delle emergenze e sorveglianza marittima. L'Italia presidia l'intera catena — costruisce i satelliti radar e iperspettrali, li opera dal Fucino, distribuisce e interpreta i dati — un caso raro di autonomia end-to-end in Europa.",
+      metriche: [
+        { k: "COSMO-SkyMed", v: "Costellazione SAR dual-use (ASI + Difesa)" },
+        { k: "PRISMA", v: "Satellite iperspettrale, tra i primi al mondo" },
+        { k: "IRIDE", v: "≈ 60 satelliti LEO entro il 2026" },
+        { k: "Copernicus", v: "Sentinel-1 SAR costruito in Italia" },
+      ],
+    },
+    catena: [
+      {
+        fase: "Ricerca, agenzie e formazione",
+        posizione: "MONTE",
+        descrizione: "Programmazione pubblica, ricerca scientifica e pipeline di competenze; l'ASI è agenzia di riferimento e cliente-guida delle missioni EO nazionali.",
+        aziende: [
+          { nome: "ASI", ruolo: "Agenzia Spaziale Italiana — programmazione, COSMO-SkyMed, PRISMA, IRIDE" },
+          { nome: "CIRA", ruolo: "Ricerca aerospaziale, rientro atmosferico (Space Rider)" },
+          { nome: "INAF / CNR-IREA", ruolo: "Astrofisica e ricerca sul telerilevamento e l'interferometria SAR" },
+          { nome: "PoliMi, PoliTo, Sapienza, Tor Vergata", ruolo: "Ingegneria aerospaziale, geomatica, osservatorio Space Economy" },
+        ],
+      },
+      {
+        fase: "Lanciatori e accesso allo spazio",
+        posizione: "MONTE",
+        descrizione: "Accesso autonomo europeo allo spazio per carichi piccoli e medi: fondamentale per mettere in orbita costellazioni EO nazionali.",
+        aziende: [
+          { nome: "Avio", ruolo: "Vega C e propulsione solida (Colleferro); motori P120C anche per Ariane 6" },
+          { nome: "Sitael", ruolo: "Propulsione elettrica per il mantenimento in orbita dei satelliti (Mola di Bari)" },
+        ],
+      },
+      {
+        fase: "Satelliti EO e payload (upstream)",
+        posizione: "CENTRO",
+        descrizione: "Il cuore dell'Osservazione della Terra: piattaforme e sensori radar (SAR), ottici e iperspettrali. Qui l'Italia è tra i leader mondiali del radar spaziale.",
+        aziende: [
+          { nome: "Thales Alenia Space Italia", ruolo: "Prime di COSMO-SkyMed e del SAR di Sentinel-1 (Copernicus); moduli abitati ISS a Torino" },
+          { nome: "Leonardo", ruolo: "Strumento iperspettrale di PRISMA, ottiche, star tracker, sensori atmosferici, celle solari" },
+          { nome: "OHB Italia", ruolo: "Prime della piattaforma PRISMA e di missioni scientifiche" },
+          { nome: "Argotec", ruolo: "Smallsat e microsatelliti (LICIACube, ArgoMoon), segmento IRIDE" },
+          { nome: "Sitael / Tyvak International", ruolo: "Piccole piattaforme e nanosatelliti per costellazioni EO" },
+        ],
+      },
+      {
+        fase: "Operazioni, ground segment e lancio",
+        posizione: "CENTRO",
+        descrizione: "Controllo missione, ricezione ed elaborazione a terra, logistica orbitale: la spina dorsale che trasforma il segnale in dato utilizzabile.",
+        aziende: [
+          { nome: "Telespazio", ruolo: "Centro spaziale del Fucino, tra i maggiori teleporti civili al mondo; operazioni COSMO-SkyMed e IRIDE" },
+          { nome: "D-Orbit", ruolo: "Logistica orbitale e space cargo (ION), rilascio di smallsat" },
+          { nome: "Leaf Space", ruolo: "Ground station as a service per costellazioni" },
+          { nome: "e-GEOS", ruolo: "Ricezione, archiviazione e processing dei dati radar (JV Telespazio 80% / ASI 20%)" },
+        ],
+      },
+      {
+        fase: "Dati EO, geoinformazione e telerilevamento",
+        posizione: "VALLE",
+        descrizione: "Distribuzione dei dati e loro trasformazione in prodotti geospaziali: interpretazione delle immagini, mappe tematiche, interferometria per il monitoraggio di frane e subsidenza.",
+        aziende: [
+          { nome: "e-GEOS (Telespazio/ASI)", ruolo: "Distribuzione dati COSMO-SkyMed; Copernicus Emergency Management Service" },
+          { nome: "Planetek Italia", ruolo: "Geoinformazione, monitoraggio del territorio e piattaforme EO (Bari)" },
+          { nome: "Aresys", ruolo: "Processori SAR e interferometria (spin-off PoliMi)" },
+          { nome: "NAIS / Geo-K / Survey Lab", ruolo: "Servizi di telerilevamento, cartografia e monitoraggio infrastrutture" },
+        ],
+      },
+      {
+        fase: "Applicazioni, analytics e servizi al mercato",
+        posizione: "VALLE",
+        descrizione: "L'ultimo miglio del valore: analytics basati su intelligenza artificiale per città, clima, agricoltura, assicurazioni e sicurezza. È il segmento più dinamico e più frammentato.",
+        aziende: [
+          { nome: "Latitudo 40", ruolo: "Analytics satellitari con AI per città, clima e rischio (Napoli)" },
+          { nome: "Programma IRIDE", ruolo: "Costellazione nazionale EO (PNRR): upstream + downstream + hub di servizi, operativa entro il 2026" },
+          { nome: "AIKO / Deep Blue", ruolo: "Autonomia di bordo con AI e human factors per le operazioni EO" },
+          { nome: "Assicurazioni e PA", ruolo: "Utenti finali: agricoltura di precisione, parametrico, protezione civile, catasto" },
+        ],
+      },
+    ],
+    forza: [
+      "Filiera completa monte-valle, rara al mondo; leadership nel radar ad apertura sintetica (COSMO-SkyMed) e nell'iperspettrale (PRISMA)",
+      "Autonomia end-to-end nell'Osservazione della Terra: costruzione satelliti, operazioni dal Fucino, distribuzione e interpretazione dei dati",
+      "IRIDE: una delle maggiori costellazioni EO europee, finanziata dal PNRR, che integra upstream, downstream e hub di servizi nazionali",
+      "Eccellenza nei moduli abitati e nelle infrastrutture orbitali (Torino, hub mondiale della ISS)",
+    ],
+    criticita: [
+      "Scala industriale e capitali privati limitati rispetto a USA e Francia; downstream molto frammentato",
+      "Ritardi e costi del programma Vega; dipendenza temporanea da lanci esteri",
+      "Valorizzazione economica del dato EO ancora bassa: molte startup, pochi campioni di scala capaci di fare mercato",
+      "Dipendenza estera per componentistica elettronica e ottiche critiche di alcuni payload",
+    ],
+    fonti: ["ASI", "ESA", "e-GEOS", "Copernicus / Commissione UE", "Osservatorio Space Economy PoliMi", "PNRR — Missione 1 (IRIDE)"],
+  },
+
+  {
+    id: "energia",
+    icona: "⚡",
+    nome: "Energia e Transizione",
+    tagline: "Hub mediterraneo del gas e leader tecnologico in cavi, turbomacchine ed elettrolizzatori, con una dipendenza strutturale dall'import.",
+    kpi: [
+      { label: "Dipendenza energetica", value: "≈ 74% import" },
+      { label: "Rinnovabili", value: "> 40% mix elettrico" },
+      { label: "Nuova capacità FER 2024", value: "+7,5 GW" },
+      { label: "Campioni nazionali", value: "Eni, Enel, Snam, Terna" },
+    ],
+    catena: [
+      {
+        fase: "Approvvigionamento e upstream",
+        posizione: "MONTE",
+        descrizione: "Esplorazione e produzione, gas naturale liquefatto, diversificazione post-2022 dalle forniture russe.",
+        aziende: [
+          { nome: "Eni", ruolo: "E&P globale, GNL, bioraffinazione — ricavi ≈ €90 mld" },
+          { nome: "Edison", ruolo: "Gas e generazione (gruppo EDF)" },
+          { nome: "Snam FSRU", ruolo: "Rigassificatori di Piombino e Ravenna" },
+        ],
+      },
+      {
+        fase: "Generazione elettrica",
+        posizione: "CENTRO",
+        descrizione: "Parco termoelettrico a gas e crescita di solare, eolico e idroelettrico.",
+        aziende: [
+          { nome: "Enel", ruolo: "1° operatore; Enel Green Power per le rinnovabili" },
+          { nome: "A2A / Iren / Hera", ruolo: "Multiutility territoriali" },
+          { nome: "ERG", ruolo: "Pure player eolico e solare" },
+          { nome: "Edison", ruolo: "Idroelettrico e gas" },
+        ],
+      },
+      {
+        fase: "Reti e infrastrutture",
+        posizione: "CENTRO",
+        descrizione: "Trasmissione, trasporto e distribuzione: monopoli naturali regolati, spina dorsale della transizione.",
+        aziende: [
+          { nome: "Terna", ruolo: "Rete di trasmissione; Tyrrhenian Link e interconnessioni" },
+          { nome: "Snam", ruolo: "Rete gas, stoccaggi, corridoio idrogeno Nord Africa-Europa" },
+          { nome: "Italgas", ruolo: "Distribuzione gas, reti digitali" },
+        ],
+      },
+      {
+        fase: "Tecnologie e supply chain della transizione",
+        posizione: "CENTRO",
+        descrizione: "La manifattura energetica: dove l'Italia esporta tecnologia in tutto il mondo.",
+        aziende: [
+          { nome: "Prysmian", ruolo: "1° produttore mondiale di cavi (interconnessioni HVDC)" },
+          { nome: "Ansaldo Energia", ruolo: "Turbine a gas e Ansaldo Nucleare" },
+          { nome: "Baker Hughes — Nuovo Pignone", ruolo: "Turbomacchine (Firenze)" },
+          { nome: "Saipem", ruolo: "EPC offshore e ingegneria sottomarina" },
+          { nome: "Industrie De Nora", ruolo: "Elettrodi ed elettrolizzatori per l'idrogeno" },
+          { nome: "Enel 3Sun", ruolo: "Gigafactory fotovoltaica di Catania" },
+        ],
+      },
+      {
+        fase: "Vendita, servizi ed efficienza",
+        posizione: "VALLE",
+        descrizione: "Mercato retail liberalizzato, servizi energetici e demand response.",
+        aziende: [
+          { nome: "Enel Energia / Eni Plenitude", ruolo: "Retail elettricità, gas e mobilità elettrica" },
+          { nome: "Acea / Hera / A2A", ruolo: "Vendita e servizi ambientali integrati" },
+          { nome: "ESCo e aggregatori", ruolo: "Efficienza energetica, comunità energetiche (CER)" },
+        ],
+      },
+    ],
+    forza: [
+      "Posizione di hub mediterraneo: rigassificatori, TAP, corridoi per l'idrogeno verde nordafricano",
+      "Campioni tecnologici globali: Prysmian (cavi), Nuovo Pignone (turbomacchine), De Nora (idrogeno)",
+      "Grandi utility con scala internazionale (Enel tra i primi operatori elettrici mondiali)",
+    ],
+    criticita: [
+      "Prezzi elettrici tra i più alti d'Europa: svantaggio competitivo per l'industria energivora",
+      "Dipendenza dall'import per il 74% del fabbisogno; assenza di generazione nucleare",
+      "Permitting lento per rinnovabili e reti nonostante l'accelerazione recente",
+    ],
+    fonti: ["MASE", "Terna", "GSE", "ARERA", "Snam"],
+  },
+
+  {
+    id: "meccanica",
+    icona: "⚙️",
+    nome: "Meccanica strumentale e Automazione",
+    tagline: "La prima voce dell'export italiano: macchine che producono ciò che il mondo consuma, dal packaging farmaceutico agli impianti siderurgici.",
+    kpi: [
+      { label: "Export macchinari", value: "€89 mld (1ª voce)" },
+      { label: "Macchine utensili", value: "4° esportatore mondiale" },
+      { label: "Packaging", value: "≈ €9 mld, 80% export" },
+      { label: "Modello", value: "Distretti + medie imprese" },
+    ],
+    catena: [
+      {
+        fase: "Metallurgia, fusioni e acciai speciali",
+        posizione: "MONTE",
+        descrizione: "La base materiale: acciai speciali, fusioni e forgiati dei distretti lombardi e veneti.",
+        aziende: [
+          { nome: "Lucchini RS", ruolo: "Acciai per ferroviario e meccanica (Lovere)" },
+          { nome: "Acciaierie Venete", ruolo: "Acciai lunghi speciali" },
+          { nome: "Distretto bresciano", ruolo: "Fonderie, stampaggio, minuteria" },
+        ],
+      },
+      {
+        fase: "Componentistica meccatronica",
+        posizione: "MONTE",
+        descrizione: "Riduttori, pneumatica, pompe, sensori: i \"campioni nascosti\" della subfornitura evoluta.",
+        aziende: [
+          { nome: "Bonfiglioli", ruolo: "Riduttori e motoriduttori (Bologna)" },
+          { nome: "Interpump", ruolo: "1° mondiale pompe ad alta pressione" },
+          { nome: "Camozzi", ruolo: "Automazione pneumatica (Brescia)" },
+          { nome: "Carraro", ruolo: "Trasmissioni per off-highway" },
+          { nome: "Gefran", ruolo: "Sensoristica e controllo di processo" },
+        ],
+      },
+      {
+        fase: "Macchine utensili e robotica",
+        posizione: "CENTRO",
+        descrizione: "Lavorazione di metallo, legno, vetro, lamiera e laser: il cuore del made in Italy industriale.",
+        aziende: [
+          { nome: "Biesse", ruolo: "Macchine per legno, vetro e pietra (Pesaro)" },
+          { nome: "SCM Group", ruolo: "Tecnologie per il legno (Rimini)" },
+          { nome: "Salvagnini", ruolo: "Sistemi per la lamiera" },
+          { nome: "Prima Industrie", ruolo: "Macchine laser" },
+          { nome: "Comau (Stellantis)", ruolo: "Robotica industriale (Torino)" },
+        ],
+      },
+      {
+        fase: "Macchine per il packaging e di settore",
+        posizione: "CENTRO",
+        descrizione: "La \"packaging valley\" emiliana: leadership mondiale nel confezionamento farmaceutico, alimentare e del beverage.",
+        aziende: [
+          { nome: "IMA", ruolo: "Packaging farmaceutico e food (Bologna)" },
+          { nome: "Coesia", ruolo: "Gruppo di 21 aziende di automazione (Bologna)" },
+          { nome: "Marchesini Group", ruolo: "Confezionamento farmaceutico e cosmetico" },
+          { nome: "Sacmi", ruolo: "Macchine per ceramica, packaging e food (Imola)" },
+        ],
+      },
+      {
+        fase: "Impianti chiavi in mano e servizi",
+        posizione: "VALLE",
+        descrizione: "Ingegneria e realizzazione di impianti completi, service, retrofit digitale e manutenzione predittiva.",
+        aziende: [
+          { nome: "Danieli", ruolo: "Impianti siderurgici completi (Buttrio) — tra i 3 leader mondiali" },
+          { nome: "MAIRE", ruolo: "Ingegneria impiantistica e chimica verde" },
+          { nome: "Service e digitale 4.0", ruolo: "Teleassistenza, IoT industriale, ricambi — quota crescente dei ricavi" },
+        ],
+      },
+    ],
+    forza: [
+      "Capacità di personalizzazione estrema: macchine \"su misura\" che i concorrenti tedeschi e giapponesi non replicano",
+      "Distretti integrati (packaging valley bolognese, macchine legno pesarese) con know-how tacito difficilmente delocalizzabile",
+      "Posizionamento premium con margini elevati e quota export strutturale ≈ 80%",
+    ],
+    criticita: [
+      "Dimensione media d'impresa ridotta: vulnerabilità ad acquisizioni estere del know-how",
+      "Ricambio generazionale di imprenditori e tecnici specializzati",
+      "Dipendenza da componentistica elettronica e controlli numerici esteri (Siemens, Fanuc)",
+    ],
+    fonti: ["Federmacchine", "UCIMU", "Ucima", "ISTAT coe"],
+  },
+
+  {
+    id: "automotive",
+    icona: "🚗",
+    nome: "Automotive e Motor Valley",
+    tagline: "Volumi in crisi, eccellenza nel lusso: la componentistica e i marchi premium reggono una filiera in piena transizione elettrica.",
+    kpi: [
+      { label: "Produzione veicoli 2024", value: "≈ 475.000 (-37%)" },
+      { label: "Filiera", value: "≈ 268.000 addetti" },
+      { label: "Export componenti", value: "≈ €23 mld" },
+      { label: "Ferrari", value: "> €90 mld di capitalizzazione" },
+    ],
+    catena: [
+      {
+        fase: "Design, ingegneria e materiali",
+        posizione: "MONTE",
+        descrizione: "Stile e ingegneria di veicolo: un'eccellenza che lavora per i costruttori di tutto il mondo.",
+        aziende: [
+          { nome: "Italdesign (Audi)", ruolo: "Ingegneria e stile (Moncalieri)" },
+          { nome: "Pininfarina", ruolo: "Design (gruppo Mahindra)" },
+          { nome: "Dallara", ruolo: "Compositi, aerodinamica, motorsport (Varano de' Melegari)" },
+        ],
+      },
+      {
+        fase: "Componentistica",
+        posizione: "MONTE",
+        descrizione: "≈ 2.200 imprese fornitrici: il segmento più solido della filiera, con saldo commerciale positivo.",
+        aziende: [
+          { nome: "Brembo", ruolo: "1° mondiale impianti frenanti ad alte prestazioni" },
+          { nome: "Pirelli", ruolo: "Pneumatici premium" },
+          { nome: "Marelli", ruolo: "Elettronica, illuminazione, propulsione" },
+          { nome: "Eurogroup Laminations", ruolo: "Statori e rotori per motori elettrici" },
+          { nome: "Sogefi", ruolo: "Filtrazione e sospensioni" },
+        ],
+      },
+      {
+        fase: "Costruttori (OEM)",
+        posizione: "CENTRO",
+        descrizione: "Grandi volumi in contrazione (Stellantis) e lusso ai massimi storici (Motor Valley emiliana).",
+        aziende: [
+          { nome: "Stellantis", ruolo: "Mirafiori, Cassino, Melfi, Pomigliano, Atessa" },
+          { nome: "Ferrari", ruolo: "Maranello: margini e capitalizzazione record" },
+          { nome: "Lamborghini (VW)", ruolo: "Sant'Agata Bolognese" },
+          { nome: "Iveco Group", ruolo: "Veicoli industriali e bus" },
+          { nome: "Piaggio", ruolo: "Due ruote (Pontedera)" },
+        ],
+      },
+      {
+        fase: "Distribuzione, aftermarket e mobilità",
+        posizione: "VALLE",
+        descrizione: "Reti di vendita, ricambi, noleggio a lungo termine e nuova mobilità.",
+        aziende: [
+          { nome: "Reti dealer e NLT", ruolo: "Consolidamento verso grandi gruppi (Autotorino, UnipolRental, Arval)" },
+          { nome: "Aftermarket", ruolo: "Ricambi e officine: mercato ≈ €25 mld" },
+        ],
+      },
+    ],
+    forza: [
+      "Motor Valley: concentrazione unica al mondo di marchi luxury/performance (Ferrari, Lamborghini, Maserati, Pagani, Ducati, Dallara)",
+      "Componentisti globali con clienti diversificati (Brembo, Pirelli fornitori di tutti i premium mondiali)",
+      "Competenze motorsport che alimentano il trasferimento tecnologico",
+    ],
+    criticita: [
+      "Crollo dei volumi produttivi: dipendenza da un solo grande OEM (Stellantis) in ritirata",
+      "Transizione elettrica: a rischio le imprese legate al powertrain termico (≈ 70.000 addetti esposti)",
+      "Assenza di una gigafactory di celle operativa su scala",
+    ],
+    fonti: ["ANFIA", "ACEA", "MIMIT — tavolo automotive", "Osservatorio componentistica CCIAA Torino"],
+  },
+
+  {
+    id: "farmaceutica",
+    icona: "💊",
+    nome: "Farmaceutica e Life Sciences",
+    tagline: "Il settore export che cresce più veloce: hub produttivo europeo per farmaci, principi attivi, vaccini e packaging farmaceutico.",
+    kpi: [
+      { label: "Produzione", value: "≈ €52 mld (1°-2° UE)" },
+      { label: "Export", value: "≈ €54 mld (2024)" },
+      { label: "Addetti", value: "≈ 70.000 (60% laureati)" },
+      { label: "R&S + investimenti", value: "≈ €4 mld/anno" },
+    ],
+    catena: [
+      {
+        fase: "Ricerca, biotech e clinica",
+        posizione: "MONTE",
+        descrizione: "IRCCS, poli biotech e ricerca traslazionale: il vivaio delle molecole.",
+        aziende: [
+          { nome: "IRCCS (San Raffaele, Humanitas, Gemelli)", ruolo: "Ricerca clinica e traslazionale" },
+          { nome: "Dompé", ruolo: "Biotech proprietario (Oxervate)" },
+          { nome: "Human Technopole", ruolo: "Ricerca genomica (Milano MIND)" },
+        ],
+      },
+      {
+        fase: "Principi attivi (API) e chimica fine",
+        posizione: "MONTE",
+        descrizione: "L'Italia è il 1° produttore europeo di principi attivi per conto terzi.",
+        aziende: [
+          { nome: "ACS Dobfar", ruolo: "Antibiotici e sterili" },
+          { nome: "Olon", ruolo: "API e biotecnologie (gruppo P&R)" },
+          { nome: "F.I.S.", ruolo: "Fabbrica Italiana Sintetici (Vicenza)" },
+          { nome: "Flamma", ruolo: "Chimica fine per pharma" },
+        ],
+      },
+      {
+        fase: "Sviluppo e produzione farmaci",
+        posizione: "CENTRO",
+        descrizione: "Campioni nazionali a capitale familiare e grandi siti produttivi delle multinazionali.",
+        aziende: [
+          { nome: "Menarini", ruolo: "1° gruppo italiano (€4,7 mld, Firenze)" },
+          { nome: "Chiesi", ruolo: "Respiratorio e malattie rare (Parma)" },
+          { nome: "Recordati", ruolo: "Specialty e rare disease (quotata)" },
+          { nome: "Angelini Pharma / Alfasigma / Zambon / Italfarmaco", ruolo: "Medi gruppi familiari internazionalizzati" },
+          { nome: "Siti multinazionali", ruolo: "Novo Nordisk (Anagni), Eli Lilly (Sesto F.no), MSD, Pfizer (Ascoli), GSK Vaccines (Siena), BSP (Latina)" },
+        ],
+      },
+      {
+        fase: "Packaging farmaceutico e macchine",
+        posizione: "CENTRO",
+        descrizione: "Il vantaggio sistemico italiano: vetro, dispositivi e macchine di confezionamento nella stessa filiera.",
+        aziende: [
+          { nome: "Stevanato Group", ruolo: "Leader mondiale contenitori in vetro e drug delivery (Piombino Dese)" },
+          { nome: "Bormioli Pharma", ruolo: "Vetro e plastica farmaceutica" },
+          { nome: "IMA / Marchesini", ruolo: "Macchine di confezionamento (link meccanica)" },
+        ],
+      },
+      {
+        fase: "Distribuzione e sanità",
+        posizione: "VALLE",
+        descrizione: "Distribuzione intermedia, ≈ 20.000 farmacie e Servizio Sanitario Nazionale come primo acquirente.",
+        aziende: [
+          { nome: "Distribuzione intermedia", ruolo: "Comifar, Unico, Farla" },
+          { nome: "Farmacie e SSN", ruolo: "Spesa farmaceutica pubblica ≈ €20 mld/anno" },
+        ],
+      },
+    ],
+    forza: [
+      "Export quasi triplicato in dieci anni: qualità produttiva riconosciuta dalle big pharma globali (fill & finish, sterili, biologici)",
+      "Filiera completa: API + produzione + vetro + macchine di confezionamento nello stesso sistema paese",
+      "Polo vaccini di Siena (GSK) e nuovi mega-investimenti (Novo Nordisk ad Anagni)",
+    ],
+    criticita: [
+      "Gran parte della produzione è conto terzi: la proprietà intellettuale resta all'estero",
+      "Dipendenza da intermedi chimici asiatici per alcune molecole di base",
+      "Prezzi regolati e payback: tensione tra spesa pubblica e attrattività degli investimenti",
+    ],
+    fonti: ["Farmindustria", "EFPIA", "AIFA", "Aschimfarma"],
+  },
+
+  {
+    id: "agroalimentare",
+    icona: "🍝",
+    nome: "Agroalimentare",
+    tagline: "Dal campo alla tavola: il soft power italiano che vale €69 mld di export e il primato mondiale delle denominazioni d'origine.",
+    kpi: [
+      { label: "Export agroalimentare", value: "€69 mld (record 2024)" },
+      { label: "Industria alimentare", value: "≈ €193 mld fatturato" },
+      { label: "DOP/IGP", value: "856 (1° in UE)" },
+      { label: "Vino", value: "€8,1 mld export" },
+    ],
+    catena: [
+      {
+        fase: "Agricoltura e allevamento",
+        posizione: "MONTE",
+        descrizione: "≈ 700.000 aziende agricole; filiere del grano duro, pomodoro, latte, vigneto e zootecnia.",
+        aziende: [
+          { nome: "Cooperative agricole", ruolo: "Conserve Italia, Granlatte, Cantine Riunite-CIV" },
+          { nome: "Grandi aziende agricole", ruolo: "Bonifiche Ferraresi (BF Spa), Genagricola" },
+        ],
+      },
+      {
+        fase: "Trasformazione industriale",
+        posizione: "CENTRO",
+        descrizione: "I marchi che portano il made in Italy alimentare nel mondo.",
+        aziende: [
+          { nome: "Ferrero", ruolo: "Dolciario: ≈ €18 mld di ricavi globali" },
+          { nome: "Barilla", ruolo: "1° produttore mondiale di pasta" },
+          { nome: "Lavazza", ruolo: "Caffè (Torino)" },
+          { nome: "Cremonini / Inalca", ruolo: "Carni e distribuzione food service" },
+          { nome: "Mutti", ruolo: "Pomodoro premium" },
+          { nome: "Granarolo / Amadori / Rana", ruolo: "Lattiero-caseario, avicolo, pasta fresca" },
+        ],
+      },
+      {
+        fase: "Consorzi e certificazioni d'origine",
+        posizione: "CENTRO",
+        descrizione: "La \"DOP economy\": tutela, disciplinari e valore del territorio.",
+        aziende: [
+          { nome: "Parmigiano Reggiano / Grana Padano", ruolo: "I due formaggi DOP più esportati" },
+          { nome: "Prosciutto di Parma", ruolo: "Consorzio dal 1963" },
+          { nome: "Consorzi del vino", ruolo: "Prosecco, Chianti, Brunello, Barolo" },
+        ],
+      },
+      {
+        fase: "Tecnologie e packaging alimentare",
+        posizione: "CENTRO",
+        descrizione: "Il ponte con la meccanica: macchine e materiali per il food processing.",
+        aziende: [
+          { nome: "Sacmi / IMA", ruolo: "Macchine per il confezionamento alimentare" },
+          { nome: "Goglio", ruolo: "Packaging flessibile per caffè e food" },
+        ],
+      },
+      {
+        fase: "Distribuzione, ristorazione ed export",
+        posizione: "VALLE",
+        descrizione: "GDO nazionale, Horeca e canali export: USA e Germania primi mercati.",
+        aziende: [
+          { nome: "Conad / Coop / Esselunga", ruolo: "GDO a insegna italiana" },
+          { nome: "Eataly", ruolo: "Retail esperienziale del made in Italy" },
+          { nome: "Autogrill (Avolta)", ruolo: "Ristorazione in concessione" },
+        ],
+      },
+    ],
+    forza: [
+      "Premium price riconosciuto a livello globale: il consumatore paga il marchio Italia",
+      "856 DOP/IGP: barriera all'imitazione fondata sul legame col territorio",
+      "Resilienza: export cresciuto ogni anno anche durante crisi e pandemia",
+    ],
+    criticita: [
+      "Italian sounding: il falso made in Italy vale ≈ €90 mld, più dell'export autentico",
+      "Frammentazione agricola a monte: potere negoziale debole verso GDO e trasformazione",
+      "Esposizione a clima, fitopatie e dazi (USA primo mercato extra-UE)",
+    ],
+    fonti: ["ISMEA", "Federalimentare", "Fondazione Qualivita", "ISTAT"],
+  },
+
+  {
+    id: "moda",
+    icona: "👔",
+    nome: "Moda, Lusso e Design",
+    tagline: "L'unica filiera del lusso completa al mondo: metà della produzione globale di alta gamma nasce in laboratori e distretti italiani.",
+    kpi: [
+      { label: "Sistema moda", value: "≈ €96 mld fatturato" },
+      { label: "Export moda e accessori", value: "≈ €62 mld" },
+      { label: "Occhialeria", value: "≈ 70% dell'alta gamma mondiale" },
+      { label: "Legno-arredo", value: "≈ €52 mld, export €19 mld" },
+    ],
+    catena: [
+      {
+        fase: "Filati, tessuti e concia",
+        posizione: "MONTE",
+        descrizione: "I distretti delle materie prime nobili: lana a Biella, seta a Como, pelle in Toscana e Veneto.",
+        aziende: [
+          { nome: "Distretto laniero di Biella", ruolo: "Zegna, Loro Piana (LVMH), Reda, Vitale Barberis Canonico" },
+          { nome: "Seta di Como", ruolo: "Ratti, Mantero" },
+          { nome: "Concia", ruolo: "Santa Croce sull'Arno, Arzignano: 60% della pelle UE" },
+          { nome: "Manteco", ruolo: "Lana riciclata (Prato), capitale del tessile circolare" },
+        ],
+      },
+      {
+        fase: "Manifattura e façonisti",
+        posizione: "CENTRO",
+        descrizione: "Migliaia di laboratori specializzati che producono per i brand italiani e per le maison estere.",
+        aziende: [
+          { nome: "Pelletteria toscana", ruolo: "Produzione borse per LVMH, Kering, Chanel" },
+          { nome: "Calzature", ruolo: "Riviera del Brenta (lusso donna), Marche" },
+          { nome: "Maglieria e confezione", ruolo: "Distretti di Carpi e Perugia" },
+        ],
+      },
+      {
+        fase: "Brand e maison",
+        posizione: "CENTRO",
+        descrizione: "I marchi italiani indipendenti e i gruppi esteri con radici produttive in Italia.",
+        aziende: [
+          { nome: "Prada Group", ruolo: "≈ €5,4 mld; acquisizione Versace 2025" },
+          { nome: "Giorgio Armani", ruolo: "Il più grande gruppo indipendente" },
+          { nome: "Moncler / Zegna / Cucinelli / Ferragamo / Max Mara / OTB", ruolo: "Campioni quotati e familiari" },
+          { nome: "Gucci, Bottega Veneta, Fendi, Bulgari", ruolo: "Marchi italiani in gruppi francesi (Kering, LVMH)" },
+        ],
+      },
+      {
+        fase: "Occhialeria e accessori",
+        posizione: "CENTRO",
+        descrizione: "Il distretto di Belluno: capitale mondiale dell'eyewear.",
+        aziende: [
+          { nome: "EssilorLuxottica", ruolo: "1° gruppo mondiale (Ray-Ban, Oakley + licenze lusso)" },
+          { nome: "Safilo / Marcolin / De Rigo", ruolo: "Produttori e licenziatari globali" },
+          { nome: "Thélios (LVMH)", ruolo: "Eyewear delle maison LVMH, prodotto a Longarone" },
+        ],
+      },
+      {
+        fase: "Retail, e-commerce e circolarità",
+        posizione: "VALLE",
+        descrizione: "Distribuzione diretta, outlet, digitale e second hand in crescita.",
+        aziende: [
+          { nome: "Retail diretto e outlet", ruolo: "Serravalle, The Mall; flagship nelle capitali" },
+          { nome: "E-commerce e resale", ruolo: "Piattaforme digitali, certificazioni di sostenibilità e tracciabilità" },
+        ],
+      },
+    ],
+    forza: [
+      "Filiera completa e prossimità: dalla materia prima al prodotto finito in poche centinaia di km",
+      "Saper fare artigianale non replicabile: le maison francesi producono in Italia l'alta pelletteria",
+      "Design e brand equity: Milano capitale mondiale di moda e design (Salone del Mobile)",
+    ],
+    criticita: [
+      "Proprietà estera crescente dei marchi: il valore aggiunto del brand migra fuori dall'Italia",
+      "Ricambio generazionale degli artigiani; controlli di filiera (caporalato nella subfornitura)",
+      "Domanda cinese debole e polarizzazione: soffre la fascia media",
+    ],
+    fonti: ["Confindustria Moda", "Altagamma", "ANFAO", "FederlegnoArredo"],
+  },
+
+  {
+    id: "elettronica",
+    icona: "🔬",
+    nome: "Semiconduttori ed Elettronica",
+    tagline: "Dalla \"Etna Valley\" del carburo di silicio alle probe card brianzole: presìdi di eccellenza in una filiera globalmente contesa.",
+    kpi: [
+      { label: "STMicroelectronics", value: "≈ $13 mld ricavi globali" },
+      { label: "Campus SiC Catania", value: "€5 mld investimento" },
+      { label: "Technoprobe", value: "Leader mondiale probe card" },
+      { label: "Leva", value: "EU Chips Act" },
+    ],
+    catena: [
+      {
+        fase: "Materiali e wafer",
+        posizione: "MONTE",
+        descrizione: "Silicio, epitassia e materiali avanzati: pochi attori, altamente strategici.",
+        aziende: [
+          { nome: "MEMC (GlobalWafers)", ruolo: "Wafer di silicio (Novara e Merano)" },
+          { nome: "LPE (ASM)", ruolo: "Reattori epitassiali per SiC (Baranzate)" },
+          { nome: "SAES Getters", ruolo: "Materiali avanzati e getter (Lainate)" },
+        ],
+      },
+      {
+        fase: "Progettazione e fabbricazione chip",
+        posizione: "CENTRO",
+        descrizione: "Power electronics, sensori MEMS e carburo di silicio: le specialità italiane.",
+        aziende: [
+          { nome: "STMicroelectronics", ruolo: "Agrate Brianza e Catania: power, MEMS, SiC per auto elettriche" },
+          { nome: "LFoundry", ruolo: "Fonderia analogica (Avezzano)" },
+          { nome: "Vishay Semiconductor Italiana", ruolo: "Semiconduttori di potenza (Torino)" },
+        ],
+      },
+      {
+        fase: "Test, packaging e attrezzature",
+        posizione: "CENTRO",
+        descrizione: "Il segmento dove l'Italia è leader mondiale nascosto.",
+        aziende: [
+          { nome: "Technoprobe", ruolo: "1° mondiale nelle probe card per il test dei chip (Cernusco Lombardone)" },
+          { nome: "SPEA", ruolo: "Sistemi automatici di test (Volpiano)" },
+        ],
+      },
+      {
+        fase: "Sistemi embedded ed elettronica applicata",
+        posizione: "VALLE",
+        descrizione: "Edge computing, identificazione automatica, elettronica professionale.",
+        aziende: [
+          { nome: "SECO", ruolo: "Edge computing e IoT (Arezzo)" },
+          { nome: "Datalogic", ruolo: "Scanner e visione industriale (Bologna)" },
+          { nome: "Eurotech", ruolo: "Computer embedded (Amaro)" },
+          { nome: "Leonardo", ruolo: "Elettronica per difesa e spazio (link difesa)" },
+        ],
+      },
+    ],
+    forza: [
+      "Leadership nel power e nel carburo di silicio: tecnologie chiave per auto elettrica e industria",
+      "Catania \"Etna Valley\": primo impianto europeo integrato per wafer SiC da 200 mm",
+      "Nicchie a leadership mondiale assoluta (Technoprobe nelle probe card)",
+    ],
+    criticita: [
+      "Nessuna fab logica avanzata: dipendenza totale da Taiwan/Corea per i nodi di punta",
+      "Scala degli investimenti fuori portata senza sostegno europeo (Chips Act)",
+      "Fuga dei talenti STEM verso hub esteri meglio remunerati",
+    ],
+    fonti: ["MIMIT", "Commissione UE — Chips Act", "Bilanci societari (STM, Technoprobe)"],
+  },
+
+  {
+    id: "nautica",
+    icona: "🛥️",
+    nome: "Cantieristica e Nautica",
+    tagline: "Metà degli ordini mondiali di superyacht e la leadership nelle navi da crociera: il mare come piattaforma industriale.",
+    kpi: [
+      { label: "Fincantieri", value: "€8,1 mld ricavi 2024" },
+      { label: "Nautica da diporto", value: "≈ €8,6 mld (record)" },
+      { label: "Superyacht", value: "≈ 50% ordini mondiali" },
+      { label: "Addetti diporto", value: "≈ 30.000 diretti" },
+    ],
+    catena: [
+      {
+        fase: "Design e progettazione navale",
+        posizione: "MONTE",
+        descrizione: "Studi di design e ingegneria che definiscono l'estetica mondiale dello yachting.",
+        aziende: [
+          { nome: "Officina Italiana Design", ruolo: "Design di Riva" },
+          { nome: "Zuccon International Project", ruolo: "Superyacht design" },
+          { nome: "Nuvolari Lenard", ruolo: "Design navale (Venezia)" },
+        ],
+      },
+      {
+        fase: "Costruzione navale (shipbuilding)",
+        posizione: "CENTRO",
+        descrizione: "Navi da crociera, militari e traghetti: cantieri di scala mondiale.",
+        aziende: [
+          { nome: "Fincantieri", ruolo: "Leader mondiale crociere (Monfalcone, Marghera, Sestri); militare e offshore" },
+          { nome: "T. Mariotti", ruolo: "Navi speciali e refit (Genova)" },
+        ],
+      },
+      {
+        fase: "Nautica da diporto e superyacht",
+        posizione: "CENTRO",
+        descrizione: "I costruttori che dominano il Global Order Book mondiale.",
+        aziende: [
+          { nome: "Azimut|Benetti", ruolo: "1° gruppo mondiale per metri costruiti" },
+          { nome: "Ferretti Group", ruolo: "Riva, Pershing, CRN, Wally" },
+          { nome: "Sanlorenzo", ruolo: "Yacht su misura, quotata" },
+          { nome: "The Italian Sea Group", ruolo: "Admiral, Tecnomar, Perini Navi" },
+        ],
+      },
+      {
+        fase: "Componentistica e allestimento",
+        posizione: "CENTRO",
+        descrizione: "Accessori, arredo nautico e sistemi di bordo: l'indotto dei distretti.",
+        aziende: [
+          { nome: "Quick Group", ruolo: "Ancoraggio, thruster, illuminazione (Ravenna)" },
+          { nome: "Besenzoni", ruolo: "Passerelle e accessori" },
+          { nome: "Arredo navale", ruolo: "Distretto brianzolo e pisano per interni yacht e crociere" },
+        ],
+      },
+      {
+        fase: "Marina, refit e servizi",
+        posizione: "VALLE",
+        descrizione: "Porti turistici, refit di superyacht, charter e brokeraggio: la coda lunga del valore.",
+        aziende: [
+          { nome: "Amico & Co", ruolo: "Refit superyacht (Genova), riferimento mondiale" },
+          { nome: "Lusben (Azimut|Benetti)", ruolo: "Refit (Livorno/Viareggio)" },
+          { nome: "Marina di Porto Cervo / Portofino", ruolo: "Infrastrutture turistico-nautiche premium" },
+        ],
+      },
+    ],
+    forza: [
+      "Leadership mondiale assoluta nei superyacht e duopolio nelle crociere (con Meyer Werft)",
+      "Integrazione civile-militare di Fincantieri: economie di scala e di scopo",
+      "Distretti (Viareggio, La Spezia, Ancona, Ravenna) con indotto artigianale unico",
+    ],
+    criticita: [
+      "Ciclicità della domanda di lusso ed esposizione geopolitica (sanzioni, clientela globale)",
+      "Colli di bottiglia nella subfornitura e nei bacini di refit",
+      "Concorrenza asiatica in crescita nelle costruzioni commerciali",
+    ],
+    fonti: ["Confindustria Nautica / Deloitte", "Global Order Book — BOAT International", "Fincantieri — bilancio 2024"],
+  },
+];
+
+/* Palette categorica di riferimento (validata) — slot per settore */
+const SECTOR_SLOTS = {
+  difesa: 1, "spazio-osservazione-terra": 5, energia: 3, meccanica: 2, automotive: 6,
+  farmaceutica: 7, agroalimentare: 4, moda: 8, elettronica: 1, nautica: 2,
+};
+
+/* Reindirizzamenti da slug storici a slug correnti (retrocompatibilità URL) */
+const SECTOR_ALIASES = {
+  spazio: "spazio-osservazione-terra",
+};
+
+const FONTI_GENERALI = [
+  { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
+  { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
+  { nome: "Eurostat", url: "https://ec.europa.eu/eurostat", ambito: "Confronti europei, valore aggiunto manifatturiero" },
+  { nome: "MEF / DEF", url: "https://www.mef.gov.it", ambito: "Quadro di finanza pubblica" },
+  { nome: "ICE — Agenzia", url: "https://www.ice.it", ambito: "Rapporto export, quote di mercato" },
+  { nome: "Fondazione Edison", url: "https://www.fondazioneedison.it", ambito: "Surplus manifatturiero, primati export" },
+  { nome: "Associazioni di categoria", url: "", ambito: "AIAD, ASI, Farmindustria, ANFIA, Federmacchine, Ucima, Confindustria Moda, Confindustria Nautica, ISMEA, Altagamma" },
+];
+
+</script>
+  <script>
+/* ============================================================
+   Progetto Italia — Motore grafici SVG (nessuna dipendenza)
+   Segue le specifiche dataviz: marche sottili, estremità dati
+   arrotondate 4px ancorate alla baseline, linee 2px, gap 2px
+   tra riempimenti, etichette dirette selettive, griglia recessiva,
+   tooltip al passaggio, testo sempre in token d'inchiostro.
+   ============================================================ */
+
+const NS = "http://www.w3.org/2000/svg";
+
+function el(tag, attrs = {}, parent = null) {
+  const node = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (parent) parent.appendChild(node);
+  return node;
+}
+
+function fmt(n, dec = 0) {
+  return n.toLocaleString("it-IT", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+}
+
+/* ---------- Tooltip singleton ---------- */
+let TIP = null;
+function tooltip() {
+  if (!TIP) {
+    TIP = document.createElement("div");
+    TIP.className = "viz-tooltip";
+    TIP.setAttribute("role", "status");
+    document.body.appendChild(TIP);
+  }
+  return TIP;
+}
+function showTip(html, evt) {
+  const t = tooltip();
+  t.innerHTML = html;
+  t.style.opacity = "1";
+  const pad = 14;
+  const w = t.offsetWidth, h = t.offsetHeight;
+  let x = evt.clientX + pad, y = evt.clientY - h - pad;
+  if (x + w > window.innerWidth - 8) x = evt.clientX - w - pad;
+  if (y < 8) y = evt.clientY + pad;
+  t.style.left = x + "px";
+  t.style.top = y + "px";
+}
+function hideTip() { if (TIP) TIP.style.opacity = "0"; }
+
+function bindTip(node, htmlFn) {
+  node.addEventListener("pointermove", (e) => showTip(htmlFn(), e));
+  node.addEventListener("pointerleave", hideTip);
+}
+
+/* Barra orizzontale con estremità dati arrotondata (4px), base squadrata */
+function roundedBarPath(x, y, w, h, r, dir = "right") {
+  r = Math.min(r, Math.abs(w) / 2 || r, h / 2);
+  if (dir === "right") {
+    return `M${x},${y} h${w - r} a${r},${r} 0 0 1 ${r},${r} v${h - 2 * r} a${r},${r} 0 0 1 ${-r},${r} h${-(w - r)} Z`;
+  }
+  // colonna verticale: estremità superiore arrotondata
+  return `M${x},${y + r} a${r},${r} 0 0 1 ${r},${-r} h${w - 2 * r} a${r},${r} 0 0 1 ${r},${r} v${h - r} h${-w} Z`;
+}
+
+/* ============================================================
+   DONUT — parte-su-tutto con etichette dirette + legenda
+   data: [{label, value, detail}]
+   ============================================================ */
+function donutChart(container, data, opts = {}) {
+  const size = 260, cx = size / 2, cy = size / 2;
+  const rOut = 108, rIn = 68;
+  const total = data.reduce((s, d) => s + d.value, 0);
+  const slots = opts.slots || [1, 2, 3, 4, 5, 6, 7, 8];
+
+  const wrap = document.createElement("div");
+  wrap.className = "donut-wrap";
+  const svg = el("svg", { viewBox: `0 0 ${size} ${size}`, class: "donut-svg", role: "img", "aria-label": opts.ariaLabel || "Grafico a ciambella" });
+
+  let a0 = -Math.PI / 2;
+  data.forEach((d, i) => {
+    const frac = d.value / total;
+    const a1 = a0 + frac * Math.PI * 2;
+    // gap di 2px sulla circonferenza esterna
+    const gap = 2 / rOut;
+    const s0 = a0 + gap / 2, s1 = a1 - gap / 2;
+    const large = s1 - s0 > Math.PI ? 1 : 0;
+    const p = [
+      `M${cx + rOut * Math.cos(s0)},${cy + rOut * Math.sin(s0)}`,
+      `A${rOut},${rOut} 0 ${large} 1 ${cx + rOut * Math.cos(s1)},${cy + rOut * Math.sin(s1)}`,
+      `L${cx + rIn * Math.cos(s1)},${cy + rIn * Math.sin(s1)}`,
+      `A${rIn},${rIn} 0 ${large} 0 ${cx + rIn * Math.cos(s0)},${cy + rIn * Math.sin(s0)}`,
+      "Z",
+    ].join(" ");
+    const path = el("path", { d: p, fill: `var(--series-${slots[i % slots.length]})` }, svg);
+    path.classList.add("viz-mark");
+    bindTip(path, () => `<strong>${d.label}</strong><br>${fmt(d.value)}% del valore aggiunto${d.detail ? `<br><span class="tip-detail">${d.detail}</span>` : ""}`);
+
+    // etichetta diretta (percentuale) per fette >= 4%
+    if (frac >= 0.04) {
+      const mid = (a0 + a1) / 2, rl = (rOut + rIn) / 2;
+      const tx = cx + rl * Math.cos(mid), ty = cy + rl * Math.sin(mid);
+      const t = el("text", { x: tx, y: ty, "text-anchor": "middle", "dominant-baseline": "middle", class: "donut-label" }, svg);
+      t.textContent = fmt(d.value) + "%";
+    }
+    a0 = a1;
+  });
+
+  // numero centrale
+  const c1 = el("text", { x: cx, y: cy - 8, "text-anchor": "middle", class: "donut-center-value" }, svg);
+  c1.textContent = opts.centerValue || "";
+  const c2 = el("text", { x: cx, y: cy + 14, "text-anchor": "middle", class: "donut-center-label" }, svg);
+  c2.textContent = opts.centerLabel || "";
+
+  wrap.appendChild(svg);
+
+  // legenda (identità mai affidata al solo colore)
+  const leg = document.createElement("div");
+  leg.className = "viz-legend viz-legend-col";
+  data.forEach((d, i) => {
+    const item = document.createElement("div");
+    item.className = "viz-legend-item";
+    item.innerHTML = `<span class="viz-swatch" style="background:var(--series-${slots[i % slots.length]})"></span><span class="viz-legend-text">${d.label} <strong>${fmt(d.value)}%</strong></span>`;
+    leg.appendChild(item);
+  });
+  wrap.appendChild(leg);
+  container.appendChild(wrap);
+}
+
+/* ============================================================
+   BARRE ORIZZONTALI — magnitudine (tinta unica sequenziale)
+   data: [{label, value, nota}]
+   ============================================================ */
+function hBarChart(container, data, opts = {}) {
+  const unit = opts.unit || "";
+  const max = Math.max(...data.map((d) => d.value));
+  const rowH = 34, labelW = opts.labelWidth || 210, valueW = 64;
+  const W = 640, H = data.length * rowH + 6;
+  const plotW = W - labelW - valueW;
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": opts.ariaLabel || "Grafico a barre" });
+
+  data.forEach((d, i) => {
+    const y = i * rowH + 5;
+    const barH = 18;
+    const w = Math.max(6, (d.value / max) * plotW);
+
+    const lab = el("text", { x: labelW - 10, y: y + barH / 2, "text-anchor": "end", "dominant-baseline": "middle", class: "viz-cat-label" }, svg);
+    lab.textContent = d.label.length > 34 ? d.label.slice(0, 33) + "…" : d.label;
+
+    const bar = el("path", { d: roundedBarPath(labelW, y, w, barH, 4, "right"), fill: opts.color || "var(--seq-450)" }, svg);
+    bar.classList.add("viz-mark");
+
+    const val = el("text", { x: labelW + w + 8, y: y + barH / 2, "dominant-baseline": "middle", class: "viz-value-label" }, svg);
+    val.textContent = fmt(d.value, opts.decimals || 0) + unit;
+
+    const hit = el("rect", { x: 0, y: y - 2, width: W, height: rowH - 4, fill: "transparent" }, svg);
+    bindTip(hit, () => `<strong>${d.label}</strong><br>${fmt(d.value, opts.decimals || 0)}${unit}${d.nota ? `<br><span class="tip-detail">${d.nota}</span>` : ""}`);
+  });
+
+  container.appendChild(svg);
+}
+
+/* ============================================================
+   COLONNE RAGGRUPPATE — export vs import per anno (2 serie)
+   data: [{anno, exp, imp}]
+   ============================================================ */
+function tradeColumns(container, data, opts = {}) {
+  const W = 640, H = 300, padL = 48, padB = 30, padT = 16;
+  const plotW = W - padL - 12, plotH = H - padT - padB;
+  const max = Math.max(...data.flatMap((d) => [d.exp, d.imp]));
+  const nice = Math.ceil(max / 100) * 100;
+  const y = (v) => padT + plotH - (v / nice) * plotH;
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": "Export e import di beni per anno" });
+
+  // griglia recessiva + assi
+  for (let g = 0; g <= 4; g++) {
+    const gv = (nice / 4) * g, gy = y(gv);
+    el("line", { x1: padL, x2: W - 12, y1: gy, y2: gy, class: g === 0 ? "viz-baseline" : "viz-grid" }, svg);
+    const t = el("text", { x: padL - 8, y: gy, "text-anchor": "end", "dominant-baseline": "middle", class: "viz-axis-label" }, svg);
+    t.textContent = fmt(gv);
+  }
+
+  const groupW = plotW / data.length;
+  const barW = Math.min(26, groupW * 0.28);
+  data.forEach((d, i) => {
+    const cx = padL + groupW * i + groupW / 2;
+    const bars = [
+      { key: "Export", v: d.exp, x: cx - barW - 1, slot: 1 },
+      { key: "Import", v: d.imp, x: cx + 1, slot: 6 },
+    ];
+    bars.forEach((b) => {
+      const by = y(b.v), bh = padT + plotH - by;
+      const bar = el("path", { d: roundedBarPath(b.x, by, barW, bh, 4, "up"), fill: `var(--series-${b.slot})` }, svg);
+      bar.classList.add("viz-mark");
+      bindTip(bar, () => `<strong>${d.anno} — ${b.key}</strong><br>€${fmt(b.v)} mld<br><span class="tip-detail">Saldo ${d.exp - d.imp >= 0 ? "+" : "−"}€${fmt(Math.abs(d.exp - d.imp))} mld</span>`);
+    });
+    const t = el("text", { x: cx, y: H - 8, "text-anchor": "middle", class: "viz-axis-label" }, svg);
+    t.textContent = d.anno;
+  });
+
+  container.appendChild(svg);
+
+  const leg = document.createElement("div");
+  leg.className = "viz-legend";
+  leg.innerHTML =
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-1)"></span><span class="viz-legend-text">Export</span></span>` +
+    `<span class="viz-legend-item"><span class="viz-swatch" style="background:var(--series-6)"></span><span class="viz-legend-text">Import</span></span>` +
+    `<span class="viz-legend-note">mld € — beni, fonte ISTAT</span>`;
+  container.appendChild(leg);
+}
+
+/* ============================================================
+   BARRE DIVERGENTI — saldo commerciale sopra/sotto lo zero
+   data: [{anno, exp, imp}] → saldo = exp - imp
+   ============================================================ */
+function balanceBars(container, data) {
+  const W = 640, H = 210, padL = 48, padB = 28, padT = 14;
+  const plotW = W - padL - 12, plotH = H - padT - padB;
+  const saldi = data.map((d) => d.exp - d.imp);
+  const maxAbs = Math.ceil(Math.max(...saldi.map(Math.abs)) / 20) * 20;
+  const zeroY = padT + plotH / 2;
+  const scale = (plotH / 2 - 6) / maxAbs;
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": "Saldo commerciale per anno" });
+
+  [-maxAbs, 0, maxAbs].forEach((gv) => {
+    const gy = zeroY - gv * scale;
+    el("line", { x1: padL, x2: W - 12, y1: gy, y2: gy, class: gv === 0 ? "viz-baseline" : "viz-grid" }, svg);
+    const t = el("text", { x: padL - 8, y: gy, "text-anchor": "end", "dominant-baseline": "middle", class: "viz-axis-label" }, svg);
+    t.textContent = (gv > 0 ? "+" : "") + fmt(gv);
+  });
+
+  const groupW = plotW / data.length;
+  const barW = Math.min(34, groupW * 0.4);
+  data.forEach((d, i) => {
+    const saldo = d.exp - d.imp;
+    const cx = padL + groupW * i + groupW / 2;
+    const h = Math.max(4, Math.abs(saldo) * scale);
+    const isPos = saldo >= 0;
+    const by = isPos ? zeroY - h : zeroY;
+    // divergente: blu positivo / rosso negativo (coppia blu↔rosso, midpoint neutro = baseline)
+    const bar = el("path", {
+      d: isPos ? roundedBarPath(cx - barW / 2, by, barW, h, 4, "up")
+               : `M${cx - barW / 2},${zeroY} h${barW} v${h - 4} a4,4 0 0 1 -4,4 h${-(barW - 8)} a4,4 0 0 1 -4,-4 Z`,
+      fill: isPos ? "var(--div-pos)" : "var(--div-neg)",
+    }, svg);
+    bar.classList.add("viz-mark");
+    bindTip(bar, () => `<strong>${d.anno}</strong><br>Saldo ${isPos ? "+" : "−"}€${fmt(Math.abs(saldo))} mld<br><span class="tip-detail">Export €${fmt(d.exp)} — Import €${fmt(d.imp)}</span>`);
+
+    // etichetta diretta sul valore (obbligatoria: rileva il WARN contrasto)
+    const vt = el("text", { x: cx, y: isPos ? by - 6 : by + h + 14, "text-anchor": "middle", class: "viz-value-label" }, svg);
+    vt.textContent = (isPos ? "+" : "−") + fmt(Math.abs(saldo));
+
+    const at = el("text", { x: cx, y: H - 6, "text-anchor": "middle", class: "viz-axis-label" }, svg);
+    at.textContent = d.anno;
+  });
+
+  container.appendChild(svg);
+}
+
+window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars };
+
+</script>
+  <script>
+/* ============================================================
+   Progetto Italia — Applicazione (router hash + rendering)
+   Flusso utente: Panoramica → Settori → Catena del valore →
+   Aziende → Metodologia. Nessuna dipendenza esterna.
+   ============================================================ */
+
+const $app = () => document.getElementById("app");
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function slotOf(id) { return SECTOR_SLOTS[id] || 1; }
+function colorOf(id) { return `var(--series-${slotOf(id)})`; }
+
+/* ---------- Router ---------- */
+const routes = [
+  { re: /^$/, render: renderHome },
+  { re: /^settori$/, render: renderSettori },
+  { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
+  { re: /^aziende$/, render: renderAziende },
+  { re: /^metodologia$/, render: renderMetodologia },
+];
+
+function navigate() {
+  const hash = location.hash.replace(/^#\/?/, "");
+  const route = routes.find((r) => r.re.test(hash)) || routes[0];
+  const m = hash.match(route.re) || [];
+  window.scrollTo(0, 0);
+  $app().innerHTML = "";
+  route.render(m);
+  updateNav(hash);
+}
+
+function updateNav(hash) {
+  const key = hash.startsWith("settore") ? "settori" : (hash || "home");
+  document.querySelectorAll(".main-nav a").forEach((a) => {
+    a.classList.toggle("active", a.dataset.nav === key);
+  });
+}
+
+window.addEventListener("hashchange", navigate);
+window.addEventListener("DOMContentLoaded", navigate);
+
+/* ---------- Componenti ---------- */
+function sectionEl(kicker, title, sub) {
+  const s = document.createElement("section");
+  s.className = "section";
+  s.innerHTML = `<div class="section-head">${kicker ? `<div class="kicker">${esc(kicker)}</div>` : ""}<h2>${esc(title)}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
+  return s;
+}
+
+function kpiRow(kpis) {
+  const row = document.createElement("div");
+  row.className = "kpi-row";
+  row.innerHTML = kpis.map((k) => `
+    <div class="stat-tile">
+      <div class="stat-label">${esc(k.label)}</div>
+      <div class="stat-value">${esc(k.value)}</div>
+      ${k.delta ? `<div class="stat-delta ${k.trend || ""}">${esc(k.delta)}</div>` : ""}
+    </div>`).join("");
+  return row;
+}
+
+function card(title, sub) {
+  const c = document.createElement("div");
+  c.className = "card";
+  if (title) c.innerHTML = `<h3>${esc(title)}</h3>${sub ? `<p class="card-sub">${esc(sub)}</p>` : ""}`;
+  return c;
+}
+
+const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ============================================================
+   PANORAMICA
+   ============================================================ */
+function renderHome() {
+  const root = $app();
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Panoramica ${MACRO.anno} · Economia italiana</div>
+    <h1>L'economia italiana in un colpo d'occhio</h1>
+    <p class="lead">Terza economia dell'area euro e seconda manifattura del continente: un sistema fondato
+    su medie imprese esportatrici, distretti specializzati e poche grandi filiere strategiche.
+    Da qui puoi scendere in ogni settore fino alla catena del valore e alle singole aziende.</p>`;
+  hero.appendChild(kpiRow(MACRO.kpi));
+  root.appendChild(hero);
+
+  /* --- Come si forma il PIL --- */
+  const s1 = sectionEl("Struttura", "Come si forma il PIL",
+    "Composizione del valore aggiunto per macro-settore. I servizi dominano il totale, ma è la manifattura — circa il 15% — a generare l'export e i primati competitivi del paese.");
+  const g1 = document.createElement("div");
+  g1.className = "grid-2";
+  const c1 = card("Valore aggiunto per macro-settore", "quota % sul totale — ISTAT, conti nazionali");
+  Charts.donutChart(c1, MACRO.pilComposizione, {
+    centerValue: "€2.192", centerLabel: "mld di PIL", ariaLabel: "Composizione del PIL per macro-settore",
+  });
+  const c2 = card("Dentro i servizi", "quota % sul valore aggiunto totale");
+  Charts.hBarChart(c2, MACRO.serviziDettaglio, { unit: "%", labelWidth: 280, ariaLabel: "Dettaglio del terziario" });
+  const note = document.createElement("p");
+  note.className = "viz-note";
+  note.textContent = "Il terziario include il turismo (≈ 10% del PIL considerando l'indotto) e un immobiliare che pesa per i fitti figurativi. La PA e la sanità valgono un sesto dell'economia.";
+  c2.appendChild(note);
+  g1.append(c1, c2);
+  s1.appendChild(g1);
+  root.appendChild(s1);
+
+  /* --- Bilancia commerciale --- */
+  const s2 = sectionEl("Scambi con l'estero", "La bilancia commerciale e chi la traina",
+    "L'Italia è strutturalmente in surplus sui beni: lo shock energetico del 2022 è l'eccezione che conferma la regola. " +
+    "Il surplus è generato da meccanica, farmaceutica, moda e agroalimentare; il deficit da energia, chimica di base ed elettronica di consumo.");
+  const g2 = document.createElement("div");
+  g2.className = "grid-2";
+  const c3 = card("Export e import di beni", "mld € correnti, 2019–2024");
+  Charts.tradeColumns(c3, MACRO.bilancia);
+  const c4 = card("Saldo commerciale", "mld €: surplus in blu, deficit in rosso");
+  Charts.balanceBars(c4, MACRO.bilancia);
+  const n4 = document.createElement("p");
+  n4.className = "viz-note";
+  n4.textContent = MACRO.bilanciaNota;
+  c4.appendChild(n4);
+  g2.append(c3, c4);
+  s2.appendChild(g2);
+  root.appendChild(s2);
+
+  /* --- Chi traina l'export --- */
+  const s3 = sectionEl("Motori dell'export", "Cosa vende l'Italia, e a chi",
+    "La meccanica strumentale è da decenni la prima voce; la farmaceutica è la più dinamica. Germania, Stati Uniti e Francia assorbono un terzo delle vendite estere.");
+  const g3 = document.createElement("div");
+  g3.className = "grid-2";
+  const c5 = card("Prime voci dell'export di beni", "mld €, valori indicativi 2024 — ISTAT coe");
+  Charts.hBarChart(c5, MACRO.topExport, { unit: "", labelWidth: 280, ariaLabel: "Prime voci dell'export" });
+  const c6 = card("Principali mercati di sbocco", "quota % dell'export di beni");
+  Charts.hBarChart(c6, MACRO.partner, { unit: "%", decimals: 1, labelWidth: 160, ariaLabel: "Principali mercati" });
+  const n6 = document.createElement("p");
+  n6.className = "viz-note";
+  n6.textContent = "Gli Stati Uniti sono il primo mercato extra-UE e il primo per surplus bilaterale (≈ €39 mld): l'esposizione ai dazi USA è oggi il principale rischio commerciale del paese.";
+  c6.appendChild(n6);
+  g3.append(c5, c6);
+  s3.appendChild(g3);
+  root.appendChild(s3);
+
+  /* --- Differenziazione --- */
+  const s4 = sectionEl("Vantaggi competitivi", "Dove l'Italia si differenzia",
+    "I primati che nessun concorrente replica facilmente: nicchie globali, distretti e filiere complete.");
+  const dg = document.createElement("div");
+  dg.className = "diff-grid";
+  dg.innerHTML = MACRO.differenziazione.map((d) => `
+    <div class="diff-card"><div class="diff-ico">${d.icona}</div><h4>${esc(d.titolo)}</h4><p>${esc(d.testo)}</p></div>`).join("");
+  s4.appendChild(dg);
+  root.appendChild(s4);
+
+  /* --- CTA settori --- */
+  const s5 = sectionEl("Approfondimento", "Esplora i settori strategici",
+    "Dieci filiere analizzate da monte a valle, con le aziende che operano in ogni stadio della catena del valore.");
+  s5.appendChild(sectorGrid());
+  root.appendChild(s5);
+}
+
+/* ============================================================
+   SETTORI (griglia)
+   ============================================================ */
+function sectorGrid() {
+  const g = document.createElement("div");
+  g.className = "sector-grid";
+  g.innerHTML = SETTORI.map((s) => `
+    <a class="sector-card" href="#/settore/${s.id}" style="--sector-color:${colorOf(s.id)}">
+      <span class="sc-ico">${s.icona}</span>
+      <h3>${esc(s.nome)}</h3>
+      <p>${esc(s.tagline)}</p>
+      <span class="sc-kpis">${s.kpi.slice(0, 2).map((k) => `<span class="sc-kpi"><strong>${esc(k.value)}</strong>${esc(k.label)}</span>`).join("")}</span>
+      <span class="sc-cta">Catena del valore →</span>
+    </a>`).join("");
+  return g;
+}
+
+function renderSettori() {
+  const root = $app();
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Analisi settoriale</div>
+    <h1>I settori strategici dell'economia italiana</h1>
+    <p class="lead">Ogni scheda ricostruisce la filiera da monte a valle — ricerca e materiali, componenti,
+    sistemi, servizi — e mappa le aziende che operano in ciascuno stadio, con punti di forza e vulnerabilità.</p>`;
+  root.appendChild(hero);
+  const wrap = document.createElement("div");
+  wrap.className = "section";
+  wrap.appendChild(sectorGrid());
+  root.appendChild(wrap);
+}
+
+/* ============================================================
+   SETTORE (dettaglio con catena del valore)
+   ============================================================ */
+function renderSettore(id) {
+  // retrocompatibilità: reindirizza gli slug storici a quelli correnti
+  if (typeof SECTOR_ALIASES !== "undefined" && SECTOR_ALIASES[id]) {
+    location.replace("#/settore/" + SECTOR_ALIASES[id]);
+    return;
+  }
+  const s = SETTORI.find((x) => x.id === id);
+  if (!s) { renderSettori(); return; }
+  const root = $app();
+  root.style.setProperty("--sector-color", colorOf(s.id));
+
+  const head = document.createElement("div");
+  head.className = "hero";
+  head.innerHTML = `
+    <nav class="breadcrumb"><a href="#/">Panoramica</a> / <a href="#/settori">Settori</a> / ${esc(s.nome)}</nav>
+    <div class="sector-hero" style="--sector-color:${colorOf(s.id)}">
+      <span class="sh-ico">${s.icona}</span>
+      <div><h1>${esc(s.nome)}</h1><p>${esc(s.tagline)}</p></div>
+    </div>`;
+  head.appendChild(kpiRow(s.kpi));
+  root.appendChild(head);
+
+  /* Focus tematico (opzionale, presente solo su alcuni settori) */
+  if (s.focus) {
+    const fs = document.createElement("div");
+    fs.className = "section";
+    const fc = document.createElement("div");
+    fc.className = "focus-card";
+    fc.style.setProperty("--sector-color", colorOf(s.id));
+    fc.innerHTML = `
+      <div class="focus-body">
+        <div class="kicker">Focus</div>
+        <h3>${esc(s.focus.titolo)}</h3>
+        <p>${esc(s.focus.testo)}</p>
+      </div>
+      <div class="focus-metrics">
+        ${s.focus.metriche.map((m) => `
+          <div class="focus-metric"><div class="fm-k">${esc(m.k)}</div><div class="fm-v">${esc(m.v)}</div></div>`).join("")}
+      </div>`;
+    fs.appendChild(fc);
+    root.appendChild(fs);
+  }
+
+  /* Catena del valore */
+  const sc = sectionEl("Catena del valore", "Da monte a valle",
+    "Ogni stadio mostra le principali aziende che vi operano. Scorri orizzontalmente per percorrere la filiera.");
+  const scroller = document.createElement("div");
+  scroller.className = "chain-scroller";
+  const labels = document.createElement("div");
+  labels.className = "chain-flow-labels";
+  labels.innerHTML = `<span>⛰️ Monte — input e tecnologie</span><span>Valle — mercato e servizi 🌊</span>`;
+  scroller.appendChild(labels);
+
+  const chain = document.createElement("div");
+  chain.className = "chain";
+  chain.style.setProperty("--sector-color", colorOf(s.id));
+  s.catena.forEach((st, i) => {
+    if (i > 0) {
+      const arrow = document.createElement("div");
+      arrow.className = "chain-arrow";
+      arrow.innerHTML = ARROW_SVG;
+      chain.appendChild(arrow);
+    }
+    const stage = document.createElement("div");
+    stage.className = "chain-stage";
+    stage.innerHTML = `
+      <span class="chain-pos pos-${st.posizione}">${st.posizione} · ${i + 1}/${s.catena.length}</span>
+      <h4>${esc(st.fase)}</h4>
+      <p class="cs-desc">${esc(st.descrizione)}</p>
+      <div class="chain-companies"></div>`;
+    const box = stage.querySelector(".chain-companies");
+    st.aziende.forEach((a) => {
+      const chip = document.createElement("div");
+      chip.className = "company-chip";
+      chip.textContent = a.nome;
+      // tooltip col ruolo: l'informazione resta accessibile anche via title
+      chip.title = a.ruolo;
+      chip.addEventListener("pointermove", (e) => showChipTip(a, e));
+      chip.addEventListener("pointerleave", hideChipTip);
+      box.appendChild(chip);
+    });
+    chain.appendChild(stage);
+  });
+  scroller.appendChild(chain);
+  sc.appendChild(scroller);
+  root.appendChild(sc);
+
+  /* Forza / criticità */
+  const sw = sectionEl("Lettura strategica", "Punti di forza e vulnerabilità", "");
+  const grid = document.createElement("div");
+  grid.className = "swot-grid";
+  const f = card("Punti di forza");
+  f.classList.add("swot-card", "forza");
+  f.innerHTML += `<ul>${s.forza.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  const c = card("Criticità e rischi");
+  c.classList.add("swot-card", "criticita");
+  c.innerHTML += `<ul>${s.criticita.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  grid.append(f, c);
+  sw.appendChild(grid);
+  const fonti = document.createElement("p");
+  fonti.className = "fonti-line";
+  fonti.innerHTML = `<strong>Fonti settoriali:</strong> ${s.fonti.map(esc).join(" · ")} — <a href="#/metodologia">metodologia e avvertenze</a>`;
+  sw.appendChild(fonti);
+  root.appendChild(sw);
+
+  /* Navigazione precedente/successivo */
+  const idx = SETTORI.indexOf(s);
+  const prev = SETTORI[(idx - 1 + SETTORI.length) % SETTORI.length];
+  const next = SETTORI[(idx + 1) % SETTORI.length];
+  const nav = document.createElement("div");
+  nav.className = "sector-nav";
+  nav.innerHTML = `
+    <a href="#/settore/${prev.id}">← ${prev.icona} ${esc(prev.nome)}</a>
+    <a href="#/settore/${next.id}">${esc(next.nome)} ${next.icona} →</a>`;
+  root.appendChild(nav);
+}
+
+/* Tooltip per i chip azienda (riusa lo stile viz-tooltip) */
+let chipTipEl = null;
+function showChipTip(a, e) {
+  if (!chipTipEl) {
+    chipTipEl = document.createElement("div");
+    chipTipEl.className = "viz-tooltip";
+    document.body.appendChild(chipTipEl);
+  }
+  chipTipEl.innerHTML = `<strong>${esc(a.nome)}</strong><br><span class="tip-detail">${esc(a.ruolo)}</span>`;
+  chipTipEl.style.opacity = "1";
+  const w = chipTipEl.offsetWidth, h = chipTipEl.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY - h - 14;
+  if (x + w > window.innerWidth - 8) x = e.clientX - w - 14;
+  if (y < 8) y = e.clientY + 14;
+  chipTipEl.style.left = x + "px";
+  chipTipEl.style.top = y + "px";
+}
+function hideChipTip() { if (chipTipEl) chipTipEl.style.opacity = "0"; }
+
+/* ============================================================
+   AZIENDE (indice ricercabile)
+   ============================================================ */
+function buildCompanyIndex() {
+  const rows = [];
+  SETTORI.forEach((s) => {
+    s.catena.forEach((st) => {
+      st.aziende.forEach((a) => {
+        rows.push({ nome: a.nome, ruolo: a.ruolo, settore: s.nome, settoreId: s.id, fase: st.fase, posizione: st.posizione, icona: s.icona });
+      });
+    });
+  });
+  return rows;
+}
+
+function renderAziende() {
+  const root = $app();
+  const rows = buildCompanyIndex();
+  let query = "", activeSector = "";
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Indice trasversale</div>
+    <h1>Le aziende delle filiere</h1>
+    <p class="lead">${rows.length} presenze aziendali mappate nelle catene del valore dei dieci settori.
+    Cerca per nome o ruolo, filtra per settore: la stessa azienda può comparire in più stadi o filiere.</p>`;
+  root.appendChild(hero);
+
+  const wrap = document.createElement("div");
+  wrap.className = "section";
+
+  const bar = document.createElement("div");
+  bar.className = "filter-bar";
+  const input = document.createElement("input");
+  input.className = "search-input";
+  input.type = "search";
+  input.placeholder = "Cerca azienda, ruolo o tecnologia… (es. Leonardo, cavi, packaging)";
+  input.setAttribute("aria-label", "Cerca azienda");
+  bar.appendChild(input);
+  wrap.appendChild(bar);
+
+  const chips = document.createElement("div");
+  chips.className = "filter-bar";
+  const allChip = document.createElement("button");
+  allChip.className = "filter-chip active";
+  allChip.textContent = "Tutti i settori";
+  chips.appendChild(allChip);
+  SETTORI.forEach((s) => {
+    const ch = document.createElement("button");
+    ch.className = "filter-chip";
+    ch.textContent = `${s.icona} ${s.nome}`;
+    ch.dataset.id = s.id;
+    chips.appendChild(ch);
+  });
+  wrap.appendChild(chips);
+
+  const count = document.createElement("p");
+  count.className = "results-count";
+  wrap.appendChild(count);
+
+  const tableWrap = document.createElement("div");
+  tableWrap.className = "table-wrap";
+  wrap.appendChild(tableWrap);
+  root.appendChild(wrap);
+
+  function draw() {
+    const q = query.trim().toLowerCase();
+    const filtered = rows.filter((r) =>
+      (!activeSector || r.settoreId === activeSector) &&
+      (!q || (r.nome + " " + r.ruolo + " " + r.fase).toLowerCase().includes(q))
+    );
+    count.textContent = `${filtered.length} risultat${filtered.length === 1 ? "o" : "i"}`;
+    tableWrap.innerHTML = `
+      <table class="data-table">
+        <thead><tr><th>Azienda</th><th>Ruolo nella filiera</th><th>Settore</th><th>Stadio</th></tr></thead>
+        <tbody>
+          ${filtered.map((r) => `
+            <tr>
+              <td class="td-company">${esc(r.nome)}</td>
+              <td class="td-role">${esc(r.ruolo)}</td>
+              <td><a class="badge-sector" href="#/settore/${r.settoreId}"><span class="badge-dot" style="background:${colorOf(r.settoreId)}"></span>${r.icona} ${esc(r.settore)}</a></td>
+              <td class="badge-stage">${esc(r.posizione)} · ${esc(r.fase)}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+    if (!filtered.length) {
+      tableWrap.innerHTML = `<p style="padding:22px;color:var(--text-muted)">Nessun risultato per «${esc(query)}».</p>`;
+    }
+  }
+
+  input.addEventListener("input", () => { query = input.value; draw(); });
+  chips.addEventListener("click", (e) => {
+    const btn = e.target.closest(".filter-chip");
+    if (!btn) return;
+    chips.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+    btn.classList.add("active");
+    activeSector = btn.dataset.id || "";
+    draw();
+  });
+
+  draw();
+}
+
+/* ============================================================
+   METODOLOGIA E FONTI
+   ============================================================ */
+function renderMetodologia() {
+  const root = $app();
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Trasparenza</div>
+    <h1>Metodologia e fonti</h1>
+    <p class="lead">La piattaforma si avvale esclusivamente di fonti autorevoli e certificate: istituti di
+    statistica, banche centrali, agenzie pubbliche, bilanci societari e associazioni di categoria.</p>`;
+  root.appendChild(hero);
+
+  const s = sectionEl("Fonti primarie", "Da dove vengono i dati", "");
+  const c = card();
+  const ul = document.createElement("ul");
+  ul.className = "method-list";
+  ul.innerHTML = FONTI_GENERALI.map((f) => `
+    <li><span class="m-name">${esc(f.nome)}</span>${f.url ? ` — <a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.url)}</a>` : ""}<br><span class="m-scope">${esc(f.ambito)}</span></li>`).join("");
+  c.appendChild(ul);
+  s.appendChild(c);
+
+  const s2 = sectionEl("Note metodologiche", "Come leggere le schede", "");
+  const c2 = card();
+  c2.innerHTML += `
+    <ul class="method-list">
+      <li><span class="m-name">Anno di riferimento.</span> <span class="m-scope">Salvo diversa indicazione i valori sono riferiti al ${MACRO.anno} (consuntivi ISTAT o stime delle associazioni di categoria); i simboli ≈ segnalano ordini di grandezza.</span></li>
+      <li><span class="m-name">Catene del valore.</span> <span class="m-scope">Gli stadi seguono la logica monte → valle (input, componenti, sistemi, mercato). Le aziende citate sono una selezione rappresentativa dei principali operatori, non un censimento esaustivo; la stessa azienda può operare su più stadi.</span></li>
+      <li><span class="m-name">Perimetri settoriali.</span> <span class="m-scope">I confini tra filiere sono porosi (es. macchine per packaging: meccanica ma anche farmaceutica e alimentare); i rimandi incrociati sono segnalati nelle schede.</span></li>
+      <li><span class="m-name">Visualizzazioni.</span> <span class="m-scope">Palette daltonismo-compatibile validata; identità mai affidata al solo colore (legende ed etichette dirette sempre presenti); i dati tabellari sono disponibili nell'indice aziende.</span></li>
+    </ul>`;
+  s2.appendChild(c2);
+
+  const disc = document.createElement("div");
+  disc.className = "disclaimer";
+  disc.innerHTML = `<strong>Avvertenza.</strong> Piattaforma a scopo analitico e divulgativo: non costituisce consulenza
+  finanziaria né valutazione ufficiale. I dati aziendali provengono da fonti pubbliche (bilanci, comunicati, stampa
+  specializzata) e vanno verificati sulle fonti originali prima di ogni uso professionale.`;
+
+  root.appendChild(s);
+  root.appendChild(s2);
+  root.appendChild(disc);
+}
+
+</script>
+</body>
+</html>
