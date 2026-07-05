@@ -1168,11 +1168,30 @@ const SETTORI = [
       { label: "DOP/IGP", value: "856 (1° in UE)" },
       { label: "Vino", value: "€8,1 mld export" },
     ],
+    approvvigionamento: {
+      intro: "Il made in Italy alimentare poggia su un equivoco fecondo: il valore è italiano (trasformazione, marchi, denominazioni), ma una quota rilevante delle materie prime agricole arriva dall'estero — il grano duro per la pasta, la soia per la zootecnia delle grandi DOP, i fertilizzanti legati al gas. Il vincolo che cresce più in fretta però non è commerciale: è il clima, con siccità e alluvioni che colpiscono il bacino del Po dove si concentra la zootecnia da formaggio e metà dell'agricoltura irrigua nazionale.",
+      materiali: [
+        { materiale: "Grano duro e cereali", impiego: "Pasta e prodotti da forno: la materia prima simbolo", fornitura: "L'Italia importa ~35-40% del grano duro (Canada, Grecia, Australia) e oltre metà del tenero; i contratti di filiera nazionali crescono ma non chiudono il gap", rischio: "alto" },
+        { materiale: "Soia e proteine per mangimi", impiego: "Zootecnia da latte e carne: dietro Parmigiano e Grana c'è la razione proteica", fornitura: "Soia da Sud America e USA sotto vincoli EUDR (deforestazione): la zootecnia delle DOP dipende strutturalmente da proteine estere", rischio: "alto" },
+        { materiale: "Fertilizzanti e agrofarmaci", impiego: "Rese agricole: azotati, fosfati, potassa e difesa delle colture", fornitura: "Gli azotati sono figli del gas (crisi 2022 con impianti UE fermi); potassa da pochi paesi; principi attivi agrofarma in consolidamento cinese (Syngenta-ChemChina)", rischio: "alto" },
+        { materiale: "Acqua irrigua", impiego: "Ortofrutta, riso, mais e foraggi del bacino padano", fornitura: "Il 'materiale' più critico e meno sostituibile: siccità ricorrenti del Po, invasi insufficienti, conflitti d'uso. Investimenti PNRR su reti e riuso in corso", rischio: "critico" },
+        { materiale: "Sementi e genetica", impiego: "Varietà vegetali ibride e genetica zootecnica", fornitura: "Sementi ibride dominate da multinazionali estere (Bayer, Corteva, Syngenta); presidio italiano su riso, grano duro e vite ma erosione costante", rischio: "medio" },
+        { materiale: "Imballaggi (vetro, banda stagnata, carta)", impiego: "Bottiglie per vino e passate, scatolame, packaging premium", fornitura: "Vetro cavo energivoro (crisi 2022 con prezzi triplicati); banda stagnata da pochi produttori UE; presidio nazionale parziale nel vetro (Zignago Vetro, Vetri Speciali)", rischio: "medio" },
+        { materiale: "Energia e logistica del freddo", impiego: "Serre, essiccazione, celle frigo, catena del freddo export", fornitura: "Costi elettrici italiani sopra la media UE su una filiera a margini agricoli sottili; reefer e rotte export esposte a colli di bottiglia portuali", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Clima e acqua", nota: "Siccità, alluvioni, gelate tardive e fitopatie (Xylella docet): il rischio climatico è ormai il primo rischio industriale della filiera; assicurazioni e invasi sono la risposta." },
+        { nome: "Manodopera stagionale", nota: "Raccolta e trasformazione dipendono da flussi stagionali regolati (decreto flussi): la legalità della subfornitura di manodopera è insieme rischio reputazionale e produttivo." },
+        { nome: "PAC e sussidi europei", nota: "La Politica Agricola Comune è il pavimento economico dell'agricoltura: ogni riforma ridisegna la redditività a monte delle filiere DOP." },
+        { nome: "Tutela e anticontraffazione", nota: "L'italian sounding vale quanto l'export autentico: registri, accordi commerciali e tutela legale dei consorzi sono un fattore produttivo del valore." },
+      ],
+    },
     catena: [
       {
         fase: "Agricoltura e allevamento",
         posizione: "MONTE",
         descrizione: "≈ 700.000 aziende agricole; filiere del grano duro, pomodoro, latte, vigneto e zootecnia.",
+        input: ["Sementi e genetica", "Fertilizzanti e agrofarmaci", "Acqua irrigua", "Gasolio e meccanizzazione", "Manodopera stagionale"],
         aziende: [
           { nome: "Cooperative agricole", ruolo: "Conserve Italia, Granlatte, Cantine Riunite-CIV" },
           { nome: "Grandi aziende agricole", ruolo: "Bonifiche Ferraresi (BF Spa), Genagricola" },
@@ -1182,6 +1201,7 @@ const SETTORI = [
         fase: "Trasformazione industriale",
         posizione: "CENTRO",
         descrizione: "I marchi che portano il made in Italy alimentare nel mondo.",
+        input: ["Materie prime agricole (anche import)", "Energia e vapore", "Imballaggi (vetro, latta, carta)", "Linee di processo e confezionamento"],
         aziende: [
           { nome: "Ferrero", ruolo: "Dolciario: ≈ €18 mld di ricavi globali" },
           { nome: "Barilla", ruolo: "1° produttore mondiale di pasta" },
@@ -1195,6 +1215,7 @@ const SETTORI = [
         fase: "Consorzi e certificazioni d'origine",
         posizione: "CENTRO",
         descrizione: "La \"DOP economy\": tutela, disciplinari e valore del territorio.",
+        input: ["Latte e carni di filiera locale", "Disciplinari e organismi di controllo", "Tempo e magazzini di stagionatura", "Tutela legale anticontraffazione"],
         aziende: [
           { nome: "Parmigiano Reggiano / Grana Padano", ruolo: "I due formaggi DOP più esportati" },
           { nome: "Prosciutto di Parma", ruolo: "Consorzio dal 1963" },
@@ -1205,6 +1226,7 @@ const SETTORI = [
         fase: "Tecnologie e packaging alimentare",
         posizione: "CENTRO",
         descrizione: "Il ponte con la meccanica: macchine e materiali per il food processing.",
+        input: ["Acciaio inox alimentare", "Automazione e visione", "Materiali barriera e film", "Normative food contact"],
         aziende: [
           { nome: "Sacmi / IMA", ruolo: "Macchine per il confezionamento alimentare" },
           { nome: "Goglio", ruolo: "Packaging flessibile per caffè e food" },
@@ -1214,6 +1236,7 @@ const SETTORI = [
         fase: "Distribuzione, ristorazione ed export",
         posizione: "VALLE",
         descrizione: "GDO nazionale, Horeca e canali export: USA e Germania primi mercati.",
+        input: ["Logistica del freddo", "Container reefer per l'export", "Piattaforme GDO", "Certificazioni (BRC, IFS)"],
         aziende: [
           { nome: "Conad / Coop / Esselunga", ruolo: "GDO a insegna italiana" },
           { nome: "Eataly", ruolo: "Retail esperienziale del made in Italy" },
@@ -1231,7 +1254,7 @@ const SETTORI = [
       "Frammentazione agricola a monte: potere negoziale debole verso GDO e trasformazione",
       "Esposizione a clima, fitopatie e dazi (USA primo mercato extra-UE)",
     ],
-    fonti: ["ISMEA", "Federalimentare", "Fondazione Qualivita", "ISTAT"],
+    fonti: ["ISMEA", "Federalimentare", "Fondazione Qualivita", "ISTAT", "CREA", "Autorità di bacino del Po"],
   },
 
   {
@@ -1245,11 +1268,30 @@ const SETTORI = [
       { label: "Occhialeria", value: "≈ 70% dell'alta gamma mondiale" },
       { label: "Legno-arredo", value: "≈ €52 mld, export €19 mld" },
     ],
+    approvvigionamento: {
+      intro: "Il lusso italiano trasforma materie prime che non possiede: la lana merino è australiana, il cashmere mongolo, la seta greggia cinese, le pelli grezze arrivano dai macelli di mezzo mondo. Il valore nasce nella nobilitazione — filatura, tessitura, tintura, concia — dove i distretti (Biella, Como, Prato, Santa Croce, Arzignano) non hanno rivali. La nuova frontiera dell'approvvigionamento non è il prezzo ma la tracciabilità: regolamenti europei su deforestazione, due diligence e passaporto digitale trasformano l'origine della materia in requisito di accesso al mercato.",
+      materiali: [
+        { materiale: "Lane pregiate e fibre nobili", impiego: "Tessuti di Biella e maglieria di lusso: merino, cashmere, vigogna", fornitura: "Merino da Australia e Nuova Zelanda, cashmere da Mongolia e Cina interna: import quasi totale del greggio, con aste globali e prezzi volatili", rischio: "alto" },
+        { materiale: "Seta greggia", impiego: "Tessitura serica di Como, cravatteria e foulard", fornitura: "La bachicoltura italiana è quasi scomparsa: greggia cinese >80% del mercato; progetti di reintroduzione in Veneto e Friuli su scala sperimentale", rischio: "alto" },
+        { materiale: "Cotone tracciato", impiego: "Camiceria, denim, jersey", fornitura: "Il bando USA sul cotone dello Xinjiang (UFLPA) ha spaccato il mercato: la tracciabilità dell'origine è ora condizione di export verso gli Stati Uniti", rischio: "alto" },
+        { materiale: "Pelli e cuoio grezzi", impiego: "Concerie di Santa Croce e Arzignano: il 60% della pelle conciata UE", fornitura: "Pelli bovine da macelli USA, Brasile e UE (sottoprodotto della filiera carne); esotiche sotto CITES; il regolamento EUDR impone tracciabilità di pascolo", rischio: "medio" },
+        { materiale: "Chimica tessile e conciaria", impiego: "Coloranti, tannini, finissaggi: la nobilitazione è chimica applicata", fornitura: "Coloranti e intermedi in gran parte asiatici; REACH restringe le molecole; presidio toscano nei tannini vegetali (castagno)", rischio: "medio" },
+        { materiale: "Fibre sintetiche e rigenerate", impiego: "Tecnico-sportivo, imbottiture, lusso circolare", fornitura: "Poliestere e nylon da petrolchimica asiatica; eccellenza italiana nel riciclo: lana rigenerata di Prato (Manteco), nylon rigenerato (Aquafil, Econyl)", rischio: "medio" },
+        { materiale: "Metalli preziosi e gemme", impiego: "Gioielleria (Vicenza, Arezzo, Valenza) e minuteria metallica del lusso", fornitura: "Oro da raffinerie certificate LBMA, diamanti sotto sanzioni russe (G7): la certificazione d'origine è diventata parte del prodotto", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Manodopera artigiana", nota: "Il vero capitale della filiera: sarti, tagliatori, conciatori, orlatori. Il ricambio generazionale e la legalità della subfornitura (audit post-inchieste 2024-25) sono il rischio n.1." },
+        { nome: "Tracciabilità e compliance", nota: "EUDR, due diligence (CSDDD), passaporto digitale di prodotto UE: l'origine documentata della materia prima è ormai requisito d'accesso, non un plus di marketing." },
+        { nome: "Energia per la nobilitazione", nota: "Tintorie, finissaggi e concerie sono gas-intensive: la crisi 2022 ha fermato interi distretti; l'acqua di processo è il secondo vincolo (Prato ricicla, altri meno)." },
+        { nome: "Domanda globale e cambio", nota: "Il lusso vive di export e turismo d'acquisto: la debolezza cinese e il cambio euro-dollaro muovono i ricavi più di ogni fattore interno." },
+      ],
+    },
     catena: [
       {
         fase: "Filati, tessuti e concia",
         posizione: "MONTE",
         descrizione: "I distretti delle materie prime nobili: lana a Biella, seta a Como, pelle in Toscana e Veneto.",
+        input: ["Lane e fibre nobili (import)", "Seta greggia (Cina)", "Pelli grezze", "Acqua e chimica di tintoria", "Energia (processi gas-intensive)"],
         aziende: [
           { nome: "Distretto laniero di Biella", ruolo: "Zegna, Loro Piana (LVMH), Reda, Vitale Barberis Canonico" },
           { nome: "Seta di Como", ruolo: "Ratti, Mantero" },
@@ -1261,6 +1303,7 @@ const SETTORI = [
         fase: "Manifattura e façonisti",
         posizione: "CENTRO",
         descrizione: "Migliaia di laboratori specializzati che producono per i brand italiani e per le maison estere.",
+        input: ["Tessuti e pellami nobilitati", "Manodopera artigiana", "Accessori metallici e chiusure", "Audit e compliance sociale"],
         aziende: [
           { nome: "Pelletteria toscana", ruolo: "Produzione borse per LVMH, Kering, Chanel" },
           { nome: "Calzature", ruolo: "Riviera del Brenta (lusso donna), Marche" },
@@ -1271,6 +1314,7 @@ const SETTORI = [
         fase: "Brand e maison",
         posizione: "CENTRO",
         descrizione: "I marchi italiani indipendenti e i gruppi esteri con radici produttive in Italia.",
+        input: ["Direzione creativa e design", "Capitale di marca e comunicazione", "IP e anticontraffazione", "Real estate per flagship"],
         aziende: [
           { nome: "Prada Group", ruolo: "≈ €5,4 mld; acquisizione Versace 2025" },
           { nome: "Giorgio Armani", ruolo: "Il più grande gruppo indipendente" },
@@ -1282,6 +1326,7 @@ const SETTORI = [
         fase: "Occhialeria e accessori",
         posizione: "CENTRO",
         descrizione: "Il distretto di Belluno: capitale mondiale dell'eyewear.",
+        input: ["Acetati e polimeri speciali", "Lenti e trattamenti ottici", "Metalli e microcomponenti", "Licenze delle maison"],
         aziende: [
           { nome: "EssilorLuxottica", ruolo: "1° gruppo mondiale (Ray-Ban, Oakley + licenze lusso)" },
           { nome: "Safilo / Marcolin / De Rigo", ruolo: "Produttori e licenziatari globali" },
@@ -1292,6 +1337,7 @@ const SETTORI = [
         fase: "Retail, e-commerce e circolarità",
         posizione: "VALLE",
         descrizione: "Distribuzione diretta, outlet, digitale e second hand in crescita.",
+        input: ["Real estate nelle vie del lusso", "Logistica e-commerce e resi", "CRM e dati clienti", "Autenticazione per il second hand"],
         aziende: [
           { nome: "Retail diretto e outlet", ruolo: "Serravalle, The Mall; flagship nelle capitali" },
           { nome: "E-commerce e resale", ruolo: "Piattaforme digitali, certificazioni di sostenibilità e tracciabilità" },
@@ -1308,7 +1354,7 @@ const SETTORI = [
       "Ricambio generazionale degli artigiani; controlli di filiera (caporalato nella subfornitura)",
       "Domanda cinese debole e polarizzazione: soffre la fascia media",
     ],
-    fonti: ["Confindustria Moda", "Altagamma", "ANFAO", "FederlegnoArredo"],
+    fonti: ["Confindustria Moda", "Altagamma", "ANFAO", "FederlegnoArredo", "UNIC — concerie italiane", "Commissione UE — passaporto digitale di prodotto"],
   },
 
   {
@@ -1411,11 +1457,30 @@ const SETTORI = [
       { label: "Superyacht", value: "≈ 50% ordini mondiali" },
       { label: "Addetti diporto", value: "≈ 30.000 diretti" },
     ],
+    approvvigionamento: {
+      intro: "Il paese che vara metà dei superyacht del mondo non produce quasi nessuno dei loro motori: la propulsione marina di potenza è tedesco-americana, l'elettronica di navigazione giapponese-americana, il teak delle coperte è sotto sanzioni. Il vantaggio italiano sta nell'integrazione — scafo, allestimento, arredo, finiture — e in un indotto artigianale che nessun concorrente replica. Il collo di bottiglia dichiarato da tutti i cantieri, però, non è un materiale: sono le maestranze, e gli spazi (bacini, banchine, aree demaniali) per costruire barche sempre più grandi.",
+      materiali: [
+        { materiale: "Motori marini e propulsione", impiego: "Propulsione di crociere, militari e yacht: MTU, MAN, Caterpillar, Volvo Penta", fornitura: "Nessun grande motorista marino italiano nella fascia alta: dipendenza pressoché totale da Germania, USA e Scandinavia; presidio parziale FPT nei medi", rischio: "alto" },
+        { materiale: "Teak e legni pregiati", impiego: "Coperte, interni e finiture di pregio", fornitura: "Il teak birmano è sotto sanzioni UE/USA e vincoli EUDR: la crisi è strutturale; alternative (teak sintetico, sughero tecnico, legni certificati FSC) in adozione accelerata", rischio: "alto" },
+        { materiale: "Acciai navali e alluminio marino", impiego: "Scafi e sovrastrutture di navi da crociera, militari e megayacht", fornitura: "Lamiere navali da acciaierie UE (la crisi ex Ilva riduce l'opzione domestica); leghe 5083 e profili da fornitori europei; prezzi ciclici", rischio: "medio" },
+        { materiale: "Resine, gelcoat e fibre composite", impiego: "Scafi in vetroresina del diporto e componenti in carbonio", fornitura: "Resine e stirene dalla petrolchimica (prezzi legati al petrolio); fibra di carbonio con precursore estero; normative ambientali sugli stirenici in irrigidimento", rischio: "medio" },
+        { materiale: "Elettronica di bordo e navigazione", impiego: "Plancia, radar, autopiloti, intrattenimento", fornitura: "Garmin, Raymarine, Furuno, Simrad: oligopolio estero; integratori italiani di plancia (Team Italia) ma hardware importato", rischio: "medio" },
+        { materiale: "Ausiliari e stabilizzazione", impiego: "Generatori, stabilizzatori giroscopici e pinne, thruster", fornitura: "Generatori esteri (Kohler, Onan); presidio italiano nella stabilizzazione (CMC Marine) e negli accessori di coperta (Quick, Besenzoni, Sanguineti)", rischio: "medio" },
+        { materiale: "Vetri navali, tessuti e pelli tecniche", impiego: "Vetrate strutturali curve, cieli, rivestimenti outdoor", fornitura: "Vetri curvi strutturali da pochi specialisti (anche italiani, Isoclima); tessuti tecnici outdoor e pelli nautiche da filiera moda-arredo nazionale", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Maestranze e trasfertisti", nota: "Carpentieri navali, saldatori certificati, falegnami e tappezzieri nautici: il vincolo n.1 dichiarato dai cantieri. Accademie interne (Fincantieri, Azimut|Benetti) e ITS come risposta." },
+        { nome: "Bacini, banchine e demanio", nota: "Barche più grandi richiedono travel lift, bacini e specchi d'acqua: le concessioni demaniali e gli spazi portuali sono il limite fisico all'espansione dei distretti (Viareggio, La Spezia, Ancona)." },
+        { nome: "Finanza di commessa", nota: "Una nave da crociera vale oltre un miliardo pagato a milestone su anni: garanzie, refund guarantee e SACE decidono la competitività quanto il cantiere." },
+        { nome: "Normative e decarbonizzazione", nota: "Classificazione (RINA), MARPOL e obiettivi IMO: metanolo, GNL e ibrido ridisegnano la propulsione — un'occasione per rientrare nella catena dei motori puliti." },
+      ],
+    },
     catena: [
       {
         fase: "Design e progettazione navale",
         posizione: "MONTE",
         descrizione: "Studi di design e ingegneria che definiscono l'estetica mondiale dello yachting.",
+        input: ["Talenti di yacht design", "CAD navale e simulazione", "Vasche navali e prove modello", "Ingegneria strutturale"],
         aziende: [
           { nome: "Officina Italiana Design", ruolo: "Design di Riva" },
           { nome: "Zuccon International Project", ruolo: "Superyacht design" },
@@ -1426,6 +1491,7 @@ const SETTORI = [
         fase: "Costruzione navale (shipbuilding)",
         posizione: "CENTRO",
         descrizione: "Navi da crociera, militari e traghetti: cantieri di scala mondiale.",
+        input: ["Acciai navali e lamiere", "Motori e propulsione (import)", "Cavi e impiantistica", "Bacini e banchine", "Saldatori certificati"],
         aziende: [
           { nome: "Fincantieri", ruolo: "Leader mondiale crociere (Monfalcone, Marghera, Sestri); militare e offshore" },
           { nome: "T. Mariotti", ruolo: "Navi speciali e refit (Genova)" },
@@ -1435,6 +1501,7 @@ const SETTORI = [
         fase: "Nautica da diporto e superyacht",
         posizione: "CENTRO",
         descrizione: "I costruttori che dominano il Global Order Book mondiale.",
+        input: ["Resine e fibre (VTR, carbonio)", "Motori marini (import)", "Teak e legni certificati", "Maestranze specializzate"],
         aziende: [
           { nome: "Azimut|Benetti", ruolo: "1° gruppo mondiale per metri costruiti" },
           { nome: "Ferretti Group", ruolo: "Riva, Pershing, CRN, Wally" },
@@ -1446,6 +1513,7 @@ const SETTORI = [
         fase: "Componentistica e allestimento",
         posizione: "CENTRO",
         descrizione: "Accessori, arredo nautico e sistemi di bordo: l'indotto dei distretti.",
+        input: ["Acciaio inox marino", "Elettronica di bordo", "Tessuti e pelli nautiche", "Vetri e cristalli curvi"],
         aziende: [
           { nome: "Quick Group", ruolo: "Ancoraggio, thruster, illuminazione (Ravenna)" },
           { nome: "Besenzoni", ruolo: "Passerelle e accessori" },
@@ -1456,6 +1524,7 @@ const SETTORI = [
         fase: "Marina, refit e servizi",
         posizione: "VALLE",
         descrizione: "Porti turistici, refit di superyacht, charter e brokeraggio: la coda lunga del valore.",
+        input: ["Travel lift e bacini di refit", "Concessioni demaniali", "Tecnici multimarca", "Servizi portuali e bunkeraggio"],
         aziende: [
           { nome: "Amico & Co", ruolo: "Refit superyacht (Genova), riferimento mondiale" },
           { nome: "Lusben (Azimut|Benetti)", ruolo: "Refit (Livorno/Viareggio)" },
@@ -1473,7 +1542,7 @@ const SETTORI = [
       "Colli di bottiglia nella subfornitura e nei bacini di refit",
       "Concorrenza asiatica in crescita nelle costruzioni commerciali",
     ],
-    fonti: ["Confindustria Nautica / Deloitte", "Global Order Book — BOAT International", "Fincantieri — bilancio 2024"],
+    fonti: ["Confindustria Nautica / Deloitte", "Global Order Book — BOAT International", "Fincantieri — bilancio 2024", "RINA", "EUDR / sanzioni UE sul teak birmano"],
   },
 ];
 
