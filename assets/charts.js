@@ -256,4 +256,152 @@ function balanceBars(container, data) {
   container.appendChild(svg);
 }
 
-window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars };
+/* ============================================================
+   MODELLO SHUTDOWN — curve di costo interattive
+   MC = 3q² − 24q + 60 + k ; AVC = q² − 12q + 60 + k ; ATC = AVC + F/q
+   k = sovrapprezzo energia (costo variabile per unità).
+   Zone di prezzo: P>ATCmin profitto · AVCmin≤P<ATCmin perdita ma produce ·
+   P<AVCmin shutdown. Mostra dal vivo lo shock energetico → shutdown.
+   ============================================================ */
+function shutdownModel(container) {
+  const F = 200;
+  let P = 45, k = 0;
+
+  const W = 640, H = 340, padL = 46, padR = 74, padT = 16, padB = 40;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const qMin = 0.7, qMax = 12, cMax = 130;
+  const X = (q) => padL + ((q - qMin) / (qMax - qMin)) * plotW;
+  const Y = (c) => padT + plotH - (Math.min(Math.max(c, 0), cMax) / cMax) * plotH;
+
+  const MC = (q) => 3 * q * q - 24 * q + 60 + k;
+  const AVC = (q) => q * q - 12 * q + 60 + k;
+  const ATC = (q) => AVC(q) + F / q;
+  const avcMin = () => 24 + k;            // minimo AVC (in q=6)
+  const atcMin = () => {                   // minimo ATC campionato
+    let m = Infinity;
+    for (let q = 2; q <= qMax; q += 0.05) m = Math.min(m, ATC(q));
+    return m;
+  };
+  const qStar = () => {
+    const disc = 576 - 12 * (60 + k - P);
+    if (disc < 0) return null;
+    return (24 + Math.sqrt(disc)) / 6;     // ramo crescente di MC
+  };
+
+  const wrap = document.createElement("div");
+  wrap.className = "sm-wrap";
+
+  // controlli
+  const ctr = document.createElement("div");
+  ctr.className = "sm-controls";
+  ctr.innerHTML = `
+    <label class="sm-slider"><span>Prezzo di mercato <strong id="sm-pval"></strong></span>
+      <input id="sm-p" type="range" min="10" max="90" step="1" value="${P}"></label>
+    <label class="sm-slider"><span>Sovrapprezzo energia <strong id="sm-kval"></strong></span>
+      <input id="sm-k" type="range" min="0" max="55" step="1" value="${k}"></label>`;
+  wrap.appendChild(ctr);
+  const pval = ctr.querySelector("#sm-pval"), kval = ctr.querySelector("#sm-kval");
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, class: "viz-svg", role: "img", "aria-label": "Curve di costo e soglia di shutdown" });
+  wrap.appendChild(svg);
+
+  const readout = document.createElement("div");
+  readout.className = "sm-readout";
+  wrap.appendChild(readout);
+
+  container.appendChild(wrap);
+
+  function curve(fn, cls) {
+    let d = "";
+    for (let q = qMin; q <= qMax + 1e-9; q += 0.15) {
+      const c = fn(q);
+      if (c > cMax + 40) continue;
+      d += (d ? "L" : "M") + X(q).toFixed(1) + "," + Y(c).toFixed(1) + " ";
+    }
+    return el("path", { d, class: cls, fill: "none" }, svg);
+  }
+
+  function update() {
+    svg.innerHTML = "";
+    const aMin = avcMin(), tMin = atcMin();
+
+    // bande di zona (in prezzo): profitto / perdita / shutdown
+    const band = (c1, c2, fill) => el("rect", { x: padL, y: Y(c2), width: plotW, height: Math.max(0, Y(c1) - Y(c2)), fill, opacity: 0.10 }, svg);
+    band(tMin, cMax, "var(--div-pos)");     // sopra ATCmin → profitto
+    band(aMin, tMin, "var(--series-3)");    // tra AVCmin e ATCmin → perdita
+    band(0, aMin, "var(--div-neg)");        // sotto AVCmin → shutdown
+
+    // assi
+    el("line", { x1: padL, y1: Y(0), x2: padL + plotW, y2: Y(0), class: "viz-baseline" }, svg);
+    el("line", { x1: padL, y1: padT, x2: padL, y2: Y(0), class: "viz-baseline" }, svg);
+    for (let c = 0; c <= cMax; c += 30) {
+      el("line", { x1: padL, x2: padL + plotW, y1: Y(c), y2: Y(c), class: "viz-grid" }, svg);
+      const t = el("text", { x: padL - 8, y: Y(c), "text-anchor": "end", "dominant-baseline": "middle", class: "viz-axis-label" }, svg);
+      t.textContent = c;
+    }
+    const xl = el("text", { x: padL + plotW / 2, y: H - 8, "text-anchor": "middle", class: "viz-axis-label" }, svg);
+    xl.textContent = "Quantità prodotta →";
+    const yl = el("text", { x: 14, y: padT + plotH / 2, "text-anchor": "middle", class: "viz-axis-label", transform: `rotate(-90 14 ${padT + plotH / 2})` }, svg);
+    yl.textContent = "€ per unità";
+
+    // curve di costo
+    curve(ATC, "sm-atc");
+    curve(AVC, "sm-avc");
+    curve(MC, "sm-mc");
+    const labelAt = (fn, txt, cls) => {
+      // ancora l'etichetta all'ultimo q con curva dentro il riquadro
+      let q = qMax;
+      while (q > qMin && fn(q) > cMax) q -= 0.1;
+      const inside = fn(qMax) <= cMax;
+      const t = el("text", {
+        x: inside ? padL + plotW + 6 : X(q) - 4,
+        y: Y(fn(q)) + (inside ? 0 : -6),
+        "dominant-baseline": "middle", "text-anchor": inside ? "start" : "end", class: cls,
+      }, svg);
+      t.textContent = txt;
+    };
+    labelAt(ATC, "ATC", "sm-lab sm-lab-atc");
+    labelAt(AVC, "AVC", "sm-lab sm-lab-avc");
+    labelAt(MC, "MC", "sm-lab sm-lab-mc");
+
+    // linea del prezzo
+    el("line", { x1: padL, x2: padL + plotW, y1: Y(P), y2: Y(P), class: "sm-price" }, svg);
+    const pt = el("text", { x: padL + plotW + 6, y: Y(P), "dominant-baseline": "middle", class: "sm-lab sm-lab-p" }, svg);
+    pt.textContent = "P";
+
+    // punto ottimo e stato
+    const shutdown = P < aMin;
+    let q = qStar(), profit = -F, stato, cls;
+    if (shutdown || q === null) {
+      stato = "Shutdown — l'impianto si ferma"; cls = "sm-zone-critico";
+      profit = -F;
+    } else {
+      const atcq = ATC(q);
+      profit = (P - atcq) * q;
+      if (P >= tMin) { stato = "Profitto positivo"; cls = "sm-zone-buono"; }
+      else { stato = "In perdita, ma conviene produrre"; cls = "sm-zone-medio"; }
+      // marcatore P = MC
+      const mk = el("circle", { cx: X(q), cy: Y(P), r: 5, class: "sm-dot" }, svg);
+      el("line", { x1: X(q), y1: Y(P), x2: X(q), y2: Y(0), class: "sm-drop" }, svg);
+      const qt = el("text", { x: X(q), y: Y(0) + 16, "text-anchor": "middle", class: "viz-value-label" }, svg);
+      qt.textContent = "q* " + q.toFixed(1);
+    }
+
+    pval.textContent = "€" + P;
+    kval.textContent = "+€" + k;
+    readout.innerHTML = `
+      <span class="sm-zone ${cls}">${escHtml(stato)}</span>
+      <span class="sm-metric">Soglia shutdown (AVC min) <strong>€${aMin.toFixed(0)}</strong></span>
+      <span class="sm-metric">Pareggio (ATC min) <strong>€${tMin.toFixed(0)}</strong></span>
+      <span class="sm-metric">Risultato <strong class="${profit >= 0 ? "sm-pos" : "sm-neg"}">${profit >= 0 ? "+" : "−"}€${Math.abs(profit).toFixed(0)}</strong></span>`;
+  }
+
+  ctr.querySelector("#sm-p").addEventListener("input", (e) => { P = +e.target.value; update(); });
+  ctr.querySelector("#sm-k").addEventListener("input", (e) => { k = +e.target.value; update(); });
+  update();
+}
+
+/* esc locale (nome distinto per non collidere con app.js nel bundle) */
+function escHtml(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+window.Charts = { donutChart, hBarChart, tradeColumns, balanceBars, shutdownModel };

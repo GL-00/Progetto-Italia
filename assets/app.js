@@ -613,6 +613,19 @@ function renderPolitiche() {
   tesi.innerHTML = `<div class="kicker">La tesi</div><p>${esc(POLITICHE.tesi)}</p>`;
   root.appendChild(tesi);
 
+  /* Modello microeconomico — la soglia di shutdown */
+  const ssm = sectionEl("Lettura microeconomica", "La soglia di shutdown: perché i distretti si fermano",
+    "Le riforme sui fattori, in termini microeconomici, abbassano il costo variabile per unità (AVC). Ecco perché conta. Un'impresa produce dove il prezzo eguaglia il costo marginale (P = MC): se il prezzo è sopra il costo medio fa profitto, ma può restare aperta in perdita finché copre il costo variabile. Quando uno shock — tipicamente l'energia — spinge l'AVC sopra il prezzo, l'impianto si ferma. Muovi i cursori per riprodurlo.");
+  const smc = document.createElement("div");
+  smc.className = "card";
+  Charts.shutdownModel(smc);
+  const smnote = document.createElement("p");
+  smnote.className = "viz-note";
+  smnote.innerHTML = "È letteralmente il meccanismo delle crisi del 2022: con prezzo di vendita fermo, il rincaro del gas ha portato l'AVC di tintorie, vetrerie e acciai a grano orientato sopra il prezzo, spingendo i distretti energivori dalla zona «in perdita ma aperti» allo shutdown. La riforma dei fattori sposta la soglia di shutdown verso il basso: meno imprese la superano a parità di shock.";
+  smc.appendChild(smnote);
+  ssm.appendChild(smc);
+  root.appendChild(ssm);
+
   /* Proof of concept */
   const spoc = sectionEl("Prove di fattibilità", "L'Italia sa già farlo",
     "Tre precedenti dimostrano che il vincolo non è la capacità: è il regime ordinario.");
