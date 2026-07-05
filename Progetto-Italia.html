@@ -976,11 +976,30 @@ const SETTORI = [
       { label: "Export componenti", value: "≈ €23 mld" },
       { label: "Ferrari", value: "> €90 mld di capitalizzazione" },
     ],
+    approvvigionamento: {
+      intro: "La transizione elettrica ha riscritto la mappa degli approvvigionamenti: nel veicolo termico l'Italia presidiava quasi tutta la catena (fonderie, meccanica, stampaggio); nel veicolo elettrico il 30-40% del valore sta nella batteria, che né l'Italia né in gran parte l'Europa producono. La crisi dei cablaggi ucraini (2022) e quella dei chip (2021-23) hanno già mostrato quanto una catena just-in-time sia fragile: oggi il rischio maggiore non è il singolo materiale ma la concentrazione asiatica dell'intera tecnologia di accumulo.",
+      materiali: [
+        { materiale: "Celle e batterie per veicoli elettrici", impiego: "Il 30-40% del valore di un BEV: pacchi batteria e moduli", fornitura: "Celle dominate da Cina e Corea (CATL, BYD, LG, Samsung SDI); la gigafactory ACC di Termoli resta congelata: l'Italia importa pacchi completi o li assembla su celle estere", rischio: "critico" },
+        { materiale: "Terre rare per motori elettrici", impiego: "Magneti NdFeB dei motori di trazione ad alta efficienza", fornitura: "Cina ~98% dei magneti in UE, sotto controlli export dal 2025; Eurogroup Laminations produce statori e rotori, ma i magneti sono importati", rischio: "critico" },
+        { materiale: "Semiconduttori di potenza e MCU", impiego: "Centraline, inverter, ADAS: fino a 3.500 chip per veicolo", fornitura: "MCU da TSMC/Infineon/NXP/Renesas: la crisi 2021-23 ha fermato le linee di mezzo mondo. Presidio italiano nel SiC di ST Catania per gli inverter", rischio: "alto" },
+        { materiale: "Acciai alto-resistenziali e alluminio", impiego: "Scocche, telai, componenti stampati e fusi", fornitura: "Acciai automotive da pochi player (la crisi dell'ex Ilva pesa sull'autonomia nazionale); l'alluminio secondario delle fonderie bresciane è un presidio, il primario è importato", rischio: "alto" },
+        { materiale: "Rame e cablaggi (wire harness)", impiego: "Cablaggi di bordo, motori, ricarica", fornitura: "Produzione labour-intensive delocalizzata in Nord Africa ed Est Europa: lo stop degli stabilimenti ucraini nel 2022 fermò le linee tedesche in una settimana", rischio: "alto" },
+        { materiale: "Gomma naturale e materie per pneumatici", impiego: "Pneumatici (Pirelli), guarnizioni, antivibranti", fornitura: "Gomma naturale dal Sud-Est asiatico sotto vincoli EUDR (deforestazione); nero di carbonio in riassetto dopo l'uscita dalle forniture russe", rischio: "medio" },
+        { materiale: "Fusioni, forgiati e lavorazioni meccaniche", impiego: "Componenti motore, sospensioni, freni (Brembo)", fornitura: "Presidio domestico forte: fonderie e officine bresciano-bergamasche competitive a livello mondiale, ma energivore e legate al ciclo del termico", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Domanda captive e monocliente", nota: "Parte della componentistica dipende dagli ordini Stellantis in Italia: il crollo dei volumi nazionali obbliga a diversificare verso i costruttori tedeschi e i nuovi entranti." },
+        { nome: "Regolazione europea (2035)", nota: "Lo stop al termico e le revisioni in corso creano incertezza d'investimento: la filiera deve investire su due tecnologie contemporaneamente senza sapere i volumi di nessuna delle due." },
+        { nome: "Energia per fonderie e stampaggio", nota: "La parte più energivora della catena (fusioni, trattamenti, verniciatura) sconta il differenziale di prezzo elettrico italiano." },
+        { nome: "Riconversione delle competenze", nota: "≈ 70.000 addetti legati al powertrain termico da riqualificare verso elettrico, software e batterie: la velocità della riconversione decide quanta filiera sopravvive." },
+      ],
+    },
     catena: [
       {
         fase: "Design, ingegneria e materiali",
         posizione: "MONTE",
         descrizione: "Stile e ingegneria di veicolo: un'eccellenza che lavora per i costruttori di tutto il mondo.",
+        input: ["Talenti di design e ingegneria", "Software CAD e simulazione", "Compositi e materiali leggeri", "Gallerie del vento e prototipazione"],
         aziende: [
           { nome: "Italdesign (Audi)", ruolo: "Ingegneria e stile (Moncalieri)" },
           { nome: "Pininfarina", ruolo: "Design (gruppo Mahindra)" },
@@ -991,6 +1010,7 @@ const SETTORI = [
         fase: "Componentistica",
         posizione: "MONTE",
         descrizione: "≈ 2.200 imprese fornitrici: il segmento più solido della filiera, con saldo commerciale positivo.",
+        input: ["Acciai alto-resistenziali e alluminio", "Semiconduttori e MCU", "Terre rare per magneti", "Rame e cablaggi", "Gomma naturale"],
         aziende: [
           { nome: "Brembo", ruolo: "1° mondiale impianti frenanti ad alte prestazioni" },
           { nome: "Pirelli", ruolo: "Pneumatici premium" },
@@ -1003,6 +1023,7 @@ const SETTORI = [
         fase: "Costruttori (OEM)",
         posizione: "CENTRO",
         descrizione: "Grandi volumi in contrazione (Stellantis) e lusso ai massimi storici (Motor Valley emiliana).",
+        input: ["Celle e pacchi batteria", "Componenti dai Tier 1", "Energia per gli stabilimenti", "Logistica inbound just-in-time"],
         aziende: [
           { nome: "Stellantis", ruolo: "Mirafiori, Cassino, Melfi, Pomigliano, Atessa" },
           { nome: "Ferrari", ruolo: "Maranello: margini e capitalizzazione record" },
@@ -1015,6 +1036,7 @@ const SETTORI = [
         fase: "Distribuzione, aftermarket e mobilità",
         posizione: "VALLE",
         descrizione: "Reti di vendita, ricambi, noleggio a lungo termine e nuova mobilità.",
+        input: ["Capitale commerciale e stock", "Ricambi e logistica", "Dati di bordo e software", "Infrastruttura di ricarica"],
         aziende: [
           { nome: "Reti dealer e NLT", ruolo: "Consolidamento verso grandi gruppi (Autotorino, UnipolRental, Arval)" },
           { nome: "Aftermarket", ruolo: "Ricambi e officine: mercato ≈ €25 mld" },
@@ -1031,7 +1053,7 @@ const SETTORI = [
       "Transizione elettrica: a rischio le imprese legate al powertrain termico (≈ 70.000 addetti esposti)",
       "Assenza di una gigafactory di celle operativa su scala",
     ],
-    fonti: ["ANFIA", "ACEA", "MIMIT — tavolo automotive", "Osservatorio componentistica CCIAA Torino"],
+    fonti: ["ANFIA", "ACEA", "CLEPA", "MIMIT — tavolo automotive", "Osservatorio componentistica CCIAA Torino"],
   },
 
   {
