@@ -341,11 +341,32 @@ const SETTORI = [
       { label: "Nuova capacità FER 2024", value: "+7,5 GW" },
       { label: "Campioni nazionali", value: "Eni, Enel, Snam, Terna" },
     ],
+    approvvigionamento: {
+      intro: "L'Italia importa circa tre quarti dell'energia che consuma: la sicurezza degli approvvigionamenti è da sempre il vincolo del sistema. La transizione non elimina la dipendenza, la trasforma: dalle molecole (gas, petrolio) ai materiali (rame, litio, silicio, terre rare) — dalla geopolitica dei pozzi a quella delle miniere e soprattutto della raffinazione, dove domina la Cina. I presìdi italiani a monte esistono e sono pregiati: i cavi di Prysmian, gli elettrolizzatori di De Nora, la bioraffinazione di Eni, la gigafactory 3Sun.",
+      materiali: [
+        { materiale: "Gas naturale e GNL", impiego: "Generazione termoelettrica (~45% del mix), industria, riscaldamento", fornitura: "Import ~95% del fabbisogno: Algeria via Transmed primo fornitore, GNL da USA e Qatar (FSRU di Piombino e Ravenna), TAP dall'Azerbaigian. Russia quasi azzerata dal 2022; il prezzo resta il più volatile d'Europa", rischio: "alto" },
+        { materiale: "Petrolio e greggi", impiego: "Raffinazione, carburanti, petrolchimica", fornitura: "Import quasi totale con paniere diversificato post-embargo russo; la raffineria ISAB di Priolo, passata di proprietà dopo il 2022, resta uno snodo di sicurezza nazionale", rischio: "medio" },
+        { materiale: "Rame", impiego: "Reti di trasmissione e distribuzione, cavi HVDC (Prysmian), motori e trasformatori", fornitura: "Estrazione Cile/Perù/RD Congo, raffinazione cinese crescente; domanda mondiale in accelerazione con l'elettrificazione e prezzi ai massimi; il riciclo europeo non basta", rischio: "alto" },
+        { materiale: "Litio, nichel e grafite (batterie)", impiego: "Storage utility-scale, accumuli domestici, mobilità elettrica", fornitura: "Raffinazione dominata dalla Cina (litio ~65%, grafite ~90%); l'Italia non ha una gigafactory di celle operativa su scala e importa sistemi completi", rischio: "critico" },
+        { materiale: "Silicio policristallino e wafer FV", impiego: "Moduli fotovoltaici — inclusa la gigafactory 3Sun di Catania", fornitura: "Polysilicon cinese ~85% e wafer ~97% del mercato mondiale: anche la produzione europea di moduli dipende da celle e wafer importati", rischio: "critico" },
+        { materiale: "Terre rare e magneti per l'eolico", impiego: "Generatori direct-drive delle turbine, motori ad alta efficienza", fornitura: "Magneti NdFeB di provenienza cinese ~98% in UE, sotto controlli export dal 2025; le alternative senza terre rare sono ancora immature", rischio: "critico" },
+        { materiale: "Acciaio elettrico (GOES) e trasformatori", impiego: "Trasformatori di rete (Terna), cabine primarie, elettrificazione", fornitura: "Acciai a grano orientato prodotti da pochissimi player mondiali; collo di bottiglia globale sui trasformatori con consegne a 3-5 anni", rischio: "alto" },
+        { materiale: "Uranio e combustibile nucleare", impiego: "Prospettico: SMR e nuovo nucleare (Ansaldo Nucleare, Newcleo, alleanze EDF/Westinghouse)", fornitura: "Estrazione Kazakistan/Canada/Namibia, arricchimento Urenco/Orano: per l'Italia è tema di scenario, da presidiare prima di un eventuale rientro operativo", rischio: "medio" },
+        { materiale: "Feedstock per biocarburanti", impiego: "Bioraffinerie Eni (Venezia, Gela), HVO e carburanti sostenibili per l'aviazione (SAF)", fornitura: "Oli esausti e grassi in larga parte importati, anche dall'Asia con problemi di tracciabilità; concorrenza d'uso con la filiera alimentare", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Prezzo dell'energia", nota: "Il paradosso del settore: l'input critico dell'energia è l'energia stessa. Il prezzo elettrico italiano, fissato dal gas marginale, resta sopra la media UE e frena elettrolisi e industria energivora." },
+        { nome: "Permitting e consenso", nota: "Autorizzazioni per rinnovabili e reti: il vero collo di bottiglia italiano. Aree idonee, soprintendenze e contenziosi pesano più della tecnologia." },
+        { nome: "Capitale e tassi", nota: "Reti, offshore e storage sono capital-intensive: massima sensibilità al costo del denaro. Ruolo di CDP, BEI e delle aste (FER X, MACSE per gli accumuli)." },
+        { nome: "Capitale umano tecnico", nota: "Installatori, elettricisti industriali, ingegneri di rete e di cantiere: carenza cronica che rallenta la messa a terra degli investimenti." },
+      ],
+    },
     catena: [
       {
         fase: "Approvvigionamento e upstream",
         posizione: "MONTE",
         descrizione: "Esplorazione e produzione, gas naturale liquefatto, diversificazione post-2022 dalle forniture russe.",
+        input: ["GNL e capacità di rigassificazione", "Gasdotti (Transmed, TAP)", "Stoccaggi (Stogit)", "Shipping e navi metaniere"],
         aziende: [
           { nome: "Eni", ruolo: "E&P globale, GNL, bioraffinazione — ricavi ≈ €90 mld" },
           { nome: "Edison", ruolo: "Gas e generazione (gruppo EDF)" },
@@ -356,6 +377,7 @@ const SETTORI = [
         fase: "Generazione elettrica",
         posizione: "CENTRO",
         descrizione: "Parco termoelettrico a gas e crescita di solare, eolico e idroelettrico.",
+        input: ["Gas per cicli combinati", "Moduli FV e inverter", "Turbine e pale eoliche", "Acqua e bacini (idro)", "Aree idonee e permitting"],
         aziende: [
           { nome: "Enel", ruolo: "1° operatore; Enel Green Power per le rinnovabili" },
           { nome: "A2A / Iren / Hera", ruolo: "Multiutility territoriali" },
@@ -367,6 +389,7 @@ const SETTORI = [
         fase: "Reti e infrastrutture",
         posizione: "CENTRO",
         descrizione: "Trasmissione, trasporto e distribuzione: monopoli naturali regolati, spina dorsale della transizione.",
+        input: ["Rame e cavi HVDC", "Trasformatori e acciai GOES", "Acciaio per tralicci e condotte", "Sistemi SCADA e cybersecurity"],
         aziende: [
           { nome: "Terna", ruolo: "Rete di trasmissione; Tyrrhenian Link e interconnessioni" },
           { nome: "Snam", ruolo: "Rete gas, stoccaggi, corridoio idrogeno Nord Africa-Europa" },
@@ -377,6 +400,7 @@ const SETTORI = [
         fase: "Tecnologie e supply chain della transizione",
         posizione: "CENTRO",
         descrizione: "La manifattura energetica: dove l'Italia esporta tecnologia in tutto il mondo.",
+        input: ["Silicio e celle FV", "Litio e celle per storage", "Terre rare per magneti", "Superleghe per turbine a gas", "Elettrodi e catalizzatori (H2)"],
         aziende: [
           { nome: "Prysmian", ruolo: "1° produttore mondiale di cavi (interconnessioni HVDC)" },
           { nome: "Ansaldo Energia", ruolo: "Turbine a gas e Ansaldo Nucleare" },
@@ -390,6 +414,7 @@ const SETTORI = [
         fase: "Vendita, servizi ed efficienza",
         posizione: "VALLE",
         descrizione: "Mercato retail liberalizzato, servizi energetici e demand response.",
+        input: ["Smart meter e piattaforme digitali", "Dati di consumo", "Capitale per efficienza (ESCo)", "Colonnine e infrastruttura EV"],
         aziende: [
           { nome: "Enel Energia / Eni Plenitude", ruolo: "Retail elettricità, gas e mobilità elettrica" },
           { nome: "Acea / Hera / A2A", ruolo: "Vendita e servizi ambientali integrati" },
@@ -407,7 +432,7 @@ const SETTORI = [
       "Dipendenza dall'import per il 74% del fabbisogno; assenza di generazione nucleare",
       "Permitting lento per rinnovabili e reti nonostante l'accelerazione recente",
     ],
-    fonti: ["MASE", "Terna", "GSE", "ARERA", "Snam"],
+    fonti: ["MASE", "Terna", "GSE", "ARERA", "Snam", "IEA — Critical Minerals", "Commissione UE — Net-Zero Industry Act"],
   },
 
   {
