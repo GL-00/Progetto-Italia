@@ -373,6 +373,35 @@ body {
 .policy-caveat strong { color: var(--text-primary); }
 .policy-scenario { display: block; margin-top: 8px; color: var(--text-muted); }
 
+/* Politiche industriali suggerite */
+.poc-card .poc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.poc-card h3 { font-size: 15px; margin: 0; }
+.poc-esito {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 9px; border-radius: 99px; border: 1px solid; white-space: nowrap;
+}
+.poc-riuscita { color: var(--good); border-color: var(--good); }
+.poc-in-corso { color: var(--text-secondary); border-color: var(--baseline); }
+.poc-nota { margin: 10px 0 0; font-size: 13px; color: var(--text-secondary); }
+
+.asse-block { margin-top: 26px; }
+.asse-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
+.asse-ico {
+  font-size: 22px; width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--surface-1); border: 1px solid var(--border);
+}
+.asse-head h3 { margin: 0 0 4px; font-size: 17px; }
+.asse-problema { margin: 0; font-size: 13.5px; color: var(--text-secondary); max-width: 88ch; }
+.prop-card h4 { margin: 10px 0 6px; font-size: 14.5px; }
+.prop-card p { margin: 0; font-size: 13px; color: var(--text-secondary); }
+.tag-orizzonte {
+  font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 3px 9px; border-radius: 99px; display: inline-block;
+}
+.tag-breve { background: var(--seq-250); color: #0d366b; }
+.tag-medio { background: var(--div-mid); color: var(--text-secondary); border: 1px solid var(--baseline); }
+.tag-lungo { background: transparent; color: var(--text-muted); border: 1px dashed var(--baseline); }
+
 .mat-list { display: flex; flex-direction: column; gap: 14px; }
 .mat-card { scroll-margin-top: 90px; }
 .mat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -473,6 +502,7 @@ table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; mi
         <a href="#/" data-nav="home">Panoramica</a>
         <a href="#/settori" data-nav="settori">Settori e filiere</a>
         <a href="#/materie-critiche" data-nav="materie-critiche">Materie critiche</a>
+        <a href="#/politiche" data-nav="politiche">Politiche</a>
         <a href="#/aziende" data-nav="aziende">Aziende</a>
         <a href="#/metodologia" data-nav="metodologia">Metodologia e fonti</a>
       </nav>
@@ -1986,6 +2016,84 @@ const LETTURA_POLICY = {
   fonte: "McKinsey Global Institute — levelised cost dei progetti industriali greenfield (2026); Financial Times",
 };
 
+/* ============================================================
+   POLITICHE INDUSTRIALI SUGGERITE
+   Agenda derivata dall'analisi della piattaforma: le righe rosse
+   della mappa dei fattori diventano assi d'intervento. Proposte
+   analitiche, non posizioni di parte.
+   ============================================================ */
+
+const POLITICHE = {
+  tesi: "L'Italia è il paese dove la politica industriale orizzontale — abilitare i fattori di produzione invece di scegliere i settori — renderebbe di più, ed è quello che l'ha praticata di meno. Il tessuto di PMI e distretti è agile per struttura, ma è il più esposto proprio sui fattori: paga l'energia più dei grandi, subisce il permitting senza uffici dedicati, finanzia il circolante a costi maggiori. Le politiche verticali hanno un bias dimensionale regressivo — i bandi li cattura chi ha uffici per parteciparvi; la politica dei fattori è l'unica size-neutral, anzi pro-PMI.",
+  proofOfConcept: [
+    { nome: "Industria 4.0 (2016)", esito: "riuscita", nota: "Credito d'imposta orizzontale sui beni strumentali, senza scegliere settori: adozione di massa proprio dalle PMI. L'esempio italiano più riuscito di 'enabling, not directing' — poi degradato in 5.0 con burocrazia da bando." },
+    { nome: "Modello Piombino / Ponte di Genova", esito: "riuscita", nota: "FSRU autorizzata e operativa in tempi record, ponte ricostruito in due anni: la prova che il vincolo non è la capacità amministrativa ma il regime ordinario. Il commissariamento è usato come eccezione invece di riformare la regola." },
+    { nome: "ZES unica del Mezzogiorno", esito: "in corso", nota: "Autorizzazione unica e credito d'imposta su base territoriale: un embrione del metodo giusto — tempi certi e sportello unico — da estendere come regime nazionale, non come deroga geografica." },
+  ],
+  assi: [
+    {
+      icona: "⚡",
+      nome: "Energia",
+      problema: "Il prezzo elettrico fissato dal gas marginale è un dazio occulto sugli stadi a monte che l'Italia presidia: fonderie, tintorie, vetrerie, fab, cantieri. Le PMI lo pagano più dei grandi energivori.",
+      proposte: [
+        { titolo: "PPA aggregati di distretto", testo: "Consorzi d'acquisto energia a lungo termine per i distretti (meccanica bresciana, tessile pratese, ceramica sassolese): portare alle PMI i prezzi che oggi spuntano solo i grandi.", orizzonte: "breve" },
+        { titolo: "Energy release esteso e accumuli", testo: "Cessione di energia rinnovabile a prezzo calmierato in cambio di investimenti; accelerazione MACSE sugli accumuli per disaccoppiare di fatto le ore solari dal prezzo del gas.", orizzonte: "medio" },
+        { titolo: "Riforma del prezzo marginale", testo: "Sostenere in sede UE il disaccoppiamento strutturale elettricità-gas; nel frattempo contratti per differenza a due vie su nuova capacità FER e nucleare di nuova generazione.", orizzonte: "lungo" },
+      ],
+    },
+    {
+      icona: "🏗️",
+      nome: "Permessi e territorio",
+      problema: "Un terzo del gap di costo dei progetti greenfield è costruzione e permessi. Il permitting è citato come collo di bottiglia in energia, nautica (demanio), agroalimentare (invasi) e semiconduttori.",
+      proposte: [
+        { titolo: "Il modello Piombino come regime ordinario", testo: "Autorizzazione unica con tempi certi e silenzio-assenso per gli impianti produttivi ed energetici: ciò che oggi richiede un commissario deve diventare la procedura standard.", orizzonte: "medio" },
+        { titolo: "Sportello unico digitale reale", testo: "Conferenza dei servizi telematica con fascicolo unico d'impresa: una pratica, un interlocutore, una scadenza. La ZES unica dimostra che si può fare.", orizzonte: "breve" },
+        { titolo: "Spazi per crescere", testo: "Piani per bacini di refit e banchine (nautica), aree idonee FER con compensazioni chiare, invasi e riuso idrico (agroalimentare): il territorio come fattore di produzione, non come veto.", orizzonte: "lungo" },
+      ],
+    },
+    {
+      icona: "🎓",
+      nome: "Capitale umano tecnico",
+      problema: "Il collo di bottiglia citato da tutte e dieci le filiere: saldatori navali, tecnici RF, ingegneri di processo, artigiani. Il sistema ITS conta ~50.000 studenti contro il milione e mezzo del duale tedesco.",
+      proposte: [
+        { titolo: "ITS su scala tedesca", testo: "Decuplicare il sistema ITS Academy con cofinanziamento dei distretti e docenti dalle imprese: la domanda c'è già, manca l'offerta formativa.", orizzonte: "medio" },
+        { titolo: "Flussi qualificati programmati sulle filiere", testo: "Programmazione pluriennale dei visti tecnici costruita con le associazioni di categoria (cantieri, agroalimentare, meccanica), con formazione nei paesi d'origine.", orizzonte: "breve" },
+        { titolo: "Accademie aziendali defiscalizzate", testo: "Credito d'imposta pieno sulla formazione tecnica interna (modello Fincantieri/Leonardo) esteso alle reti di PMI che formano in consorzio.", orizzonte: "breve" },
+      ],
+    },
+    {
+      icona: "🏦",
+      nome: "Capitale e crescita dimensionale",
+      problema: "Commesse pluriennali pagate a milestone, medie imprese prede di acquisizioni, scalini normativi che premiano il nanismo: la finanza è il vincolo di crescita citato da meccanica, nautica, difesa e spazio.",
+      proposte: [
+        { titolo: "Garanzie sul circolante di commessa", testo: "Estendere le garanzie SACE oltre l'export: anticipi e refund guarantee anche sulle commesse domestiche pluriennali (impianti, cantieri, programmi).", orizzonte: "breve" },
+        { titolo: "Rimozione degli scalini dimensionali", testo: "Censire e appianare le soglie normative (dipendenti, fatturato) che scoraggiano la crescita: nessun obbligo nuovo deve scattare in modo discontinuo.", orizzonte: "medio" },
+        { titolo: "Capitale paziente per le filiere strategiche", testo: "Fondi di coinvestimento CDP con orizzonte decennale su spazio, difesa e semiconduttori, dove il venture capital privato è sottile: co-investire, non sostituire.", orizzonte: "medio" },
+      ],
+    },
+    {
+      icona: "⏱️",
+      nome: "Time-to-market e regole",
+      problema: "Il tempo regolatorio è un costo di produzione: variazioni GMP, qualifiche militari, tracciabilità EUDR e passaporto digitale pesano sulle PMI molto più che sui grandi gruppi.",
+      proposte: [
+        { titolo: "Compliance come servizio di sistema", testo: "Piattaforme pubbliche condivise per tracciabilità EUDR, passaporto digitale e origine preferenziale: l'infrastruttura di conformità offerta alle PMI come bene pubblico, non come costo individuale.", orizzonte: "medio" },
+        { titolo: "Tempi certi delle agenzie", testo: "Corsie rapide e scadenze vincolanti per AIFA (variazioni), qualifiche difesa e certificazioni: ogni mese di attesa regolatoria è margine ceduto ai concorrenti.", orizzonte: "breve" },
+      ],
+    },
+    {
+      icona: "🛡️",
+      nome: "Strumenti strategici — dove i fattori non bastano",
+      problema: "Nessuna riforma dei fattori risolve un monopolio: terre rare, gallio, fotoresist, litografia, penicilline. Qui servono strumenti verticali — ma chirurgici, e la riforma dei fattori ne riduce la scala necessaria.",
+      proposte: [
+        { titolo: "Stoccaggi nazionali di materie critiche", testo: "Scorte strategiche su terre rare, gallio e principi attivi essenziali, coordinate con RESourceEU: l'assicurazione costa meno della crisi.", orizzonte: "breve" },
+        { titolo: "Golden power chirurgico e presìdi", testo: "Screening mirato sugli asset a monte identificati dall'analisi (perclorato, vetro farmaceutico, wafer, probe card): proteggere i colli di bottiglia in cui l'Italia è dalla parte giusta.", orizzonte: "breve" },
+        { titolo: "Domanda pubblica àncora pluriennale", testo: "Programmazione decennale su spazio, difesa e sanità (acquisti di API essenziali reshored): la domanda certa è la sola politica verticale che non distorce la concorrenza tra imprese.", orizzonte: "lungo" },
+      ],
+    },
+  ],
+  avvertenza: "Proposte analitiche derivate dall'evidenza raccolta nella piattaforma (mappa dei fattori, matrice delle dipendenze, letture settoriali): non costituiscono posizioni politiche né esauriscono il dibattito. Fonti di riferimento: McKinsey Global Institute, rapporti Draghi e Letta sul mercato unico, Commissione UE (CRMA, Chips Act, Critical Medicines Act).",
+};
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
@@ -2281,6 +2389,7 @@ const routes = [
   { re: /^settori$/, render: renderSettori },
   { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
   { re: /^materie-critiche$/, render: renderMaterie },
+  { re: /^politiche$/, render: renderPolitiche },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -2840,7 +2949,7 @@ function renderMaterie() {
 
   const pfonte = document.createElement("p");
   pfonte.className = "fonti-line";
-  pfonte.innerHTML = `<strong>Fonte:</strong> ${esc(LETTURA_POLICY.fonte)}`;
+  pfonte.innerHTML = `<strong>Fonte:</strong> ${esc(LETTURA_POLICY.fonte)} — da questa lettura discende l'<a href="#/politiche">agenda delle politiche industriali suggerite →</a>`;
   sp.appendChild(pfonte);
   root.appendChild(sp);
 
@@ -2848,6 +2957,78 @@ function renderMaterie() {
   fonti.className = "fonti-line";
   fonti.innerHTML = `<strong>Fonti:</strong> aggregazione delle schede settoriali (EPRS/CSIS, IEA, Commissione UE — CRMA, Chips Act, Critical Medicines Act, RESourceEU) — <a href="#/metodologia">metodologia e avvertenze</a>`;
   root.appendChild(fonti);
+}
+
+/* ============================================================
+   POLITICHE INDUSTRIALI SUGGERITE
+   ============================================================ */
+function renderPolitiche() {
+  const root = $app();
+  const ORIZZONTE = { breve: "breve termine", medio: "medio termine", lungo: "lungo termine" };
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Agenda</div>
+    <h1>Politiche industriali suggerite</h1>
+    <p class="lead">Le righe rosse della <a href="#/materie-critiche">mappa dei fattori</a> diventano assi d'intervento:
+    un'agenda di politica industriale <em>abilitante</em> — rendere capitale, energia, permessi e competenze più rapidi
+    ed economici da impiegare — con gli strumenti strategici riservati a dove i fattori non bastano.</p>`;
+  root.appendChild(hero);
+
+  /* Tesi */
+  const tesi = document.createElement("div");
+  tesi.className = "policy-thesis";
+  tesi.innerHTML = `<div class="kicker">La tesi</div><p>${esc(POLITICHE.tesi)}</p>`;
+  root.appendChild(tesi);
+
+  /* Proof of concept */
+  const spoc = sectionEl("Prove di fattibilità", "L'Italia sa già farlo",
+    "Tre precedenti dimostrano che il vincolo non è la capacità: è il regime ordinario.");
+  const pg = document.createElement("div");
+  pg.className = "grid-3";
+  POLITICHE.proofOfConcept.forEach((p) => {
+    const c = document.createElement("div");
+    c.className = "card poc-card";
+    c.innerHTML = `
+      <div class="poc-head"><h3>${esc(p.nome)}</h3><span class="poc-esito poc-${esc(p.esito.replace(" ", "-"))}">${p.esito === "riuscita" ? "✔" : "◌"} ${esc(p.esito)}</span></div>
+      <p class="poc-nota">${esc(p.nota)}</p>`;
+    pg.appendChild(c);
+  });
+  spoc.appendChild(pg);
+  root.appendChild(spoc);
+
+  /* Assi d'intervento */
+  const sa = sectionEl("Gli assi d'intervento", "Sei leve, dalle righe rosse della mappa", "");
+  POLITICHE.assi.forEach((a) => {
+    const blk = document.createElement("div");
+    blk.className = "asse-block";
+    blk.innerHTML = `
+      <div class="asse-head">
+        <span class="asse-ico">${a.icona}</span>
+        <div><h3>${esc(a.nome)}</h3><p class="asse-problema">${esc(a.problema)}</p></div>
+      </div>`;
+    const grid = document.createElement("div");
+    grid.className = "grid-3 prop-grid";
+    a.proposte.forEach((p) => {
+      const pc = document.createElement("div");
+      pc.className = "card prop-card";
+      pc.innerHTML = `
+        <span class="tag-orizzonte tag-${esc(p.orizzonte)}">${esc(ORIZZONTE[p.orizzonte] || p.orizzonte)}</span>
+        <h4>${esc(p.titolo)}</h4>
+        <p>${esc(p.testo)}</p>`;
+      grid.appendChild(pc);
+    });
+    blk.appendChild(grid);
+    sa.appendChild(blk);
+  });
+  root.appendChild(sa);
+
+  /* Avvertenza */
+  const disc = document.createElement("div");
+  disc.className = "disclaimer";
+  disc.innerHTML = `<strong>Avvertenza.</strong> ${esc(POLITICHE.avvertenza)}`;
+  root.appendChild(disc);
 }
 
 /* ============================================================

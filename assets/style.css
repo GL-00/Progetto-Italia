@@ -364,6 +364,35 @@ body {
 .policy-caveat strong { color: var(--text-primary); }
 .policy-scenario { display: block; margin-top: 8px; color: var(--text-muted); }
 
+/* Politiche industriali suggerite */
+.poc-card .poc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.poc-card h3 { font-size: 15px; margin: 0; }
+.poc-esito {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 9px; border-radius: 99px; border: 1px solid; white-space: nowrap;
+}
+.poc-riuscita { color: var(--good); border-color: var(--good); }
+.poc-in-corso { color: var(--text-secondary); border-color: var(--baseline); }
+.poc-nota { margin: 10px 0 0; font-size: 13px; color: var(--text-secondary); }
+
+.asse-block { margin-top: 26px; }
+.asse-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
+.asse-ico {
+  font-size: 22px; width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--surface-1); border: 1px solid var(--border);
+}
+.asse-head h3 { margin: 0 0 4px; font-size: 17px; }
+.asse-problema { margin: 0; font-size: 13.5px; color: var(--text-secondary); max-width: 88ch; }
+.prop-card h4 { margin: 10px 0 6px; font-size: 14.5px; }
+.prop-card p { margin: 0; font-size: 13px; color: var(--text-secondary); }
+.tag-orizzonte {
+  font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 3px 9px; border-radius: 99px; display: inline-block;
+}
+.tag-breve { background: var(--seq-250); color: #0d366b; }
+.tag-medio { background: var(--div-mid); color: var(--text-secondary); border: 1px solid var(--baseline); }
+.tag-lungo { background: transparent; color: var(--text-muted); border: 1px dashed var(--baseline); }
+
 .mat-list { display: flex; flex-direction: column; gap: 14px; }
 .mat-card { scroll-margin-top: 90px; }
 .mat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }

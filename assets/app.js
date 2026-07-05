@@ -19,6 +19,7 @@ const routes = [
   { re: /^settori$/, render: renderSettori },
   { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
   { re: /^materie-critiche$/, render: renderMaterie },
+  { re: /^politiche$/, render: renderPolitiche },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -578,7 +579,7 @@ function renderMaterie() {
 
   const pfonte = document.createElement("p");
   pfonte.className = "fonti-line";
-  pfonte.innerHTML = `<strong>Fonte:</strong> ${esc(LETTURA_POLICY.fonte)}`;
+  pfonte.innerHTML = `<strong>Fonte:</strong> ${esc(LETTURA_POLICY.fonte)} — da questa lettura discende l'<a href="#/politiche">agenda delle politiche industriali suggerite →</a>`;
   sp.appendChild(pfonte);
   root.appendChild(sp);
 
@@ -586,6 +587,78 @@ function renderMaterie() {
   fonti.className = "fonti-line";
   fonti.innerHTML = `<strong>Fonti:</strong> aggregazione delle schede settoriali (EPRS/CSIS, IEA, Commissione UE — CRMA, Chips Act, Critical Medicines Act, RESourceEU) — <a href="#/metodologia">metodologia e avvertenze</a>`;
   root.appendChild(fonti);
+}
+
+/* ============================================================
+   POLITICHE INDUSTRIALI SUGGERITE
+   ============================================================ */
+function renderPolitiche() {
+  const root = $app();
+  const ORIZZONTE = { breve: "breve termine", medio: "medio termine", lungo: "lungo termine" };
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Agenda</div>
+    <h1>Politiche industriali suggerite</h1>
+    <p class="lead">Le righe rosse della <a href="#/materie-critiche">mappa dei fattori</a> diventano assi d'intervento:
+    un'agenda di politica industriale <em>abilitante</em> — rendere capitale, energia, permessi e competenze più rapidi
+    ed economici da impiegare — con gli strumenti strategici riservati a dove i fattori non bastano.</p>`;
+  root.appendChild(hero);
+
+  /* Tesi */
+  const tesi = document.createElement("div");
+  tesi.className = "policy-thesis";
+  tesi.innerHTML = `<div class="kicker">La tesi</div><p>${esc(POLITICHE.tesi)}</p>`;
+  root.appendChild(tesi);
+
+  /* Proof of concept */
+  const spoc = sectionEl("Prove di fattibilità", "L'Italia sa già farlo",
+    "Tre precedenti dimostrano che il vincolo non è la capacità: è il regime ordinario.");
+  const pg = document.createElement("div");
+  pg.className = "grid-3";
+  POLITICHE.proofOfConcept.forEach((p) => {
+    const c = document.createElement("div");
+    c.className = "card poc-card";
+    c.innerHTML = `
+      <div class="poc-head"><h3>${esc(p.nome)}</h3><span class="poc-esito poc-${esc(p.esito.replace(" ", "-"))}">${p.esito === "riuscita" ? "✔" : "◌"} ${esc(p.esito)}</span></div>
+      <p class="poc-nota">${esc(p.nota)}</p>`;
+    pg.appendChild(c);
+  });
+  spoc.appendChild(pg);
+  root.appendChild(spoc);
+
+  /* Assi d'intervento */
+  const sa = sectionEl("Gli assi d'intervento", "Sei leve, dalle righe rosse della mappa", "");
+  POLITICHE.assi.forEach((a) => {
+    const blk = document.createElement("div");
+    blk.className = "asse-block";
+    blk.innerHTML = `
+      <div class="asse-head">
+        <span class="asse-ico">${a.icona}</span>
+        <div><h3>${esc(a.nome)}</h3><p class="asse-problema">${esc(a.problema)}</p></div>
+      </div>`;
+    const grid = document.createElement("div");
+    grid.className = "grid-3 prop-grid";
+    a.proposte.forEach((p) => {
+      const pc = document.createElement("div");
+      pc.className = "card prop-card";
+      pc.innerHTML = `
+        <span class="tag-orizzonte tag-${esc(p.orizzonte)}">${esc(ORIZZONTE[p.orizzonte] || p.orizzonte)}</span>
+        <h4>${esc(p.titolo)}</h4>
+        <p>${esc(p.testo)}</p>`;
+      grid.appendChild(pc);
+    });
+    blk.appendChild(grid);
+    sa.appendChild(blk);
+  });
+  root.appendChild(sa);
+
+  /* Avvertenza */
+  const disc = document.createElement("div");
+  disc.className = "disclaimer";
+  disc.innerHTML = `<strong>Avvertenza.</strong> ${esc(POLITICHE.avvertenza)}`;
+  root.appendChild(disc);
 }
 
 /* ============================================================
