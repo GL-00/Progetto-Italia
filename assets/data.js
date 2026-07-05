@@ -596,11 +596,30 @@ const SETTORI = [
       { label: "Addetti", value: "≈ 70.000 (60% laureati)" },
       { label: "R&S + investimenti", value: "≈ €4 mld/anno" },
     ],
+    approvvigionamento: {
+      intro: "Il grande paradosso della filiera: l'Italia è il primo produttore europeo di principi attivi per conto terzi, ma a monte dipende dall'Asia per gli intermedi chimici di base — per alcune molecole mature (antibiotici in testa) la Cina è di fatto monopolista. La pandemia lo ha reso evidente e l'UE risponde con il Critical Medicines Act (proposta 2025) per riportare in Europa le produzioni essenziali. A valle della chimica, però, l'Italia presidia in casa un pezzo raro della catena: vetro farmaceutico (Stevanato), macchine di confezionamento (IMA, Marchesini) e capacità sterile riconosciuta dalle big pharma.",
+      materiali: [
+        { materiale: "Intermedi chimici e KSM (key starting materials)", impiego: "Sintesi dei principi attivi: il gradino sotto gli API", fornitura: "Cina e India dominano gli intermedi di base: anche il 1° produttore UE di API compra i precursori in Asia. Reshoring avviato solo su molecole selezionate", rischio: "critico" },
+        { materiale: "Penicilline e antibiotici di base (6-APA)", impiego: "Antibiotici: la classe più esposta a carenze", fornitura: "Cina quasi monopolista del 6-APA e delle fermentazioni di base; ACS Dobfar tra gli ultimi produttori occidentali di sterili antibiotici", rischio: "critico" },
+        { materiale: "Solventi, reagenti e chimica di base", impiego: "Processi di sintesi e purificazione della chimica fine", fornitura: "La petrolchimica europea in ritirata restringe le fonti locali; costi energetici italiani sopra la media aggravano il divario con l'Asia", rischio: "alto" },
+        { materiale: "Eccipienti e lipidi speciali", impiego: "Formulazione; lipidi per nanoparticelle (mRNA), gelatine, lattosio", fornitura: "Mercato globale concentrato su pochi fornitori qualificati; per i lipidi LNP la capacità è nata quasi tutta fuori dall'Italia", rischio: "alto" },
+        { materiale: "Filtri sterili e sistemi single-use", impiego: "Bioproduzione e riempimento asettico (fill & finish)", fornitura: "Oligopolio globale (Merck Millipore, Sartorius, Pall): durante il Covid code d'attesa di mesi; l'Italia è utente, non produttrice, di questi consumabili critici", rischio: "alto" },
+        { materiale: "Vetro farmaceutico (tubing borosilicato)", impiego: "Fiale, siringhe e cartucce a contatto diretto col farmaco", fornitura: "Stevanato è leader mondiale nella trasformazione, ma il tubo di vetro a monte è concentrato in pochi player (Schott, Corning, Nipro): presidio italiano forte a valle, esposto a monte", rischio: "medio" },
+        { materiale: "Isotopi per medicina nucleare", impiego: "Radiofarmaci diagnostici e teranostica", fornitura: "Il tecnezio-99m dipende da pochi reattori esteri (Paesi Bassi, Belgio) prossimi al fine vita; filiera fragile e senza scorte possibili", rischio: "alto" },
+      ],
+      fattori: [
+        { nome: "Standard GMP e regolatorio", nota: "Ogni sito, materiale e fornitore va certificato GMP e ispezionato da AIFA/EMA/FDA: cambiare fornitore richiede mesi o anni. È insieme barriera all'ingresso e rigidità della catena." },
+        { nome: "Capitale umano scientifico", nota: "Chimici di processo, biotecnologi ed esperti di regulatory affairs: il 60% degli addetti è laureato. Il polo lombardo-emiliano e Siena formano competenze contese a livello globale." },
+        { nome: "Energia e acqua di processo", nota: "Sintesi chimica, sterilizzazione e liofilizzazione sono energivore; l'acqua for injection (WFI) ultrapura è un input di processo obbligato e regolato." },
+        { nome: "Prezzi regolati e payback", nota: "Il farmaco è a prezzo amministrato: tetti di spesa e payback comprimono i margini. La tensione tra sostenibilità del SSN e attrattività degli investimenti è strutturale." },
+      ],
+    },
     catena: [
       {
         fase: "Ricerca, biotech e clinica",
         posizione: "MONTE",
         descrizione: "IRCCS, poli biotech e ricerca traslazionale: il vivaio delle molecole.",
+        input: ["Capitale umano scientifico", "Reagenti e strumentazione di laboratorio", "Finanziamenti R&S e venture", "Dati clinici e biobanche"],
         aziende: [
           { nome: "IRCCS (San Raffaele, Humanitas, Gemelli)", ruolo: "Ricerca clinica e traslazionale" },
           { nome: "Dompé", ruolo: "Biotech proprietario (Oxervate)" },
@@ -611,6 +630,7 @@ const SETTORI = [
         fase: "Principi attivi (API) e chimica fine",
         posizione: "MONTE",
         descrizione: "L'Italia è il 1° produttore europeo di principi attivi per conto terzi.",
+        input: ["Intermedi chimici (Asia)", "Solventi ad alta purezza", "Reagenti di fermentazione", "Energia e acqua di processo", "Certificazione GMP"],
         aziende: [
           { nome: "ACS Dobfar", ruolo: "Antibiotici e sterili" },
           { nome: "Olon", ruolo: "API e biotecnologie (gruppo P&R)" },
@@ -622,6 +642,7 @@ const SETTORI = [
         fase: "Sviluppo e produzione farmaci",
         posizione: "CENTRO",
         descrizione: "Campioni nazionali a capitale familiare e grandi siti produttivi delle multinazionali.",
+        input: ["Principi attivi (API)", "Eccipienti e formulazione", "Reagenti biotech e single-use", "Vetro e primary packaging", "Camere sterili e liofilizzatori"],
         aziende: [
           { nome: "Menarini", ruolo: "1° gruppo italiano (€4,7 mld, Firenze)" },
           { nome: "Chiesi", ruolo: "Respiratorio e malattie rare (Parma)" },
@@ -634,6 +655,7 @@ const SETTORI = [
         fase: "Packaging farmaceutico e macchine",
         posizione: "CENTRO",
         descrizione: "Il vantaggio sistemico italiano: vetro, dispositivi e macchine di confezionamento nella stessa filiera.",
+        input: ["Tubing di vetro borosilicato", "Polimeri medicali e gomme", "Alluminio e materiali di chiusura", "Meccanica di precisione"],
         aziende: [
           { nome: "Stevanato Group", ruolo: "Leader mondiale contenitori in vetro e drug delivery (Piombino Dese)" },
           { nome: "Bormioli Pharma", ruolo: "Vetro e plastica farmaceutica" },
@@ -644,6 +666,7 @@ const SETTORI = [
         fase: "Distribuzione e sanità",
         posizione: "VALLE",
         descrizione: "Distribuzione intermedia, ≈ 20.000 farmacie e Servizio Sanitario Nazionale come primo acquirente.",
+        input: ["Logistica a temperatura controllata", "Sistemi di tracciabilità (serializzazione)", "Fondi del SSN", "Personale sanitario e farmacisti"],
         aziende: [
           { nome: "Distribuzione intermedia", ruolo: "Comifar, Unico, Farla" },
           { nome: "Farmacie e SSN", ruolo: "Spesa farmaceutica pubblica ≈ €20 mld/anno" },
@@ -660,7 +683,7 @@ const SETTORI = [
       "Dipendenza da intermedi chimici asiatici per alcune molecole di base",
       "Prezzi regolati e payback: tensione tra spesa pubblica e attrattività degli investimenti",
     ],
-    fonti: ["Farmindustria", "EFPIA", "AIFA", "Aschimfarma"],
+    fonti: ["Farmindustria", "EFPIA", "AIFA", "Aschimfarma", "Commissione UE — Critical Medicines Act", "EMA — carenze di medicinali"],
   },
 
   {
