@@ -872,11 +872,30 @@ const SETTORI = [
       { label: "Packaging", value: "≈ €9 mld, 80% export" },
       { label: "Modello", value: "Distretti + medie imprese" },
     ],
+    approvvigionamento: {
+      intro: "Il paradosso della prima voce dell'export italiano: le macchine sono progettate e costruite in Italia, ma il loro 'cervello' — controlli numerici, PLC, azionamenti — è un oligopolio tedesco-giapponese. La base metallurgica invece è un punto di forza domestico (acciaierie e fonderie bresciane e venete), pur dipendendo da rottame, ferroleghe ed energia ai prezzi italiani. La crisi dei chip 2021-23 ha insegnato la lezione: una macchina da un milione di euro può restare ferma per un componente elettronico da cento.",
+      materiali: [
+        { materiale: "Controlli numerici (CNC)", impiego: "Il cervello di ogni macchina utensile: governa assi, utensili e cicli", fornitura: "Oligopolio Siemens, Fanuc, Heidenhain, Mitsubishi: nessun produttore italiano su scala. Dipendenza strategica accettata da decenni, senza alternative a breve", rischio: "critico" },
+        { materiale: "PLC, elettronica industriale e semiconduttori", impiego: "Automazione, motion control, sensoristica, quadri", fornitura: "Siemens, Rockwell, Omron, Schneider a monte; la scarsità di chip 2021-23 ha bloccato consegne di intere linee. Scorte strategiche ora prassi nei distretti", rischio: "alto" },
+        { materiale: "Cuscinetti, guide lineari e viti a ricircolo", impiego: "Precisione del moto: il cuore meccanico delle macchine", fornitura: "SKF, Schaeffler, THK, NSK, Bosch Rexroth: produzione svedese-tedesco-giapponese con lead time lunghi nei picchi di ciclo", rischio: "alto" },
+        { materiale: "Sorgenti laser e ottiche di potenza", impiego: "Taglio e lavorazione lamiera (Prima Industrie, BLM)", fornitura: "Sorgenti in fibra dominate da IPG e Trumpf; presidio italiano parziale con El.En (Firenze) e fotonica torinese", rischio: "alto" },
+        { materiale: "Software CAD/CAM/PLM e digital twin", impiego: "Progettazione, simulazione, gemello digitale delle linee", fornitura: "Licenze estere (Siemens PLM, Dassault, Autodesk): come nei semiconduttori, un fattore produttivo sotto giurisdizione altrui", rischio: "alto" },
+        { materiale: "Acciai speciali, fusioni e forgiati", impiego: "Basamenti, alberi, ingranaggi, carpenteria", fornitura: "Presidio domestico forte (acciaierie bresciane e venete, Lucchini RS), ma alimentato da rottame e ferroleghe importati e gravato dal costo dell'energia", rischio: "medio" },
+        { materiale: "Riduttori, servomotori e azionamenti", impiego: "Trasmissione del moto e attuazione", fornitura: "Qui l'Italia gioca in casa: Bonfiglioli, Interpump e la meccatronica emiliana esportano nel mondo; inverter e servo di fascia alta restano in parte esteri", rischio: "medio" },
+      ],
+      fattori: [
+        { nome: "Energia per fonderie", nota: "Forni elettrici e trattamenti termici: il differenziale di prezzo elettrico con Germania e Francia è un dazio occulto sulla base metallurgica dei distretti." },
+        { nome: "Capitale umano tecnico", nota: "Periti, ITS, montatori trasfertisti: i 'sarti della meccanica' vanno in pensione più in fretta di quanto se ne formino. Il collo di bottiglia è demografico." },
+        { nome: "Export credit e fiere", nota: "Con l'80% di export, SACE, Simest e le fiere (EMO, Interpack) sono infrastruttura di vendita; dazi e cambio euro-dollaro spostano interi bilanci." },
+        { nome: "Finanza di commessa", nota: "Impianti pagati a milestone su 12-24 mesi: il circolante è il vero vincolo di crescita delle medie imprese; anticipi e garanzie bancarie decidono le gare." },
+      ],
+    },
     catena: [
       {
         fase: "Metallurgia, fusioni e acciai speciali",
         posizione: "MONTE",
         descrizione: "La base materiale: acciai speciali, fusioni e forgiati dei distretti lombardi e veneti.",
+        input: ["Rottame ferroso e ferroleghe", "Energia (forni elettrici)", "Refrattari", "Sabbie e leganti da fonderia"],
         aziende: [
           { nome: "Lucchini RS", ruolo: "Acciai per ferroviario e meccanica (Lovere)" },
           { nome: "Acciaierie Venete", ruolo: "Acciai lunghi speciali" },
@@ -887,6 +906,7 @@ const SETTORI = [
         fase: "Componentistica meccatronica",
         posizione: "MONTE",
         descrizione: "Riduttori, pneumatica, pompe, sensori: i \"campioni nascosti\" della subfornitura evoluta.",
+        input: ["Acciai da cementazione", "Cuscinetti e guide lineari", "Elettronica di controllo", "Lavorazioni di precisione"],
         aziende: [
           { nome: "Bonfiglioli", ruolo: "Riduttori e motoriduttori (Bologna)" },
           { nome: "Interpump", ruolo: "1° mondiale pompe ad alta pressione" },
@@ -899,6 +919,7 @@ const SETTORI = [
         fase: "Macchine utensili e robotica",
         posizione: "CENTRO",
         descrizione: "Lavorazione di metallo, legno, vetro, lamiera e laser: il cuore del made in Italy industriale.",
+        input: ["CNC (Siemens, Fanuc, Heidenhain)", "Sorgenti laser e ottiche", "Servomotori e azionamenti", "Software CAD/CAM"],
         aziende: [
           { nome: "Biesse", ruolo: "Macchine per legno, vetro e pietra (Pesaro)" },
           { nome: "SCM Group", ruolo: "Tecnologie per il legno (Rimini)" },
@@ -911,6 +932,7 @@ const SETTORI = [
         fase: "Macchine per il packaging e di settore",
         posizione: "CENTRO",
         descrizione: "La \"packaging valley\" emiliana: leadership mondiale nel confezionamento farmaceutico, alimentare e del beverage.",
+        input: ["PLC e motion control", "Robotica e sistemi di visione", "Acciaio inox alimentare/farma", "Software e digital twin"],
         aziende: [
           { nome: "IMA", ruolo: "Packaging farmaceutico e food (Bologna)" },
           { nome: "Coesia", ruolo: "Gruppo di 21 aziende di automazione (Bologna)" },
@@ -922,6 +944,7 @@ const SETTORI = [
         fase: "Impianti chiavi in mano e servizi",
         posizione: "VALLE",
         descrizione: "Ingegneria e realizzazione di impianti completi, service, retrofit digitale e manutenzione predittiva.",
+        input: ["Ingegneria e project management", "Componenti su specifica", "Export credit (SACE/Simest)", "Montatori trasfertisti"],
         aziende: [
           { nome: "Danieli", ruolo: "Impianti siderurgici completi (Buttrio) — tra i 3 leader mondiali" },
           { nome: "MAIRE", ruolo: "Ingegneria impiantistica e chimica verde" },
@@ -939,7 +962,7 @@ const SETTORI = [
       "Ricambio generazionale di imprenditori e tecnici specializzati",
       "Dipendenza da componentistica elettronica e controlli numerici esteri (Siemens, Fanuc)",
     ],
-    fonti: ["Federmacchine", "UCIMU", "Ucima", "ISTAT coe"],
+    fonti: ["Federmacchine", "UCIMU", "Ucima", "ISTAT coe", "ANIMA", "Siderweb — congiuntura acciaio"],
   },
 
   {
