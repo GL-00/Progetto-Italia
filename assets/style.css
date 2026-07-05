@@ -320,6 +320,34 @@ body {
 .mx-name:hover { color: var(--accent); }
 .mx-dot { font-size: 14px; cursor: default; border: none; padding: 0; background: none; }
 
+/* Mappa dei fattori — heatmap divergente (blu = eccelle, rosso = manca) */
+:root {
+  --fm-p2: #2a78d6; --fm-p1: #9ec5f4; --fm-n1: #f3b9b9; --fm-n2: #d03b3b;
+  --fm-p1-ink: #0d366b; --fm-n1-ink: #7a1f1f;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --fm-p2: #3987e5; --fm-p1: #1c5cab; --fm-n1: #7a2e2e; --fm-n2: #e05252; --fm-p1-ink: #cde2fb; --fm-n1-ink: #f3c4c4; }
+}
+:root[data-theme="dark"] { --fm-p2: #3987e5; --fm-p1: #1c5cab; --fm-n1: #7a2e2e; --fm-n2: #e05252; --fm-p1-ink: #cde2fb; --fm-n1-ink: #f3c4c4; }
+:root[data-theme="light"] { --fm-p2: #2a78d6; --fm-p1: #9ec5f4; --fm-n1: #f3b9b9; --fm-n2: #d03b3b; --fm-p1-ink: #0d366b; --fm-n1-ink: #7a1f1f; }
+
+.factor-map td.td-company { min-width: 185px; font-size: 13px; }
+.factor-map td.fm-cell { text-align: center; padding: 6px 5px; }
+.fm-group td {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-muted); background: var(--page); padding: 8px 16px;
+}
+.fm-val {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 30px; height: 24px; border-radius: 6px; padding: 0 4px;
+  font-size: 12.5px; font-weight: 800; cursor: default; letter-spacing: 0.02em;
+}
+.fm-vp2 { background: var(--fm-p2); color: #fff; }
+.fm-vp1 { background: var(--fm-p1); color: var(--fm-p1-ink); }
+.fm-vn1 { background: var(--fm-n1); color: var(--fm-n1-ink); }
+.fm-vn2 { background: var(--fm-n2); color: #fff; }
+.fm-legend { margin-top: 12px; }
+
 .mat-list { display: flex; flex-direction: column; gap: 14px; }
 .mat-card { scroll-margin-top: 90px; }
 .mat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }

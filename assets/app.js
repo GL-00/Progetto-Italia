@@ -397,6 +397,65 @@ function renderMaterie() {
   ]));
   root.appendChild(hero);
 
+  /* Mappa dei fattori — heatmap divergente eccellenze/gap */
+  const smap = sectionEl("La mappa dei fattori", "Dove l'Italia eccelle, cosa manca",
+    "Gli stessi fattori attraversano tutte le filiere, in positivo e in negativo: blu dove il paese eccelle, rosso dove il gap è strutturale. Passa sopra una cella per la lettura specifica.");
+  const VAL_GLYPH = { 2: "++", 1: "+", "-1": "−", "-2": "−−" };
+  const VAL_LABEL = { 2: "eccellenza mondiale", 1: "punto di forza", "-1": "debolezza", "-2": "gap critico" };
+  const mw = document.createElement("div");
+  mw.className = "table-wrap";
+  const mt = document.createElement("table");
+  mt.className = "data-table factor-map";
+  mt.innerHTML = `
+    <thead><tr>
+      <th>Fattore</th>
+      ${SETTORI.map((s) => `<th class="mx-col"><a href="#/settore/${s.id}" title="${esc(s.nome)}">${s.icona}</a></th>`).join("")}
+    </tr></thead>`;
+  const mb = document.createElement("tbody");
+  MAPPA_FATTORI.gruppi.forEach((g) => {
+    const gr = document.createElement("tr");
+    gr.className = "fm-group";
+    gr.innerHTML = `<td colspan="${SETTORI.length + 1}">${esc(g.titolo)}</td>`;
+    mb.appendChild(gr);
+    g.fattori.forEach((f) => {
+      const tr = document.createElement("tr");
+      const tdN = document.createElement("td");
+      tdN.className = "td-company";
+      tdN.textContent = f.nome;
+      tr.appendChild(tdN);
+      SETTORI.forEach((s) => {
+        const td = document.createElement("td");
+        td.className = "fm-cell";
+        const cell = f.valori[s.id];
+        if (cell) {
+          const b = document.createElement("span");
+          b.className = `fm-val fm-v${cell.v > 0 ? "p" : "n"}${Math.abs(cell.v)}`;
+          b.textContent = VAL_GLYPH[cell.v];
+          b.setAttribute("role", "img");
+          b.setAttribute("aria-label", `${s.nome} — ${f.nome}: ${VAL_LABEL[cell.v]}. ${cell.nota}`);
+          b.addEventListener("pointermove", (e) => showChipTip({ nome: `${s.icona} ${s.nome} · ${VAL_LABEL[cell.v]}`, ruolo: cell.nota }, e));
+          b.addEventListener("pointerleave", hideChipTip);
+          td.appendChild(b);
+        }
+        tr.appendChild(td);
+      });
+      mb.appendChild(tr);
+    });
+  });
+  mt.appendChild(mb);
+  mw.appendChild(mt);
+  smap.appendChild(mw);
+  const legend = document.createElement("div");
+  legend.className = "viz-legend fm-legend";
+  legend.innerHTML = `
+    <span class="viz-legend-item"><span class="fm-val fm-vp2">++</span><span class="viz-legend-text">Eccellenza mondiale</span></span>
+    <span class="viz-legend-item"><span class="fm-val fm-vp1">+</span><span class="viz-legend-text">Punto di forza</span></span>
+    <span class="viz-legend-item"><span class="fm-val fm-vn1">−</span><span class="viz-legend-text">Debolezza</span></span>
+    <span class="viz-legend-item"><span class="fm-val fm-vn2">−−</span><span class="viz-legend-text">Gap critico</span></span>
+    <span class="viz-legend-note">cella vuota = fattore non determinante per quel settore</span>`;
+  smap.appendChild(legend);
+  root.appendChild(smap);
+
   /* Matrice materiali × settori */
   const sm = sectionEl("La matrice delle dipendenze", "Chi dipende da cosa",
     "Ogni riga è una famiglia di materiali, ogni colonna un settore: il simbolo indica l'esposizione e il suo livello di rischio. Passa sopra una cella per il dettaglio dell'impiego.");

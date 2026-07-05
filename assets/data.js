@@ -1308,6 +1308,164 @@ const MATERIE_CRITICHE = [
   },
 ];
 
+/* ============================================================
+   MAPPA DEI FATTORI — punteggi comparati per settore
+   Scala: +2 eccellenza mondiale · +1 punto di forza ·
+          −1 debolezza · −2 gap critico · assente = non rilevante
+   ============================================================ */
+
+const MAPPA_FATTORI = {
+  gruppi: [
+    {
+      titolo: "Dove il paese eccelle",
+      fattori: [
+        {
+          nome: "Saper fare e mestiere",
+          valori: {
+            difesa: { v: 1, nota: "Integrazione di sistemi complessi in tutti i domini" },
+            "spazio-osservazione-terra": { v: 2, nota: "Moduli abitati e AIT: eccellenza riconosciuta a livello mondiale" },
+            energia: { v: 1, nota: "Ingegneria impiantistica, cavi e turbomacchine" },
+            meccanica: { v: 2, nota: "Macchine su misura che tedeschi e giapponesi non replicano" },
+            automotive: { v: 2, nota: "Motor Valley: motorsport, compositi, carrozzeria" },
+            farmaceutica: { v: 1, nota: "Sterili e fill & finish scelti dalle big pharma" },
+            agroalimentare: { v: 2, nota: "Trasformazione e stagionatura: mestiere secolare" },
+            moda: { v: 2, nota: "L'artigianato che le maison estere vengono a comprare" },
+            elettronica: { v: 1, nota: "Ingegneria di processo (Agrate, Catania)" },
+            nautica: { v: 2, nota: "Allestimento e finiture senza rivali al mondo" },
+          },
+        },
+        {
+          nome: "Leadership di nicchia mondiale",
+          valori: {
+            difesa: { v: 2, nota: "Elicotteri (AW139), artiglieria navale, guerra elettronica" },
+            "spazio-osservazione-terra": { v: 2, nota: "Radar SAR (COSMO-SkyMed), iperspettrale, moduli ISS" },
+            energia: { v: 2, nota: "Prysmian (cavi), De Nora (idrogeno), Nuovo Pignone" },
+            meccanica: { v: 2, nota: "Packaging valley: leadership mondiale assoluta" },
+            automotive: { v: 1, nota: "Brembo (freni), Pirelli premium, design" },
+            farmaceutica: { v: 2, nota: "CDMO, vetro farmaceutico (Stevanato), 1° UE negli API" },
+            agroalimentare: { v: 2, nota: "856 DOP/IGP: primato mondiale delle denominazioni" },
+            moda: { v: 2, nota: "Occhialeria ~70% dell'alta gamma mondiale" },
+            elettronica: { v: 2, nota: "Probe card (Technoprobe), SiC, MEMS" },
+            nautica: { v: 2, nota: "~50% degli ordini mondiali di superyacht" },
+          },
+        },
+        {
+          nome: "Brand e premium price",
+          valori: {
+            meccanica: { v: 1, nota: "La reputazione tecnica si traduce in prezzo premium" },
+            automotive: { v: 2, nota: "Ferrari: il marchio più forte del mondo" },
+            agroalimentare: { v: 2, nota: "Il consumatore globale paga il marchio Italia" },
+            moda: { v: 2, nota: "Made in Italy: metà del lusso mondiale" },
+            nautica: { v: 2, nota: "Riva, Benetti, Sanlorenzo: icone globali" },
+          },
+        },
+        {
+          nome: "Filiera completa in casa",
+          valori: {
+            difesa: { v: 1, nota: "Tutti i domini presidiati; manca la componentistica di base" },
+            "spazio-osservazione-terra": { v: 2, nota: "Dal lanciatore al dato interpretato: rara al mondo" },
+            energia: { v: -1, nota: "Import strutturale di molecole, celle e moduli" },
+            meccanica: { v: 1, nota: "Distretti integrati, ma il cervello elettronico è estero" },
+            automotive: { v: -1, nota: "Batterie e chip fuori dal paese" },
+            farmaceutica: { v: 1, nota: "API + farmaco + vetro + macchine nello stesso sistema" },
+            agroalimentare: { v: 2, nota: "Dal campo alla tavola, con i consorzi a difesa" },
+            moda: { v: 2, nota: "Dal filo alla boutique in trecento chilometri" },
+            elettronica: { v: -1, nota: "Niente logica avanzata né litografia" },
+            nautica: { v: 1, nota: "Tutto in casa tranne il motore" },
+          },
+        },
+        {
+          nome: "Domanda pubblica àncora",
+          valori: {
+            difesa: { v: 2, nota: "Programmi pluriennali nazionali, NATO e UE" },
+            "spazio-osservazione-terra": { v: 2, nota: "ASI, ESA, PNRR e IRIDE finanziano la filiera" },
+            energia: { v: 1, nota: "Aste FER, capacity market, MACSE" },
+            automotive: { v: -1, nota: "Incentivi stop-and-go che disorientano gli investimenti" },
+            farmaceutica: { v: 1, nota: "SSN primo acquirente, ma a prezzi amministrati" },
+            agroalimentare: { v: 1, nota: "La PAC come pavimento economico dell'agricoltura" },
+            elettronica: { v: 1, nota: "Chips Act e credito d'imposta 4.0/5.0" },
+          },
+        },
+      ],
+    },
+    {
+      titolo: "Cosa manca",
+      fattori: [
+        {
+          nome: "Autonomia nelle materie prime",
+          valori: {
+            difesa: { v: -2, nota: "Terre rare, titanio, gallio: tutto estero" },
+            "spazio-osservazione-terra": { v: -2, nota: "Germanio, xenon e FPGA sotto controllo altrui" },
+            energia: { v: -2, nota: "74% import; litio e silicio cinesi" },
+            meccanica: { v: -1, nota: "Acciai in casa, ma rottame e ferroleghe esteri" },
+            automotive: { v: -2, nota: "La batteria (30-40% del valore) è importata" },
+            farmaceutica: { v: -2, nota: "Intermedi e penicilline dall'Asia" },
+            agroalimentare: { v: -1, nota: "Grano duro e soia import; acqua a rischio clima" },
+            moda: { v: -1, nota: "Fibre e pelli grezze estere; la nobilitazione è in casa" },
+            elettronica: { v: -2, nota: "Gallio, fotoresist, litografia: monopoli altrui" },
+            nautica: { v: -1, nota: "Motori e teak esteri; scafo e allestimento in casa" },
+          },
+        },
+        {
+          nome: "Elettronica e \"cervello\" proprietario",
+          valori: {
+            difesa: { v: -1, nota: "Rad-hard e FPGA esteri; l'EW però è propria" },
+            "spazio-osservazione-terra": { v: -2, nota: "Su ogni satellite italiano c'è un FPGA americano" },
+            energia: { v: -1, nota: "Inverter e smart tech in gran parte asiatici" },
+            meccanica: { v: -2, nota: "CNC: oligopolio estero accettato da decenni" },
+            automotive: { v: -1, nota: "MCU esteri; il SiC di ST è il presidio" },
+            elettronica: { v: 1, nota: "Power, MEMS e SiC: un presidio reale" },
+            nautica: { v: -1, nota: "Plancia e navigazione estere" },
+          },
+        },
+        {
+          nome: "Costo dell'energia",
+          valori: {
+            difesa: { v: -1, nota: "Acciai e chimica degli energetici pagano il kWh italiano" },
+            energia: { v: -2, nota: "Il paradosso: prezzo fissato dal gas marginale" },
+            meccanica: { v: -2, nota: "Fonderie e trattamenti: un dazio occulto" },
+            automotive: { v: -1, nota: "Fusioni e verniciatura energivore" },
+            farmaceutica: { v: -1, nota: "Sintesi e sterilizzazione energivore" },
+            agroalimentare: { v: -1, nota: "Serre, essiccazione e freddo" },
+            moda: { v: -2, nota: "Tintorie e concerie gas-intensive: distretti fermi nel 2022" },
+            elettronica: { v: -1, nota: "Ogni wafer paga l'elettricità italiana" },
+            nautica: { v: -1, nota: "Cantieri e carpenteria metallica" },
+          },
+        },
+        {
+          nome: "Scala d'impresa e capitale",
+          valori: {
+            difesa: { v: 1, nota: "Leonardo e Fincantieri: scala europea vera" },
+            "spazio-osservazione-terra": { v: -2, nota: "Venture capital sottile, campioni piccoli" },
+            energia: { v: 1, nota: "Enel ed Eni: scala globale" },
+            meccanica: { v: -2, nota: "Medie imprese eccellenti: prede di acquisizioni" },
+            automotive: { v: -1, nota: "Un solo grande OEM, componentisti esposti" },
+            farmaceutica: { v: -1, nota: "Medi gruppi familiari contro big pharma" },
+            agroalimentare: { v: -1, nota: "700.000 aziende agricole frammentate" },
+            moda: { v: -1, nota: "Brand medi contro i conglomerati francesi" },
+            elettronica: { v: -2, nota: "Investimenti da fab fuori portata nazionale" },
+            nautica: { v: 1, nota: "Gruppi leader mondiali consolidati" },
+          },
+        },
+        {
+          nome: "Ricambio generazionale",
+          valori: {
+            difesa: { v: -1, nota: "Competenze specialistiche nelle PMI a rischio" },
+            "spazio-osservazione-terra": { v: -1, nota: "Talent drain verso hub esteri" },
+            energia: { v: -1, nota: "Installatori e ingegneri di rete mancanti" },
+            meccanica: { v: -2, nota: "Imprenditori e tecnici in uscita, pochi eredi" },
+            automotive: { v: -1, nota: "70.000 addetti del termico da riconvertire" },
+            agroalimentare: { v: -2, nota: "Età media degli agricoltori sopra i 57 anni" },
+            moda: { v: -2, nota: "Artigiani senza eredi: il rischio numero uno" },
+            elettronica: { v: -1, nota: "STEM attratti da hub meglio remunerati" },
+            nautica: { v: -2, nota: "Maestranze: il vincolo dichiarato dai cantieri" },
+          },
+        },
+      ],
+    },
+  ],
+};
+
 /* Fattori produttivi comuni a più filiere (dalla lettura dei 10 settori) */
 const FATTORI_TRASVERSALI = [
   { nome: "Energia a costo italiano", icona: "⚡", nota: "Il prezzo elettrico sopra la media UE è un dazio occulto su fonderie, tintorie, vetrerie, fab, sterilizzazione e cantieri: penalizza proprio gli stadi a monte che l'Italia presidia.", settori: ["difesa", "meccanica", "automotive", "farmaceutica", "elettronica", "moda", "agroalimentare", "energia"] },
