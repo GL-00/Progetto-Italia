@@ -402,6 +402,26 @@ body {
 .tag-medio { background: var(--div-mid); color: var(--text-secondary); border: 1px solid var(--baseline); }
 .tag-lungo { background: transparent; color: var(--text-muted); border: 1px dashed var(--baseline); }
 
+/* Capitale estero — registro proprietà */
+.registro-table td.td-company { white-space: normal; min-width: 220px; }
+.reg-nota { font-weight: 400; font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.reg-paese { font-size: 12px; color: var(--text-muted); }
+.tag-tipo {
+  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+  white-space: nowrap; border: 1px solid var(--baseline); color: var(--text-secondary);
+}
+.tag-tipo-greenfield { border-color: var(--good); color: var(--good); }
+.tag-tipo-rientro { border-color: var(--accent); color: var(--accent); }
+.lettura { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.lettura-ancora { color: var(--good); }
+.lettura-neutrale { color: var(--text-muted); }
+.lettura-attenzione { color: var(--warn-s); }
+.lettura-attenzione-b {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 9px; border-radius: 99px; border: 1px solid var(--critical); color: var(--critical);
+}
+.diff-card .poc-esito { margin-bottom: 6px; display: inline-block; }
+
 .mat-list { display: flex; flex-direction: column; gap: 14px; }
 .mat-card { scroll-margin-top: 90px; }
 .mat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -503,6 +523,7 @@ table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; mi
         <a href="#/settori" data-nav="settori">Settori e filiere</a>
         <a href="#/materie-critiche" data-nav="materie-critiche">Materie critiche</a>
         <a href="#/politiche" data-nav="politiche">Politiche</a>
+        <a href="#/capitale-estero" data-nav="capitale-estero">Capitale estero</a>
         <a href="#/aziende" data-nav="aziende">Aziende</a>
         <a href="#/metodologia" data-nav="metodologia">Metodologia e fonti</a>
       </nav>
@@ -538,6 +559,7 @@ const MACRO = {
     { label: "Occupati", value: "24,3 mln", delta: "disoccupazione 6,1%: minimo dal 2007", trend: "up" },
     { label: "Debito pubblico", value: "≈ 136% PIL", delta: "≈ €3.100 mld", trend: "warn" },
     { label: "Inflazione (IPCA)", value: "+1,6%", delta: "dal +1,1% del 2024", trend: "flat" },
+    { label: "Posizione netta sull'estero", value: "≈ +12% PIL", delta: "creditrice del mondo dal 2020", trend: "up" },
   ],
 
   // Composizione del valore aggiunto per macro-settore (% sul totale)
@@ -2094,6 +2116,57 @@ const POLITICHE = {
   avvertenza: "Proposte analitiche derivate dall'evidenza raccolta nella piattaforma (mappa dei fattori, matrice delle dipendenze, letture settoriali): non costituiscono posizioni politiche né esauriscono il dibattito. Fonti di riferimento: McKinsey Global Institute, rapporti Draghi e Letta sul mercato unico, Commissione UE (CRMA, Chips Act, Critical Medicines Act).",
 };
 
+/* ============================================================
+   CAPITALE ESTERO — IDE, proprietà e tutela del know-how
+   Tutela del patrimonio industriale: chi possiede gli asset
+   strategici, come gli IDE agiscono sulla bilancia dei pagamenti,
+   e dove il golden power è intervenuto.
+   ============================================================ */
+
+const CAPITALE_ESTERO = {
+  kpi: [
+    { label: "Stock IDE in entrata", value: "≈ 20% PIL", delta: "tra i più bassi d'Europa", trend: "warn" },
+    { label: "Posizione netta sull'estero", value: "≈ +12% PIL", delta: "l'Italia è creditrice del mondo", trend: "up" },
+    { label: "Notifiche golden power", value: "≈ 600-700/anno", delta: "da ~30 nel 2019: cambio di regime", trend: "flat" },
+    { label: "Paradosso italiano", value: "Attrarre, non difendersi", delta: "pochi greenfield, molte acquisizioni", trend: "warn" },
+  ],
+  canali: [
+    { nome: "Conto finanziario", icona: "🔁", nota: "L'IDE in entrata è un afflusso di capitale che finanzia la bilancia: la forma più stabile e pregiata — non crea debito, non ha scadenza, non fugge come i capitali di portafoglio. Per i paesi in deficit corrente è vitale; l'Italia, in surplus, non ne ha bisogno contabile." },
+    { nome: "Redditi primari", icona: "💸", nota: "Il costo differito: l'IDE di oggi è il dividendo in uscita di domani. Un paese molto posseduto dall'estero paga una rendita permanente — è il canale da cui esce il valore dei brand di moda che maturano a Parigi." },
+    { nome: "Bilancia commerciale", icona: "🚢", nota: "Dipende dal tipo: l'IDE export-oriented migliora strutturalmente il conto corrente — il boom farmaceutico 2025 è in parte prodotto da stabilimenti esteri in Italia. L'IDE market-seeking può invece aumentare l'import di input dalla casa madre." },
+  ],
+  registro: [
+    { azienda: "Avio Aero", proprietario: "GE Aerospace", paese: "USA", settoreId: "difesa", tipo: "acquisizione", anno: "2013", lettura: "ancora", nota: "Ancoraggio tecnologico positivo: additive manufacturing e ruolo stabile nei programmi motoristici GE" },
+    { azienda: "Microtecnica", proprietario: "Collins Aerospace (RTX)", paese: "USA", settoreId: "difesa", tipo: "acquisizione", anno: "1998", lettura: "neutrale", nota: "Attuazione e controlli di volo integrati nella supply chain RTX" },
+    { azienda: "Piaggio Aerospace", proprietario: "Baykar", paese: "Turchia", settoreId: "difesa", tipo: "acquisizione", anno: "2025", lettura: "attenzione", nota: "Rilancio promesso sui velivoli senza pilota: know-how aeronautico ligure sotto controllo extra-UE" },
+    { azienda: "Thales Alenia Space / Telespazio", proprietario: "JV Leonardo-Thales", paese: "Francia/Italia", settoreId: "spazio-osservazione-terra", tipo: "jv", anno: "2005", lettura: "ancora", nota: "Governance condivisa italo-francese: l'alleanza spaziale strutturale d'Europa" },
+    { azienda: "OHB Italia", proprietario: "OHB SE", paese: "Germania", settoreId: "spazio-osservazione-terra", tipo: "acquisizione", anno: "2009", lettura: "neutrale", nota: "Missioni scientifiche nel gruppo tedesco" },
+    { azienda: "Edison", proprietario: "EDF", paese: "Francia", settoreId: "energia", tipo: "acquisizione", anno: "2012", lettura: "attenzione", nota: "Il secondo operatore elettrico italiano è controllato dallo Stato francese" },
+    { azienda: "Ansaldo Energia", proprietario: "CDP (quota cinese diluita)", paese: "Italia", settoreId: "energia", tipo: "rientro", anno: "2023", lettura: "ancora", nota: "La quota di Shanghai Electric (40% nel 2014) è stata diluita dalle ricapitalizzazioni CDP: un rientro di fatto" },
+    { azienda: "MEMC Novara e Merano", proprietario: "GlobalWafers", paese: "Taiwan", settoreId: "elettronica", tipo: "acquisizione", anno: "2011", lettura: "ancora", nota: "Presidio produttivo raro in UE mantenuto e ampliato sotto proprietà taiwanese" },
+    { azienda: "LPE (epitassia SiC)", proprietario: "ASM International", paese: "Paesi Bassi", settoreId: "elettronica", tipo: "acquisizione", anno: "2022", lettura: "ancora", nota: "Venduta a un gruppo UE dopo il veto golden power alla cessione cinese (2021): il precedente di scuola" },
+    { azienda: "Pirelli", proprietario: "Sinochem (~37%)", paese: "Cina", settoreId: "automotive", tipo: "acquisizione", anno: "2015", lettura: "attenzione", nota: "Golden power 2023: limitati i poteri dell'azionista di controllo sui dati e sulla governance" },
+    { azienda: "Marelli", proprietario: "KKR", paese: "USA", settoreId: "automotive", tipo: "acquisizione", anno: "2019", lettura: "attenzione", nota: "Spin-off FCA venduto a leva, Chapter 11 nel 2025: il caso-scuola dei rischi da private equity su asset industriali" },
+    { azienda: "Iveco Group", proprietario: "Tata Motors", paese: "India", settoreId: "automotive", tipo: "acquisizione", anno: "2025-26", lettura: "attenzione", nota: "Il ramo difesa (IDV) scorporato a Leonardo in sede di golden power: il modello del bisturi applicato" },
+    { azienda: "Lamborghini, Ducati, Italdesign", proprietario: "Gruppo Volkswagen", paese: "Germania", settoreId: "automotive", tipo: "acquisizione", anno: "1998", lettura: "ancora", nota: "Investimenti e volumi record in Emilia: l'acquisizione che ha rafforzato il territorio" },
+    { azienda: "Maison del lusso (Loro Piana, Fendi, Bulgari, Gucci, Bottega Veneta)", proprietario: "LVMH / Kering", paese: "Francia", settoreId: "moda", tipo: "acquisizione", anno: "1999-2013", lettura: "attenzione", nota: "La produzione resta nei distretti, ma il valore del brand matura a Parigi ed esce come redditi primari" },
+    { azienda: "Versace", proprietario: "Prada Group", paese: "Italia", settoreId: "moda", tipo: "rientro", anno: "2025", lettura: "ancora", nota: "Il controesempio: riacquisita da un gruppo italiano dopo la parentesi americana (Capri Holdings)" },
+    { azienda: "Ferretti Group", proprietario: "Weichai (primo azionista)", paese: "Cina", settoreId: "nautica", tipo: "acquisizione", anno: "2012", lettura: "neutrale", nota: "Rilancio riuscito e doppia quotazione; il controllo di fatto resta cinese" },
+    { azienda: "Siti farmaceutici (Anagni, Sesto F.no, Siena, Ascoli)", proprietario: "Novo Nordisk, Lilly, GSK, Pfizer", paese: "Danimarca/USA/UK", settoreId: "farmaceutica", tipo: "greenfield", anno: "vari", lettura: "ancora", nota: "IDE export-oriented: il motore del boom da €69 mld — il tipo di capitale estero da corteggiare" },
+  ],
+  goldenPower: {
+    testo: "Introdotto nel 2012 e progressivamente esteso (2017, 2020, 2022) da difesa e reti a semiconduttori, salute, agroalimentare e dati, il golden power è passato da strumento eccezionale a presidio ordinario: da ~30 notifiche nel 2019 a 600-700 l'anno. La casistica mostra la postura emergente: quasi mai il veto, quasi sempre prescrizioni — il bisturi, non il muro.",
+    casi: [
+      { nome: "LPE → veto (2021)", esito: "veto", nota: "Bloccata la cessione dell'epitassia SiC a Shenzhen Investment Holdings; l'azienda è poi passata all'olandese ASM: know-how salvo, capitale trovato altrove." },
+      { nome: "Verisem → veto (2021)", esito: "veto", nota: "Bloccata la vendita delle sementi a Syngenta (ChemChina): la genetica vegetale riconosciuta come asset strategico agroalimentare." },
+      { nome: "Pirelli → prescrizioni (2023)", esito: "prescrizioni", nota: "Limitati i poteri di Sinochem su dati dei sensori e nomine chiave, senza forzare l'uscita: convivenza vigilata." },
+      { nome: "Iveco/IDV → scorporo (2025)", esito: "prescrizioni", nota: "Via libera a Tata Motors con separazione del ramo difesa a Leonardo: l'operazione ridisegnata, non respinta." },
+    ],
+  },
+  postura: "La postura ottimale per l'Italia discende dai numeri: massima apertura al greenfield — che si conquista con le riforme sui fattori, perché è lì che si compete per gli stabilimenti — e screening chirurgico sulle acquisizioni dei colli di bottiglia identificati dall'analisi (perclorato, vetro farmaceutico, wafer, probe card, sementi). Il golden power come bisturi, non come muro: un muro scoraggerebbe anche il greenfield di cui il paese ha fame.",
+  fonti: "Banca d'Italia — posizione patrimoniale sull'estero e bilancia dei pagamenti; UNCTAD — World Investment Report; Relazione annuale al Parlamento sull'esercizio del golden power; comunicati societari",
+};
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },
@@ -2390,6 +2463,7 @@ const routes = [
   { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
   { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^politiche$/, render: renderPolitiche },
+  { re: /^capitale-estero$/, render: renderCapitaleEstero },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -3029,6 +3103,91 @@ function renderPolitiche() {
   disc.className = "disclaimer";
   disc.innerHTML = `<strong>Avvertenza.</strong> ${esc(POLITICHE.avvertenza)}`;
   root.appendChild(disc);
+}
+
+/* ============================================================
+   CAPITALE ESTERO — IDE, proprietà e tutela del know-how
+   ============================================================ */
+function renderCapitaleEstero() {
+  const root = $app();
+  const TIPO = { acquisizione: "Acquisizione", greenfield: "Greenfield", jv: "Joint venture", rientro: "Rientro" };
+  const LETTURA = { ancora: "✔ àncora", neutrale: "● neutrale", attenzione: "⚠ attenzione" };
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Tutela del patrimonio industriale</div>
+    <h1>Capitale estero: IDE, proprietà e know-how</h1>
+    <p class="lead">Chi possiede gli asset strategici delle filiere, come gli investimenti diretti esteri agiscono
+    sulla bilancia dei pagamenti, e dove il golden power è intervenuto. La distinzione che conta non è
+    italiano/straniero, ma <em>greenfield che aggiunge capacità</em> contro <em>acquisizione che trasferisce know-how</em>.</p>`;
+  hero.appendChild(kpiRow(CAPITALE_ESTERO.kpi));
+  root.appendChild(hero);
+
+  /* I tre canali sulla bilancia dei pagamenti */
+  const sc = sectionEl("La meccanica", "Come gli IDE agiscono sulla bilancia dei pagamenti",
+    "Tre canali con tempi diversi: l'afflusso immediato, la rendita differita, l'effetto reale sull'export. L'Italia — in surplus e creditrice netta — non ha bisogno contabile degli IDE: il suo problema è attrarne di buoni.");
+  const cg = document.createElement("div");
+  cg.className = "grid-3";
+  CAPITALE_ESTERO.canali.forEach((c) => {
+    const card_ = document.createElement("div");
+    card_.className = "card poc-card";
+    card_.innerHTML = `<h3>${c.icona} ${esc(c.nome)}</h3><p class="poc-nota">${esc(c.nota)}</p>`;
+    cg.appendChild(card_);
+  });
+  sc.appendChild(cg);
+  root.appendChild(sc);
+
+  /* Registro della proprietà estera */
+  const sr = sectionEl("Il registro", "La proprietà degli asset strategici",
+    "Le presenze estere già emerse nelle dieci filiere, lette caso per caso: àncora (rafforza il territorio), neutrale, attenzione (centri decisionali o leva geopolitica). Include i rientri — il flusso non è a senso unico.");
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  tw.innerHTML = `
+    <table class="data-table registro-table">
+      <thead><tr><th>Asset</th><th>Proprietario (paese)</th><th>Settore</th><th>Tipo</th><th>Lettura</th></tr></thead>
+      <tbody>
+        ${CAPITALE_ESTERO.registro.map((r) => {
+          const s = SETTORI.find((x) => x.id === r.settoreId);
+          return `<tr>
+            <td class="td-company">${esc(r.azienda)}<div class="reg-nota">${esc(r.nota)}</div></td>
+            <td class="td-role">${esc(r.proprietario)}<br><span class="reg-paese">${esc(r.paese)} · ${esc(r.anno)}</span></td>
+            <td>${s ? `<a class="badge-sector" href="#/settore/${s.id}"><span class="badge-dot" style="background:${colorOf(s.id)}"></span>${s.icona} ${esc(s.nome)}</a>` : ""}</td>
+            <td><span class="tag-tipo tag-tipo-${esc(r.tipo)}">${esc(TIPO[r.tipo] || r.tipo)}</span></td>
+            <td><span class="lettura lettura-${esc(r.lettura)}">${LETTURA[r.lettura] || esc(r.lettura)}</span></td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+  sr.appendChild(tw);
+  root.appendChild(sr);
+
+  /* Golden power */
+  const sg = sectionEl("Lo strumento", "Golden power: il bisturi, non il muro", CAPITALE_ESTERO.goldenPower.testo);
+  const gg = document.createElement("div");
+  gg.className = "diff-grid";
+  CAPITALE_ESTERO.goldenPower.casi.forEach((c) => {
+    const gc = document.createElement("div");
+    gc.className = "diff-card";
+    gc.innerHTML = `
+      <span class="poc-esito ${c.esito === "veto" ? "lettura-attenzione-b" : "poc-in-corso"}">${c.esito === "veto" ? "⛔ veto" : "✎ prescrizioni"}</span>
+      <h4>${esc(c.nome)}</h4><p>${esc(c.nota)}</p>`;
+    gg.appendChild(gc);
+  });
+  sg.appendChild(gg);
+  root.appendChild(sg);
+
+  /* Postura */
+  const tesi = document.createElement("div");
+  tesi.className = "policy-thesis";
+  tesi.innerHTML = `<div class="kicker">La postura suggerita</div><p>${esc(CAPITALE_ESTERO.postura)}</p>
+    <p class="fonti-line" style="margin-top:12px">Si collega all'<a href="#/politiche">agenda delle politiche</a> (asse "strumenti strategici") e alla <a href="#/materie-critiche">matrice delle dipendenze</a>.</p>`;
+  root.appendChild(tesi);
+
+  const fonti = document.createElement("p");
+  fonti.className = "fonti-line";
+  fonti.innerHTML = `<strong>Fonti:</strong> ${esc(CAPITALE_ESTERO.fonti)} — <a href="#/metodologia">metodologia e avvertenze</a>`;
+  root.appendChild(fonti);
 }
 
 /* ============================================================

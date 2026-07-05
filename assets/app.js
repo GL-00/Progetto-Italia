@@ -20,6 +20,7 @@ const routes = [
   { re: /^settore\/([a-z-]+)$/, render: (m) => renderSettore(m[1]) },
   { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^politiche$/, render: renderPolitiche },
+  { re: /^capitale-estero$/, render: renderCapitaleEstero },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -659,6 +660,91 @@ function renderPolitiche() {
   disc.className = "disclaimer";
   disc.innerHTML = `<strong>Avvertenza.</strong> ${esc(POLITICHE.avvertenza)}`;
   root.appendChild(disc);
+}
+
+/* ============================================================
+   CAPITALE ESTERO — IDE, proprietà e tutela del know-how
+   ============================================================ */
+function renderCapitaleEstero() {
+  const root = $app();
+  const TIPO = { acquisizione: "Acquisizione", greenfield: "Greenfield", jv: "Joint venture", rientro: "Rientro" };
+  const LETTURA = { ancora: "✔ àncora", neutrale: "● neutrale", attenzione: "⚠ attenzione" };
+
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Tutela del patrimonio industriale</div>
+    <h1>Capitale estero: IDE, proprietà e know-how</h1>
+    <p class="lead">Chi possiede gli asset strategici delle filiere, come gli investimenti diretti esteri agiscono
+    sulla bilancia dei pagamenti, e dove il golden power è intervenuto. La distinzione che conta non è
+    italiano/straniero, ma <em>greenfield che aggiunge capacità</em> contro <em>acquisizione che trasferisce know-how</em>.</p>`;
+  hero.appendChild(kpiRow(CAPITALE_ESTERO.kpi));
+  root.appendChild(hero);
+
+  /* I tre canali sulla bilancia dei pagamenti */
+  const sc = sectionEl("La meccanica", "Come gli IDE agiscono sulla bilancia dei pagamenti",
+    "Tre canali con tempi diversi: l'afflusso immediato, la rendita differita, l'effetto reale sull'export. L'Italia — in surplus e creditrice netta — non ha bisogno contabile degli IDE: il suo problema è attrarne di buoni.");
+  const cg = document.createElement("div");
+  cg.className = "grid-3";
+  CAPITALE_ESTERO.canali.forEach((c) => {
+    const card_ = document.createElement("div");
+    card_.className = "card poc-card";
+    card_.innerHTML = `<h3>${c.icona} ${esc(c.nome)}</h3><p class="poc-nota">${esc(c.nota)}</p>`;
+    cg.appendChild(card_);
+  });
+  sc.appendChild(cg);
+  root.appendChild(sc);
+
+  /* Registro della proprietà estera */
+  const sr = sectionEl("Il registro", "La proprietà degli asset strategici",
+    "Le presenze estere già emerse nelle dieci filiere, lette caso per caso: àncora (rafforza il territorio), neutrale, attenzione (centri decisionali o leva geopolitica). Include i rientri — il flusso non è a senso unico.");
+  const tw = document.createElement("div");
+  tw.className = "table-wrap";
+  tw.innerHTML = `
+    <table class="data-table registro-table">
+      <thead><tr><th>Asset</th><th>Proprietario (paese)</th><th>Settore</th><th>Tipo</th><th>Lettura</th></tr></thead>
+      <tbody>
+        ${CAPITALE_ESTERO.registro.map((r) => {
+          const s = SETTORI.find((x) => x.id === r.settoreId);
+          return `<tr>
+            <td class="td-company">${esc(r.azienda)}<div class="reg-nota">${esc(r.nota)}</div></td>
+            <td class="td-role">${esc(r.proprietario)}<br><span class="reg-paese">${esc(r.paese)} · ${esc(r.anno)}</span></td>
+            <td>${s ? `<a class="badge-sector" href="#/settore/${s.id}"><span class="badge-dot" style="background:${colorOf(s.id)}"></span>${s.icona} ${esc(s.nome)}</a>` : ""}</td>
+            <td><span class="tag-tipo tag-tipo-${esc(r.tipo)}">${esc(TIPO[r.tipo] || r.tipo)}</span></td>
+            <td><span class="lettura lettura-${esc(r.lettura)}">${LETTURA[r.lettura] || esc(r.lettura)}</span></td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+  sr.appendChild(tw);
+  root.appendChild(sr);
+
+  /* Golden power */
+  const sg = sectionEl("Lo strumento", "Golden power: il bisturi, non il muro", CAPITALE_ESTERO.goldenPower.testo);
+  const gg = document.createElement("div");
+  gg.className = "diff-grid";
+  CAPITALE_ESTERO.goldenPower.casi.forEach((c) => {
+    const gc = document.createElement("div");
+    gc.className = "diff-card";
+    gc.innerHTML = `
+      <span class="poc-esito ${c.esito === "veto" ? "lettura-attenzione-b" : "poc-in-corso"}">${c.esito === "veto" ? "⛔ veto" : "✎ prescrizioni"}</span>
+      <h4>${esc(c.nome)}</h4><p>${esc(c.nota)}</p>`;
+    gg.appendChild(gc);
+  });
+  sg.appendChild(gg);
+  root.appendChild(sg);
+
+  /* Postura */
+  const tesi = document.createElement("div");
+  tesi.className = "policy-thesis";
+  tesi.innerHTML = `<div class="kicker">La postura suggerita</div><p>${esc(CAPITALE_ESTERO.postura)}</p>
+    <p class="fonti-line" style="margin-top:12px">Si collega all'<a href="#/politiche">agenda delle politiche</a> (asse "strumenti strategici") e alla <a href="#/materie-critiche">matrice delle dipendenze</a>.</p>`;
+  root.appendChild(tesi);
+
+  const fonti = document.createElement("p");
+  fonti.className = "fonti-line";
+  fonti.innerHTML = `<strong>Fonti:</strong> ${esc(CAPITALE_ESTERO.fonti)} — <a href="#/metodologia">metodologia e avvertenze</a>`;
+  root.appendChild(fonti);
 }
 
 /* ============================================================
