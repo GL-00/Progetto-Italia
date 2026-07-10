@@ -1736,11 +1736,11 @@ const DOSSIER = [
     rimandi: [{ href: "#/capitale-estero", label: "Golden power" }, { href: "#/settore/automotive", label: "Automotive" }],
   },
   {
-    id: "bromo", icona: "🛰️", titolo: "Consolidamento spaziale (Project Bromo)",
+    id: "bromo", icona: "🛰️", titolo: "Project Bromo — JV spaziale europea",
     tipo: "consolidamento", aggiornamento: "lug 2026",
-    stato: "Trattativa Leonardo–Airbus–Thales per fondere le attività satellitari in un unico campione europeo anti-Starlink; impatterebbe Thales Alenia Space e Telespazio, cuore della filiera di osservazione della Terra.",
-    posta: "Scala europea contro la frammentazione di fronte alle mega-costellazioni, ma rischio di diluizione del controllo italiano su un asset dual-use come COSMO-SkyMed.",
-    rimandi: [{ href: "#/settore/spazio-osservazione-terra", label: "Spazio e OT" }],
+    stato: "MoU firmato il 23 ottobre 2025: Airbus (35%), Leonardo (32,5%) e Thales (32,5%) fondono le attività satellitari in un unico campione europeo — ~25.000 addetti, €6,5 mld di ricavi, sede a Tolosa, servizio dal 2027. Via libera UE non atteso prima del 2027; OHB (Germania) contraria.",
+    posta: "Scala europea contro Starlink e le costellazioni cinesi, ma controllo condiviso a tre e rischio di diluizione del peso italiano su un asset dual-use come COSMO-SkyMed. Impatta Thales Alenia Space e Telespazio.",
+    rimandi: [{ href: "#/settore/spazio-osservazione-terra", label: "Spazio e OT" }, { href: "#/operazioni", label: "Operazioni" }],
   },
   {
     id: "risiko", icona: "🏦", titolo: "Risiko bancario (MPS–Mediobanca)",
@@ -1757,8 +1757,39 @@ const DOSSIER_TIPI = {
   "greenfield": "Greenfield",
   "golden-power": "Golden power",
   "consolidamento": "Consolidamento",
+  "jv": "Joint venture",
+  "rientro": "Rientro / controllo IT",
   "finanza": "Finanza",
 };
+
+/* ============================================================
+   OPERAZIONI STRATEGICHE — linea del tempo (2021→2026)
+   Le grandi operazioni sul controllo del patrimonio industriale:
+   acquisizioni estere, greenfield, golden power, JV, rientri.
+   Fotografie da stampa specializzata e comunicati societari.
+   ============================================================ */
+
+const OPERAZIONI = [
+  { anno: 2026, titolo: "ex-Ilva / Acciaierie d'Italia", attori: "Flacks Group (USA) vs Jindal (India)", tipo: "acquisizione-estera", settoreId: null, stato: "in corso", lettura: "Il futuro della siderurgia primaria nazionale; decarbonizzazione e prestiti statali sul tavolo." },
+  { anno: 2026, titolo: "Silicon Box — fab di Novara", attori: "Silicon Box (Singapore)", tipo: "greenfield", settoreId: "elettronica", valore: "€3,2 mld", lettura: "Prima fab europea di advanced packaging; €1,3 mld di sostegno pubblico, 1.600 posti." },
+  { anno: 2026, titolo: "Pirelli — terzo decreto golden power", attori: "Governo su Sinochem (Cina)", tipo: "golden-power", settoreId: "automotive", lettura: "Consiglieri di Sinochem limitati e tecnologia Cyber Tyre segregata: convivenza vigilata." },
+  { anno: 2026, titolo: "Intesa Sanpaolo — OPAS su MPS", attori: "Intesa Sanpaolo, BPER, Mediobanca", tipo: "finanza", settoreId: null, stato: "in corso", lettura: "Riassetto del credito e del controllo su Mediobanca e Generali. Perimetro finanziario." },
+  { anno: 2025, titolo: "Project Bromo — JV satellitare europea", attori: "Airbus 35% · Leonardo 32,5% · Thales 32,5%", tipo: "consolidamento", settoreId: "spazio-osservazione-terra", valore: "€6,5 mld ricavi", lettura: "Campione europeo anti-Starlink; controllo condiviso a tre, sede a Tolosa, servizio dal 2027." },
+  { anno: 2025, titolo: "Iveco Group → Tata Motors", attori: "Tata Motors (India); IDV difesa a Leonardo", tipo: "acquisizione-estera", settoreId: "automotive", lettura: "Golden power applicato: il ramo difesa scorporato a Leonardo, il civile a controllo indiano." },
+  { anno: 2025, titolo: "Versace → Prada", attori: "Prada Group (Italia)", tipo: "rientro", settoreId: "moda", valore: "≈ €1,25 mld", lettura: "Un marchio del lusso torna sotto controllo italiano dopo la parentesi americana." },
+  { anno: 2025, titolo: "Nuclitalia — JV per gli SMR", attori: "Enel · Leonardo · Ansaldo Energia", tipo: "jv", settoreId: "energia", lettura: "Piattaforma nazionale sui piccoli reattori modulari: primo passo del rientro nucleare." },
+  { anno: 2025, titolo: "Piaggio Aerospace → Baykar", attori: "Baykar (Turchia)", tipo: "acquisizione-estera", settoreId: "difesa", lettura: "Rilancio promesso sui droni, ma know-how aeronautico ligure sotto controllo extra-UE." },
+  { anno: 2025, titolo: "Sparkle → MEF + Retelit", attori: "MEF e Retelit (Italia)", tipo: "rientro", settoreId: null, lettura: "I cavi sottomarini strategici di TIM tornano sotto controllo pubblico." },
+  { anno: 2025, titolo: "ITA Airways → Lufthansa", attori: "Lufthansa (Germania)", tipo: "acquisizione-estera", settoreId: null, lettura: "La compagnia di bandiera entra nel gruppo tedesco, con quota residua del MEF." },
+  { anno: 2024, titolo: "Rete TIM (FiberCop) → KKR", attori: "KKR (USA)", tipo: "acquisizione-estera", settoreId: null, valore: "≈ €22 mld", lettura: "La rete telefonica nazionale a un fondo statunitense: separazione storica di un'infrastruttura critica." },
+  { anno: 2024, titolo: "Subacquea di difesa a Fincantieri (WASS)", attori: "Fincantieri ← Leonardo", tipo: "consolidamento", settoreId: "nautica", lettura: "Riorganizzazione nazionale della subacquea militare in un unico polo." },
+  { anno: 2024, titolo: "JV terrestre Leonardo–Rheinmetall", attori: "Leonardo · Rheinmetall (Germania)", tipo: "jv", settoreId: "difesa", lettura: "Alleanza sui veicoli da combattimento terrestri per i futuri programmi europei." },
+  { anno: 2023, titolo: "Raffineria ISAB Priolo (Lukoil)", attori: "Lukoil (RU) → G.O.I. Energy / Trafigura", tipo: "acquisizione-estera", settoreId: "energia", lettura: "Uscita russa da uno snodo di raffinazione e sicurezza energetica nazionale." },
+  { anno: 2022, titolo: "LPE (epitassia SiC) → ASM", attori: "ASM International (Paesi Bassi)", tipo: "acquisizione-estera", settoreId: "elettronica", lettura: "Dopo il veto alla cessione cinese, il know-how sul carburo di silicio resta in mani europee." },
+  { anno: 2021, titolo: "Veti golden power: LPE e Verisem", attori: "Governo su Shenzhen IH e Syngenta (Cina)", tipo: "golden-power", settoreId: null, lettura: "Due veti fondativi: microelettronica e sementi riconosciute come asset strategici." },
+];
+
+const OPERAZIONI_TIPI = DOSSIER_TIPI;
 
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },

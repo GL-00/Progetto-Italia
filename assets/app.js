@@ -21,6 +21,7 @@ const routes = [
   { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^politiche$/, render: renderPolitiche },
   { re: /^capitale-estero$/, render: renderCapitaleEstero },
+  { re: /^operazioni$/, render: renderOperazioni },
   { re: /^ide$/, render: renderIDE },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
@@ -818,6 +819,74 @@ function dossierSection() {
 }
 
 /* ============================================================
+   OPERAZIONI STRATEGICHE — dossier aperti + linea del tempo
+   ============================================================ */
+function renderOperazioni() {
+  const root = $app();
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Controllo del patrimonio industriale</div>
+    <h1>Operazioni strategiche</h1>
+    <p class="lead">I fascicoli aperti e la cronologia delle grandi operazioni sul controllo industriale:
+    acquisizioni estere, greenfield, golden power, joint venture e rientri. La direzione in cui si muove
+    la proprietà degli asset strategici del paese.</p>`;
+  root.appendChild(hero);
+
+  // dossier aperti
+  root.appendChild(dossierSection());
+
+  // linea del tempo filtrabile
+  const st = sectionEl("La linea del tempo", "Le operazioni recenti (2021 → 2026)",
+    "Filtra per tipo. I rimandi portano al settore o alla pagina collegata.");
+  const chips = document.createElement("div");
+  chips.className = "filter-bar";
+  let active = "";
+  const tipi = Array.from(new Set(OPERAZIONI.map((o) => o.tipo)));
+  const mkChip = (id, label) => { const b = document.createElement("button"); b.className = "filter-chip" + (id === active ? " active" : ""); b.textContent = label; b.dataset.id = id; return b; };
+  chips.appendChild(mkChip("", "Tutte"));
+  tipi.forEach((t) => chips.appendChild(mkChip(t, OPERAZIONI_TIPI[t] || t)));
+  st.appendChild(chips);
+
+  const tl = document.createElement("div");
+  tl.className = "timeline";
+  st.appendChild(tl);
+  root.appendChild(st);
+
+  function draw() {
+    const list = OPERAZIONI.filter((o) => !active || o.tipo === active);
+    let lastYear = null;
+    tl.innerHTML = list.map((o) => {
+      const s = o.settoreId ? SETTORI.find((x) => x.id === o.settoreId) : null;
+      const yearMark = o.anno !== lastYear ? `<div class="tl-year">${o.anno}</div>` : `<div class="tl-year tl-year-empty"></div>`;
+      lastYear = o.anno;
+      return `<div class="tl-item">
+        ${yearMark}
+        <div class="tl-dot dt-dot-${esc(o.tipo)}"></div>
+        <div class="tl-body">
+          <div class="tl-meta"><span class="dossier-tipo dt-${esc(o.tipo)}">${esc(OPERAZIONI_TIPI[o.tipo] || o.tipo)}</span>${o.stato ? `<span class="tl-stato">● ${esc(o.stato)}</span>` : ""}${o.valore ? `<span class="tl-valore">${esc(o.valore)}</span>` : ""}</div>
+          <h4>${esc(o.titolo)}</h4>
+          <p class="tl-attori">${esc(o.attori)}</p>
+          <p class="tl-lettura">${esc(o.lettura)}</p>
+          ${s ? `<a class="badge-sector" href="#/settore/${s.id}"><span class="badge-dot" style="background:${colorOf(s.id)}"></span>${s.icona} ${esc(s.nome)}</a>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+  }
+  chips.addEventListener("click", (e) => {
+    const b = e.target.closest(".filter-chip"); if (!b) return;
+    chips.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+    b.classList.add("active"); active = b.dataset.id || ""; draw();
+  });
+  draw();
+
+  const nota = document.createElement("p");
+  nota.className = "fonti-line";
+  nota.innerHTML = `Fotografie da stampa specializzata e comunicati societari; date e valori indicativi. Il perimetro finanziario (risiko bancario) è incluso per completezza ma resta distinto dalla manifattura. — <a href="#/capitale-estero">Meccanica IDE e golden power →</a>`;
+  root.appendChild(nota);
+}
+
+/* ============================================================
    CAPITALE ESTERO — IDE, proprietà e tutela del know-how
    ============================================================ */
 function renderCapitaleEstero() {
@@ -834,10 +903,11 @@ function renderCapitaleEstero() {
     sulla bilancia dei pagamenti, e dove il golden power è intervenuto. La distinzione che conta non è
     italiano/straniero, ma <em>greenfield che aggiunge capacità</em> contro <em>acquisizione che trasferisce know-how</em>.</p>`;
   hero.appendChild(kpiRow(CAPITALE_ESTERO.kpi));
+  const opl = document.createElement("p");
+  opl.className = "fonti-line";
+  opl.innerHTML = `I casi aperti e la cronologia delle grandi operazioni sono nella pagina <a href="#/operazioni">Operazioni strategiche →</a>`;
+  hero.appendChild(opl);
   root.appendChild(hero);
-
-  /* Monitor dei dossier strategici aperti */
-  root.appendChild(dossierSection());
 
   /* I tre canali sulla bilancia dei pagamenti */
   const sc = sectionEl("La meccanica", "Come gli IDE agiscono sulla bilancia dei pagamenti",

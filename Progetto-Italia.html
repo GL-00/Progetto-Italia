@@ -441,6 +441,38 @@ body {
 .tag-medio { background: var(--div-mid); color: var(--text-secondary); border: 1px solid var(--baseline); }
 .tag-lungo { background: transparent; color: var(--text-muted); border: 1px dashed var(--baseline); }
 
+/* Timeline operazioni strategiche */
+.timeline { position: relative; margin-top: 6px; }
+.tl-item { display: grid; grid-template-columns: 58px 20px 1fr; gap: 0 12px; align-items: start; }
+.tl-year { font-size: 15px; font-weight: 800; color: var(--text-primary); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.tl-year-empty { visibility: hidden; }
+.tl-dot { position: relative; width: 12px; height: 12px; border-radius: 99px; margin: 6px auto 0; background: var(--baseline); z-index: 1; }
+.tl-item { position: relative; }
+.tl-item::before { content: ""; position: absolute; left: calc(58px + 12px + 5px); top: 0; bottom: -18px; width: 2px; background: var(--grid); }
+.tl-item:last-child::before { display: none; }
+.dt-dot-acquisizione-estera { background: var(--warn-s); }
+.dt-dot-greenfield { background: var(--good); }
+.dt-dot-golden-power { background: var(--series-5); }
+.dt-dot-jv { background: var(--series-2); }
+.dt-dot-rientro { background: var(--accent); }
+.dt-dot-consolidamento { background: var(--baseline); }
+.dt-dot-finanza { background: var(--text-muted); }
+.tl-body { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 18px; }
+.tl-body h4 { margin: 6px 0 4px; font-size: 15.5px; }
+.tl-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tl-stato { font-size: 11px; font-weight: 700; color: var(--warn-s); text-transform: uppercase; letter-spacing: 0.05em; }
+.tl-valore { font-size: 12px; font-weight: 700; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.tl-attori { margin: 0 0 6px; font-size: 13px; color: var(--text-primary); font-weight: 550; }
+.tl-lettura { margin: 0 0 10px; font-size: 13px; color: var(--text-secondary); }
+.tl-body .badge-sector { text-decoration: none; }
+.dt-jv { color: var(--series-2); border-color: var(--series-2); }
+.dt-rientro { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 640px) {
+  .tl-item { grid-template-columns: 40px 16px 1fr; }
+  .tl-item::before { left: calc(40px + 8px + 4px); }
+  .tl-year { font-size: 13px; }
+}
+
 /* Dossier strategici — monitor */
 .dossier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
 .dossier-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
@@ -583,7 +615,8 @@ table.data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; mi
         <a href="#/materie-critiche" data-nav="materie-critiche">Materie critiche</a>
         <a href="#/politiche" data-nav="politiche">Politiche</a>
         <a href="#/capitale-estero" data-nav="capitale-estero">Capitale estero</a>
-        <a href="#/ide" data-nav="ide">IDE in Italia</a>
+        <a href="#/operazioni" data-nav="operazioni">Operazioni</a>
+        <a href="#/ide" data-nav="ide">IDE</a>
         <a href="#/aziende" data-nav="aziende">Aziende</a>
         <a href="#/metodologia" data-nav="metodologia">Metodologia</a>
       </nav>
@@ -2338,11 +2371,11 @@ const DOSSIER = [
     rimandi: [{ href: "#/capitale-estero", label: "Golden power" }, { href: "#/settore/automotive", label: "Automotive" }],
   },
   {
-    id: "bromo", icona: "🛰️", titolo: "Consolidamento spaziale (Project Bromo)",
+    id: "bromo", icona: "🛰️", titolo: "Project Bromo — JV spaziale europea",
     tipo: "consolidamento", aggiornamento: "lug 2026",
-    stato: "Trattativa Leonardo–Airbus–Thales per fondere le attività satellitari in un unico campione europeo anti-Starlink; impatterebbe Thales Alenia Space e Telespazio, cuore della filiera di osservazione della Terra.",
-    posta: "Scala europea contro la frammentazione di fronte alle mega-costellazioni, ma rischio di diluizione del controllo italiano su un asset dual-use come COSMO-SkyMed.",
-    rimandi: [{ href: "#/settore/spazio-osservazione-terra", label: "Spazio e OT" }],
+    stato: "MoU firmato il 23 ottobre 2025: Airbus (35%), Leonardo (32,5%) e Thales (32,5%) fondono le attività satellitari in un unico campione europeo — ~25.000 addetti, €6,5 mld di ricavi, sede a Tolosa, servizio dal 2027. Via libera UE non atteso prima del 2027; OHB (Germania) contraria.",
+    posta: "Scala europea contro Starlink e le costellazioni cinesi, ma controllo condiviso a tre e rischio di diluizione del peso italiano su un asset dual-use come COSMO-SkyMed. Impatta Thales Alenia Space e Telespazio.",
+    rimandi: [{ href: "#/settore/spazio-osservazione-terra", label: "Spazio e OT" }, { href: "#/operazioni", label: "Operazioni" }],
   },
   {
     id: "risiko", icona: "🏦", titolo: "Risiko bancario (MPS–Mediobanca)",
@@ -2359,8 +2392,39 @@ const DOSSIER_TIPI = {
   "greenfield": "Greenfield",
   "golden-power": "Golden power",
   "consolidamento": "Consolidamento",
+  "jv": "Joint venture",
+  "rientro": "Rientro / controllo IT",
   "finanza": "Finanza",
 };
+
+/* ============================================================
+   OPERAZIONI STRATEGICHE — linea del tempo (2021→2026)
+   Le grandi operazioni sul controllo del patrimonio industriale:
+   acquisizioni estere, greenfield, golden power, JV, rientri.
+   Fotografie da stampa specializzata e comunicati societari.
+   ============================================================ */
+
+const OPERAZIONI = [
+  { anno: 2026, titolo: "ex-Ilva / Acciaierie d'Italia", attori: "Flacks Group (USA) vs Jindal (India)", tipo: "acquisizione-estera", settoreId: null, stato: "in corso", lettura: "Il futuro della siderurgia primaria nazionale; decarbonizzazione e prestiti statali sul tavolo." },
+  { anno: 2026, titolo: "Silicon Box — fab di Novara", attori: "Silicon Box (Singapore)", tipo: "greenfield", settoreId: "elettronica", valore: "€3,2 mld", lettura: "Prima fab europea di advanced packaging; €1,3 mld di sostegno pubblico, 1.600 posti." },
+  { anno: 2026, titolo: "Pirelli — terzo decreto golden power", attori: "Governo su Sinochem (Cina)", tipo: "golden-power", settoreId: "automotive", lettura: "Consiglieri di Sinochem limitati e tecnologia Cyber Tyre segregata: convivenza vigilata." },
+  { anno: 2026, titolo: "Intesa Sanpaolo — OPAS su MPS", attori: "Intesa Sanpaolo, BPER, Mediobanca", tipo: "finanza", settoreId: null, stato: "in corso", lettura: "Riassetto del credito e del controllo su Mediobanca e Generali. Perimetro finanziario." },
+  { anno: 2025, titolo: "Project Bromo — JV satellitare europea", attori: "Airbus 35% · Leonardo 32,5% · Thales 32,5%", tipo: "consolidamento", settoreId: "spazio-osservazione-terra", valore: "€6,5 mld ricavi", lettura: "Campione europeo anti-Starlink; controllo condiviso a tre, sede a Tolosa, servizio dal 2027." },
+  { anno: 2025, titolo: "Iveco Group → Tata Motors", attori: "Tata Motors (India); IDV difesa a Leonardo", tipo: "acquisizione-estera", settoreId: "automotive", lettura: "Golden power applicato: il ramo difesa scorporato a Leonardo, il civile a controllo indiano." },
+  { anno: 2025, titolo: "Versace → Prada", attori: "Prada Group (Italia)", tipo: "rientro", settoreId: "moda", valore: "≈ €1,25 mld", lettura: "Un marchio del lusso torna sotto controllo italiano dopo la parentesi americana." },
+  { anno: 2025, titolo: "Nuclitalia — JV per gli SMR", attori: "Enel · Leonardo · Ansaldo Energia", tipo: "jv", settoreId: "energia", lettura: "Piattaforma nazionale sui piccoli reattori modulari: primo passo del rientro nucleare." },
+  { anno: 2025, titolo: "Piaggio Aerospace → Baykar", attori: "Baykar (Turchia)", tipo: "acquisizione-estera", settoreId: "difesa", lettura: "Rilancio promesso sui droni, ma know-how aeronautico ligure sotto controllo extra-UE." },
+  { anno: 2025, titolo: "Sparkle → MEF + Retelit", attori: "MEF e Retelit (Italia)", tipo: "rientro", settoreId: null, lettura: "I cavi sottomarini strategici di TIM tornano sotto controllo pubblico." },
+  { anno: 2025, titolo: "ITA Airways → Lufthansa", attori: "Lufthansa (Germania)", tipo: "acquisizione-estera", settoreId: null, lettura: "La compagnia di bandiera entra nel gruppo tedesco, con quota residua del MEF." },
+  { anno: 2024, titolo: "Rete TIM (FiberCop) → KKR", attori: "KKR (USA)", tipo: "acquisizione-estera", settoreId: null, valore: "≈ €22 mld", lettura: "La rete telefonica nazionale a un fondo statunitense: separazione storica di un'infrastruttura critica." },
+  { anno: 2024, titolo: "Subacquea di difesa a Fincantieri (WASS)", attori: "Fincantieri ← Leonardo", tipo: "consolidamento", settoreId: "nautica", lettura: "Riorganizzazione nazionale della subacquea militare in un unico polo." },
+  { anno: 2024, titolo: "JV terrestre Leonardo–Rheinmetall", attori: "Leonardo · Rheinmetall (Germania)", tipo: "jv", settoreId: "difesa", lettura: "Alleanza sui veicoli da combattimento terrestri per i futuri programmi europei." },
+  { anno: 2023, titolo: "Raffineria ISAB Priolo (Lukoil)", attori: "Lukoil (RU) → G.O.I. Energy / Trafigura", tipo: "acquisizione-estera", settoreId: "energia", lettura: "Uscita russa da uno snodo di raffinazione e sicurezza energetica nazionale." },
+  { anno: 2022, titolo: "LPE (epitassia SiC) → ASM", attori: "ASM International (Paesi Bassi)", tipo: "acquisizione-estera", settoreId: "elettronica", lettura: "Dopo il veto alla cessione cinese, il know-how sul carburo di silicio resta in mani europee." },
+  { anno: 2021, titolo: "Veti golden power: LPE e Verisem", attori: "Governo su Shenzhen IH e Syngenta (Cina)", tipo: "golden-power", settoreId: null, lettura: "Due veti fondativi: microelettronica e sementi riconosciute come asset strategici." },
+];
+
+const OPERAZIONI_TIPI = DOSSIER_TIPI;
 
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
@@ -2873,6 +2937,7 @@ const routes = [
   { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^politiche$/, render: renderPolitiche },
   { re: /^capitale-estero$/, render: renderCapitaleEstero },
+  { re: /^operazioni$/, render: renderOperazioni },
   { re: /^ide$/, render: renderIDE },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
@@ -3670,6 +3735,74 @@ function dossierSection() {
 }
 
 /* ============================================================
+   OPERAZIONI STRATEGICHE — dossier aperti + linea del tempo
+   ============================================================ */
+function renderOperazioni() {
+  const root = $app();
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Controllo del patrimonio industriale</div>
+    <h1>Operazioni strategiche</h1>
+    <p class="lead">I fascicoli aperti e la cronologia delle grandi operazioni sul controllo industriale:
+    acquisizioni estere, greenfield, golden power, joint venture e rientri. La direzione in cui si muove
+    la proprietà degli asset strategici del paese.</p>`;
+  root.appendChild(hero);
+
+  // dossier aperti
+  root.appendChild(dossierSection());
+
+  // linea del tempo filtrabile
+  const st = sectionEl("La linea del tempo", "Le operazioni recenti (2021 → 2026)",
+    "Filtra per tipo. I rimandi portano al settore o alla pagina collegata.");
+  const chips = document.createElement("div");
+  chips.className = "filter-bar";
+  let active = "";
+  const tipi = Array.from(new Set(OPERAZIONI.map((o) => o.tipo)));
+  const mkChip = (id, label) => { const b = document.createElement("button"); b.className = "filter-chip" + (id === active ? " active" : ""); b.textContent = label; b.dataset.id = id; return b; };
+  chips.appendChild(mkChip("", "Tutte"));
+  tipi.forEach((t) => chips.appendChild(mkChip(t, OPERAZIONI_TIPI[t] || t)));
+  st.appendChild(chips);
+
+  const tl = document.createElement("div");
+  tl.className = "timeline";
+  st.appendChild(tl);
+  root.appendChild(st);
+
+  function draw() {
+    const list = OPERAZIONI.filter((o) => !active || o.tipo === active);
+    let lastYear = null;
+    tl.innerHTML = list.map((o) => {
+      const s = o.settoreId ? SETTORI.find((x) => x.id === o.settoreId) : null;
+      const yearMark = o.anno !== lastYear ? `<div class="tl-year">${o.anno}</div>` : `<div class="tl-year tl-year-empty"></div>`;
+      lastYear = o.anno;
+      return `<div class="tl-item">
+        ${yearMark}
+        <div class="tl-dot dt-dot-${esc(o.tipo)}"></div>
+        <div class="tl-body">
+          <div class="tl-meta"><span class="dossier-tipo dt-${esc(o.tipo)}">${esc(OPERAZIONI_TIPI[o.tipo] || o.tipo)}</span>${o.stato ? `<span class="tl-stato">● ${esc(o.stato)}</span>` : ""}${o.valore ? `<span class="tl-valore">${esc(o.valore)}</span>` : ""}</div>
+          <h4>${esc(o.titolo)}</h4>
+          <p class="tl-attori">${esc(o.attori)}</p>
+          <p class="tl-lettura">${esc(o.lettura)}</p>
+          ${s ? `<a class="badge-sector" href="#/settore/${s.id}"><span class="badge-dot" style="background:${colorOf(s.id)}"></span>${s.icona} ${esc(s.nome)}</a>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+  }
+  chips.addEventListener("click", (e) => {
+    const b = e.target.closest(".filter-chip"); if (!b) return;
+    chips.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+    b.classList.add("active"); active = b.dataset.id || ""; draw();
+  });
+  draw();
+
+  const nota = document.createElement("p");
+  nota.className = "fonti-line";
+  nota.innerHTML = `Fotografie da stampa specializzata e comunicati societari; date e valori indicativi. Il perimetro finanziario (risiko bancario) è incluso per completezza ma resta distinto dalla manifattura. — <a href="#/capitale-estero">Meccanica IDE e golden power →</a>`;
+  root.appendChild(nota);
+}
+
+/* ============================================================
    CAPITALE ESTERO — IDE, proprietà e tutela del know-how
    ============================================================ */
 function renderCapitaleEstero() {
@@ -3686,10 +3819,11 @@ function renderCapitaleEstero() {
     sulla bilancia dei pagamenti, e dove il golden power è intervenuto. La distinzione che conta non è
     italiano/straniero, ma <em>greenfield che aggiunge capacità</em> contro <em>acquisizione che trasferisce know-how</em>.</p>`;
   hero.appendChild(kpiRow(CAPITALE_ESTERO.kpi));
+  const opl = document.createElement("p");
+  opl.className = "fonti-line";
+  opl.innerHTML = `I casi aperti e la cronologia delle grandi operazioni sono nella pagina <a href="#/operazioni">Operazioni strategiche →</a>`;
+  hero.appendChild(opl);
   root.appendChild(hero);
-
-  /* Monitor dei dossier strategici aperti */
-  root.appendChild(dossierSection());
 
   /* I tre canali sulla bilancia dei pagamenti */
   const sc = sectionEl("La meccanica", "Come gli IDE agiscono sulla bilancia dei pagamenti",

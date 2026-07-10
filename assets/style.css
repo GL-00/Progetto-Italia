@@ -432,6 +432,38 @@ body {
 .tag-medio { background: var(--div-mid); color: var(--text-secondary); border: 1px solid var(--baseline); }
 .tag-lungo { background: transparent; color: var(--text-muted); border: 1px dashed var(--baseline); }
 
+/* Timeline operazioni strategiche */
+.timeline { position: relative; margin-top: 6px; }
+.tl-item { display: grid; grid-template-columns: 58px 20px 1fr; gap: 0 12px; align-items: start; }
+.tl-year { font-size: 15px; font-weight: 800; color: var(--text-primary); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.tl-year-empty { visibility: hidden; }
+.tl-dot { position: relative; width: 12px; height: 12px; border-radius: 99px; margin: 6px auto 0; background: var(--baseline); z-index: 1; }
+.tl-item { position: relative; }
+.tl-item::before { content: ""; position: absolute; left: calc(58px + 12px + 5px); top: 0; bottom: -18px; width: 2px; background: var(--grid); }
+.tl-item:last-child::before { display: none; }
+.dt-dot-acquisizione-estera { background: var(--warn-s); }
+.dt-dot-greenfield { background: var(--good); }
+.dt-dot-golden-power { background: var(--series-5); }
+.dt-dot-jv { background: var(--series-2); }
+.dt-dot-rientro { background: var(--accent); }
+.dt-dot-consolidamento { background: var(--baseline); }
+.dt-dot-finanza { background: var(--text-muted); }
+.tl-body { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 18px; }
+.tl-body h4 { margin: 6px 0 4px; font-size: 15.5px; }
+.tl-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tl-stato { font-size: 11px; font-weight: 700; color: var(--warn-s); text-transform: uppercase; letter-spacing: 0.05em; }
+.tl-valore { font-size: 12px; font-weight: 700; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.tl-attori { margin: 0 0 6px; font-size: 13px; color: var(--text-primary); font-weight: 550; }
+.tl-lettura { margin: 0 0 10px; font-size: 13px; color: var(--text-secondary); }
+.tl-body .badge-sector { text-decoration: none; }
+.dt-jv { color: var(--series-2); border-color: var(--series-2); }
+.dt-rientro { color: var(--accent); border-color: var(--accent); }
+@media (max-width: 640px) {
+  .tl-item { grid-template-columns: 40px 16px 1fr; }
+  .tl-item::before { left: calc(40px + 8px + 4px); }
+  .tl-year { font-size: 13px; }
+}
+
 /* Dossier strategici — monitor */
 .dossier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
 .dossier-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
