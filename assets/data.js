@@ -1647,6 +1647,119 @@ const PROFILI_COSTO = [
   { id: "nautica", x: 2.2, y: 3.4, comp: { energia: 8, materie: 52, lavoro: 33, altro: 7 }, isteresi: "basso", vulnerabilita: "bassa", nota: "Progetti a commessa: si può pausare tra un ordine e l'altro; materie e maestranze dominano, poco energivoro." },
 ];
 
+/* ============================================================
+   IDE IN ITALIA — vista quantitativa dell'attrazione
+   Quanto attraiamo, da dove, in cosa, perché poco.
+   Fonti: EY Attractiveness Survey Italy 2025, Banca d'Italia,
+   UNCTAD World Investment Report. Valori indicativi.
+   ============================================================ */
+
+const IDE = {
+  kpi: [
+    { label: "Stock IDE in entrata", value: "≈ 20% PIL", delta: "tra i più bassi d'Europa", trend: "warn" },
+    { label: "Progetti IDE 2024", value: "224 (+5%)", delta: "controtendenza sull'Europa (−5%)", trend: "up" },
+    { label: "Quota europea", value: "4,2% · 7ª", delta: "+2 posizioni sul 2023", trend: "up" },
+    { label: "Greenfield annunciato", value: "$38,6 mld (+36%)", delta: "il capitale che aggiunge capacità", trend: "up" },
+  ],
+  intro: "L'Italia vive un paradosso di attrazione: attira poco in stock — circa il 20% del PIL, tra i valori più bassi d'Europa e meno della metà della media UE — ma nel 2024-25 cresce in controtendenza (+5% di progetti mentre l'Europa cala del 5%), spinta da nearshoring, friendshoring e dalla posizione di hub mediterraneo. Il problema non è la qualità dell'offerta — manifattura, distretti, know-how — ma i costi di accesso ai fattori. È il rovescio della medaglia dell'analisi: gli stessi ostacoli che pesano sulle imprese italiane scoraggiano chi vorrebbe investirci.",
+  origine: [
+    { label: "Stati Uniti", value: 16, nota: "1° investitore, in calo dal 19% del 2023" },
+    { label: "Germania", value: 14, nota: "Automotive, meccanica, chimica" },
+    { label: "Francia", value: 13, nota: "Lusso, energia (EDF), servizi" },
+    { label: "Regno Unito", value: 11, nota: "Finanza e servizi" },
+    { label: "Svizzera", value: 9, nota: "Farmaceutica, food, macchinari" },
+    { label: "Paesi Bassi / Lussemburgo", value: 6, nota: "In parte holding e veicoli finanziari" },
+    { label: "Giappone", value: 4, nota: "Automotive, elettronica, chimica" },
+    { label: "Cina", value: 3, nota: "Piccola quota ma su asset strategici (golden power)" },
+  ],
+  settori: [
+    { label: "Manifattura", value: 30, nota: "Il cuore dell'attrazione: qualità e distretti" },
+    { label: "Software e ICT", value: 18, nota: "Data center, digitale, R&S" },
+    { label: "Servizi alle imprese", value: 14 },
+    { label: "Logistica e trasporti", value: 10, nota: "Beneficia del nearshoring e dell'hub mediterraneo" },
+    { label: "Energia e utility", value: 9 },
+    { label: "Retail e beni di consumo", value: 8 },
+    { label: "Finanza e assicurazioni", value: 7 },
+    { label: "Altro", value: 4 },
+  ],
+  greenfieldTesi: "La distinzione che conta è greenfield vs. acquisizione. Il greenfield — nuova capacità produttiva — aggiunge stabilimenti, tecnologia, occupazione e spillover sui fornitori: è l'IDE da corteggiare (Silicon Box a Novara, i siti pharma esteri). L'acquisizione è ambigua: può rafforzare il territorio (Lamborghini-VW) o trasferire centri decisionali e know-how all'estero. Che l'Italia attragga poco e in prevalenza tramite M&A su medie imprese eccellenti è il mix peggiore: pochi capitali nuovi, molta erosione di presìdi. La crescita 2024-25 del greenfield (+36%) è quindi la notizia migliore del quadro.",
+  gap: {
+    testo: "Perché lo stock resta basso nonostante la qualità dell'offerta? Gli ostacoli sono gli stessi fattori della pagina Politiche — l'attrazione degli investimenti è il rovescio della competitività delle imprese:",
+    drivers: [
+      { nome: "Tempi e permessi", nota: "Autorizzazioni lente e giustizia civile tra le più lunghe d'Europa: l'incertezza sui tempi è un costo per chi decide dove localizzare." },
+      { nome: "Costo dell'energia", nota: "Elettricità sopra la media UE: penalizza gli investimenti industriali energivori, proprio quelli a maggior valore aggiunto." },
+      { nome: "Carico fiscale e burocrazia", nota: "Complessità e imprevedibilità normativa più che le sole aliquote: il costo di conformità scoraggia l'ingresso." },
+      { nome: "Scala e capitale", nota: "Mercato dei capitali sottile e tessuto di PMI: meno target di grandi dimensioni, più operazioni piccole e frammentate." },
+    ],
+  },
+  traino: [
+    { icona: "🌍", titolo: "Hub mediterraneo", testo: "Ponte tra Europa, Nord Africa e Medio Oriente: nearshoring e friendshoring giocano a favore." },
+    { icona: "🏭", titolo: "Manifattura e distretti", testo: "La 2ª manifattura d'Europa e il saper fare dei distretti restano un magnete per gli investitori industriali." },
+    { icona: "💶", titolo: "PNRR e incentivi", testo: "PNRR, Transizione 5.0, credito d'imposta e ZES unica del Mezzogiorno come leve di attrazione recenti." },
+    { icona: "🔧", titolo: "Reshoring europeo", testo: "La ricomposizione delle catene del valore post-2022 riporta in Europa produzioni: l'Italia può intercettarle." },
+  ],
+  fonti: "EY Attractiveness Survey Italy 2025 · Banca d'Italia — posizione patrimoniale sull'estero · UNCTAD World Investment Report · MAECI / ICE",
+};
+
+/* ============================================================
+   DOSSIER STRATEGICI — monitor dei casi aperti (mid-2026)
+   Analisi sintetica; le schede possono essere approfondite.
+   ============================================================ */
+
+const DOSSIER = [
+  {
+    id: "ilva", icona: "⛓️", titolo: "ex-Ilva / Acciaierie d'Italia",
+    tipo: "acquisizione-estera", aggiornamento: "lug 2026",
+    stato: "In amministrazione straordinaria. Il fondo statunitense Flacks Group tratta l'intera azienda contro l'indiana Jindal; piano di risalita a 6 Mt e ripresa dei prestiti statali, ma cessione più volte slittata e nuovo prestito ponte da €100 mln a maggio 2026.",
+    posta: "Autonomia siderurgica nazionale, decarbonizzazione (dall'altoforno al DRI/elettrico — che riscrive la struttura di costo) e costo dell'energia. L'asset a monte di difesa, auto, nautica ed energia.",
+    rimandi: [{ href: "#/materie-critiche", label: "Acciai speciali" }, { href: "#/politiche", label: "Soglia di shutdown" }],
+  },
+  {
+    id: "stellantis", icona: "🚗", titolo: "Stellantis — Piano Italia",
+    tipo: "politica-industriale", aggiornamento: "lug 2026",
+    stato: "Dopo l'uscita di Tavares, il CEO Antonio Filosa presenta in Parlamento un piano da €5 mld al 2030 (€1 mld ad Atessa), nessuna chiusura di impianti e gamma multi-motorizzazione. Produzione italiana +16% nei primi 5 mesi 2026, dal −37% del 2024.",
+    posta: "La tenuta dei volumi e dell'indotto. E il dato-simbolo dichiarato dal gruppo: elettricità a €205/MWh in Italia contro €90 in Spagna e €100 in Francia — la prova empirica del fattore energia.",
+    rimandi: [{ href: "#/settore/automotive", label: "Automotive" }, { href: "#/politiche", label: "Politiche · energia" }],
+  },
+  {
+    id: "siliconbox", icona: "🔬", titolo: "Silicon Box (Novara) e STMicro (Catania)",
+    tipo: "greenfield", aggiornamento: "lug 2026",
+    stato: "Silicon Box (Singapore) costruisce a Novara la prima fab europea di advanced packaging/chiplet: €3,2 mld, 1.600 posti, €1,3 mld di sostegno pubblico. In parallelo STMicroelectronics investe €5 mld nel carburo di silicio a Catania. Entrambi dentro il Chips Act 2.0.",
+    posta: "Il greenfield 'buono': capacità e tecnologia nuove che riducono, sia pure ai margini, la dipendenza critica sui semiconduttori. L'IDE da corteggiare, non da difendere.",
+    rimandi: [{ href: "#/settore/elettronica", label: "Semiconduttori" }, { href: "#/ide", label: "IDE in Italia" }],
+  },
+  {
+    id: "pirelli", icona: "🛞", titolo: "Pirelli — governance Sinochem",
+    tipo: "golden-power", aggiornamento: "lug 2026",
+    stato: "Il patto Camfin-Sinochem è stato disdetto (scaduto il 18 maggio 2026); il terzo decreto golden power (aprile 2026) limita i consiglieri nominabili da Sinochem (37% via Marco Polo/CNRC) e disciplina la segregazione della tecnologia Cyber Tyre.",
+    posta: "Il caso-scuola vivente del golden power come bisturi: comprimere la governance estera sui dati sensibili senza espellere il capitale. Convivenza vigilata, non muro.",
+    rimandi: [{ href: "#/capitale-estero", label: "Golden power" }, { href: "#/settore/automotive", label: "Automotive" }],
+  },
+  {
+    id: "bromo", icona: "🛰️", titolo: "Consolidamento spaziale (Project Bromo)",
+    tipo: "consolidamento", aggiornamento: "lug 2026",
+    stato: "Trattativa Leonardo–Airbus–Thales per fondere le attività satellitari in un unico campione europeo anti-Starlink; impatterebbe Thales Alenia Space e Telespazio, cuore della filiera di osservazione della Terra.",
+    posta: "Scala europea contro la frammentazione di fronte alle mega-costellazioni, ma rischio di diluizione del controllo italiano su un asset dual-use come COSMO-SkyMed.",
+    rimandi: [{ href: "#/settore/spazio-osservazione-terra", label: "Spazio e OT" }],
+  },
+  {
+    id: "risiko", icona: "🏦", titolo: "Risiko bancario (MPS–Mediobanca)",
+    tipo: "finanza", aggiornamento: "lug 2026",
+    stato: "OPAS di Intesa Sanpaolo su MPS con BPER: a BPER andrebbe la rete retail del Monte (circa 635 filiali), a Intesa Mediobanca e il 13% di Generali. La proposta di fusione MPS-Banco BPM è stata soffocata sul nascere.",
+    posta: "Riassetto del credito e del controllo su Mediobanca e Generali. Perimetro finanziario — distinto dalla manifattura — ma tocca la tutela dei mercati creditizi citata nel mandato.",
+    rimandi: [{ href: "#/metodologia", label: "Perimetro e fonti" }],
+  },
+];
+
+const DOSSIER_TIPI = {
+  "acquisizione-estera": "Acquisizione estera",
+  "politica-industriale": "Politica industriale",
+  "greenfield": "Greenfield",
+  "golden-power": "Golden power",
+  "consolidamento": "Consolidamento",
+  "finanza": "Finanza",
+};
+
 const FONTI_GENERALI = [
   { nome: "ISTAT", url: "https://www.istat.it", ambito: "Conti nazionali, commercio estero (coe.istat.it), occupazione" },
   { nome: "Banca d'Italia", url: "https://www.bancaditalia.it", ambito: "Finanza pubblica, bilancia dei pagamenti, relazione annuale" },

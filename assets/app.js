@@ -21,6 +21,7 @@ const routes = [
   { re: /^materie-critiche$/, render: renderMaterie },
   { re: /^politiche$/, render: renderPolitiche },
   { re: /^capitale-estero$/, render: renderCapitaleEstero },
+  { re: /^ide$/, render: renderIDE },
   { re: /^aziende$/, render: renderAziende },
   { re: /^metodologia$/, render: renderMetodologia },
 ];
@@ -721,6 +722,102 @@ function renderPolitiche() {
 }
 
 /* ============================================================
+   IDE IN ITALIA — vista quantitativa dell'attrazione
+   ============================================================ */
+function renderIDE() {
+  const root = $app();
+  const hero = document.createElement("div");
+  hero.className = "hero";
+  hero.innerHTML = `
+    <div class="kicker">Attrazione di capitale</div>
+    <h1>Investimenti diretti esteri in Italia</h1>
+    <p class="lead">Quanto capitale estero attrae il paese, da dove arriva, in quali settori — e perché,
+    a dispetto della qualità dell'offerta, lo stock resta tra i più bassi d'Europa. È la vista quantitativa;
+    il controllo e la proprietà degli asset strategici sono nella pagina <a href="#/capitale-estero">Capitale estero</a>.</p>`;
+  hero.appendChild(kpiRow(IDE.kpi));
+  root.appendChild(hero);
+
+  const sintro = document.createElement("div");
+  sintro.className = "policy-thesis";
+  sintro.innerHTML = `<div class="kicker">Il paradosso dell'attrazione</div><p>${esc(IDE.intro)}</p>`;
+  root.appendChild(sintro);
+
+  // origine e destinazione
+  const sgeo = sectionEl("Da dove e verso cosa", "Origine e destinazione dei flussi", "");
+  const g = document.createElement("div");
+  g.className = "grid-2";
+  const c1 = card("Principali paesi investitori", "quota % dei progetti IDE, 2024 — EY");
+  Charts.hBarChart(c1, IDE.origine, { unit: "%", labelWidth: 200, ariaLabel: "Paesi investitori" });
+  const c2 = card("Settori di destinazione", "quota % indicativa dei progetti");
+  Charts.hBarChart(c2, IDE.settori, { unit: "%", labelWidth: 200, ariaLabel: "Settori di destinazione" });
+  g.append(c1, c2);
+  sgeo.appendChild(g);
+  root.appendChild(sgeo);
+
+  // greenfield vs M&A
+  const sgf = sectionEl("La distinzione che conta", "Greenfield o acquisizione", "");
+  const gt = document.createElement("div");
+  gt.className = "policy-thesis";
+  gt.innerHTML = `<p>${esc(IDE.greenfieldTesi)}</p>`;
+  sgf.appendChild(gt);
+  root.appendChild(sgf);
+
+  // gap di attrazione
+  const sgap = sectionEl("Il gap di attrazione", "Perché attraiamo poco", IDE.gap.testo);
+  const fg = document.createElement("div");
+  fg.className = "factor-grid";
+  fg.innerHTML = IDE.gap.drivers.map((d) => `<div class="factor-card"><h4>${esc(d.nome)}</h4><p>${esc(d.nota)}</p></div>`).join("");
+  sgap.appendChild(fg);
+  const gaplink = document.createElement("p");
+  gaplink.className = "fonti-line";
+  gaplink.innerHTML = `Sono gli stessi fattori dell'<a href="#/politiche">agenda delle politiche</a>: abbassarne il costo attrae investimenti oltre che sostenere le imprese.`;
+  sgap.appendChild(gaplink);
+  root.appendChild(sgap);
+
+  // traino
+  const str = sectionEl("I venti a favore", "Cosa gioca per l'Italia", "");
+  const tg = document.createElement("div");
+  tg.className = "diff-grid";
+  tg.innerHTML = IDE.traino.map((t) => `<div class="diff-card"><div class="diff-ico">${t.icona}</div><h4>${esc(t.titolo)}</h4><p>${esc(t.testo)}</p></div>`).join("");
+  str.appendChild(tg);
+  root.appendChild(str);
+
+  const fonti = document.createElement("p");
+  fonti.className = "fonti-line";
+  fonti.innerHTML = `<strong>Fonti:</strong> ${esc(IDE.fonti)} — <a href="#/metodologia">metodologia e avvertenze</a>`;
+  root.appendChild(fonti);
+}
+
+/* Monitor dei dossier strategici (usato in Capitale estero) */
+function dossierSection() {
+  const s = sectionEl("Dossier strategici", "I casi aperti, in sintesi",
+    "Monitor dei principali fascicoli di controllo industriale a metà 2026: acquisizioni estere, greenfield, golden power, consolidamenti. Analisi sintetica — ogni scheda è approfondibile.");
+  const grid = document.createElement("div");
+  grid.className = "dossier-grid";
+  DOSSIER.forEach((d) => {
+    const c = document.createElement("div");
+    c.className = "card dossier-card";
+    c.innerHTML = `
+      <div class="dossier-head">
+        <span class="dossier-ico">${d.icona}</span>
+        <div class="dossier-title"><h3>${esc(d.titolo)}</h3>
+          <span class="dossier-meta"><span class="dossier-tipo dt-${esc(d.tipo)}">${esc(DOSSIER_TIPI[d.tipo] || d.tipo)}</span><span class="dossier-date">agg. ${esc(d.aggiornamento)}</span></span>
+        </div>
+      </div>
+      <p class="dossier-row"><strong>Stato.</strong> ${esc(d.stato)}</p>
+      <p class="dossier-row"><strong>Posta in gioco.</strong> ${esc(d.posta)}</p>
+      <div class="dossier-links">${d.rimandi.map((r) => `<a class="chip-link" href="${esc(r.href)}">${esc(r.label)} →</a>`).join("")}</div>`;
+    grid.appendChild(c);
+  });
+  s.appendChild(grid);
+  const nota = document.createElement("p");
+  nota.className = "fonti-line";
+  nota.innerHTML = `Fotografie a metà 2026 da stampa specializzata e comunicati; i fascicoli si muovono in fretta. Il risiko bancario è di perimetro finanziario, distinto dalla manifattura.`;
+  s.appendChild(nota);
+  return s;
+}
+
+/* ============================================================
    CAPITALE ESTERO — IDE, proprietà e tutela del know-how
    ============================================================ */
 function renderCapitaleEstero() {
@@ -738,6 +835,9 @@ function renderCapitaleEstero() {
     italiano/straniero, ma <em>greenfield che aggiunge capacità</em> contro <em>acquisizione che trasferisce know-how</em>.</p>`;
   hero.appendChild(kpiRow(CAPITALE_ESTERO.kpi));
   root.appendChild(hero);
+
+  /* Monitor dei dossier strategici aperti */
+  root.appendChild(dossierSection());
 
   /* I tre canali sulla bilancia dei pagamenti */
   const sc = sectionEl("La meccanica", "Come gli IDE agiscono sulla bilancia dei pagamenti",
